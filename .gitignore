@@ -1,0 +1,14 @@
+.env
+.DS_Store
+node_modules
+public/.DS_Store
+*/.DS_Store
+public/images/intro-images/*
+public/images/misc/*
+public/images/intro-images
+public/images/misc
+public/images
+.vscode/*
+.vscode
+outputs/generic/style.generic.css
+outputs/generic/advert.generic.html

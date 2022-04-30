@@ -1,0 +1,290 @@
+{{header}}
+{{banner}}
+<div id="series">
+    <div id="series-information">
+        <div id="top-section">
+            <div id="guide-info">
+                <h1>{{title}}</h1>
+                <p>{{description}}</p>
+            </div>
+        </div>
+        <div id="advert">
+            <h2>Sponsor</h2>
+            {{advert}}
+        </div>
+        <div class="bar">
+            <h2>Series Length</h2>
+        </div>
+        <div class="fl">
+            <div id="series-meta" class="fl">
+                <!--<div id="series-time">Est. Length: {{<span class="hours">{{hours}}</span> <span class="mins">{{mins}}</span></div>-->
+                <div id="series-progress"><div id="series-progress-amount"><div id="series-completion-amount">0%</div></div></div>
+            </div>
+        </div>
+        <div id="achievements">
+            <div id="achievements-info">
+                <h2>Quiz Medals</h2>
+            </div>
+            <div id="medal-holder"></div>
+        </div>
+    </div>
+    <div id="series-content">
+        {{seriesSections+}}
+    </div>
+</div>
+
+<style combined>
+    #advert {
+        margin-bottom: 2rem;
+    }
+    #series-progress:after {
+        content: '';
+        left: 66.6%;
+        width: 1px;
+        height: 100%;
+        position: absolute;
+        background: #4e535cb0;
+    }
+    #series-completion-amount {
+        margin-right: 0;
+        order: 3;
+        font-weight: 800;
+        font-size: 1rem;
+        position: absolute;
+        top: 3px;
+        letter-spacing: 0.5px;
+        right: 7px;
+        opacity: 0.9;
+        color: white;
+        z-index: 9999;
+    }
+    #series-progress:before {
+        position: absolute;
+        content: '';
+        left: 33.3%;
+        width: 1px;
+        height: 100%;
+        background: #4e535cb0;
+    }
+
+    #series-progress-amount {
+        position: absolute;
+        top: 0;
+        z-index: 999;
+        max-width: 100%;
+        left: 0;
+        height: calc(100% - 8px);
+        background-image: linear-gradient(45deg, #951dfb, #0072ff);
+        min-width: 51px;
+        border-radius: 100px;
+        height: 100%;
+    }
+    #series-progress {
+        width: 100%;
+        background: #2b303b;
+        margin-left: auto;
+        border-radius: 100px;
+        height: 1.75rem;
+        position: relative;
+        margin: 1rem 0 0;
+    }
+    #series-time, #achievements h2 {
+        margin: 0 1rem 0 0;
+    }
+    #series-meta {
+        position: relative;
+        padding: 1rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        background: #27324c61;
+        margin: 1rem 0 2rem 0;
+        box-sizing: border-box;
+        width: 100%;
+        align-items: center;
+        border-radius: 10px;
+    }
+    #achievements h2 {
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 2rem;
+        font-weight: normal;
+        text-transform: initial;
+    }
+    #achievements-info {
+        width: 100%;
+    }
+    #medal-holder {
+        display: flex;
+        float: left;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    #guide-info h1 {
+        font-weight: 600;
+    }
+    #medal-holder .medal svg {
+        fill: #2b303b;
+        position: absolute;
+        left: 0;
+        width: 27px;
+        left: 3px;
+        top: 1px;
+    }
+    #medal-holder .medal {
+        width: 32px;
+        height: 44px;
+        position: relative;
+        margin: 0 0.75rem 1rem 0;
+    }
+
+    [data-medal="🎖"] svg,
+    [data-medal="🥈"] svg,
+    [data-medal="🥉"] svg {
+        opacity: 0;
+    }
+    #achievements [data-medal="🎖"]:after,
+    #achievements [data-medal="🥈"]:after,
+    #achievements [data-medal="🥉"]:after {
+        content: '🎖';
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        font-size: 2.72rem;
+    }
+    #achievements [data-medal="🥈"]:after {
+        content: '🥈';
+    }
+    #achievements [data-medal="🥉"]:after {
+        content: '🥉';
+    }
+    #medal-holder .medal-achievement {
+        position: relative;
+        z-index: 99;
+        opacity: 0;
+        font-size: 2rem;
+    }
+
+    #medal-holder [data-medal="🎖"] .medal-achievement {
+        opacity: 1;
+        font-size: 2.5rem;
+        top: -4px;
+    }
+    #achievements p {
+        margin: 0rem 0 1rem 0;
+        font-size: 1rem;
+        line-height: 1.75rem;
+    }
+    #achievements {
+        float: left;
+        width: 100%;
+        box-sizing: border-box;
+        align-self: flex-start;
+        background: #27324c61;
+        border-radius: 10px;
+        margin: 0 0 2rem 0;
+        padding: 1rem;
+    }
+    #series-content {
+        margin-left: 0;
+    }
+    #series h2 {
+        margin: 0;
+        font-size: 1.25rem;
+    }
+
+    #series-content a {
+        min-height: 80px;
+        text-decoration: none;
+        border-bottom: 1px solid #2a3242;
+    }
+
+    #series-content .item:last-of-type a {
+        border-bottom: none !important;
+    }
+
+
+    #series-information #carbonadcontainer {
+        width: 100%;
+    }
+    #series-information p {
+        font-size: 1.125rem;
+        line-height: 2.2rem;
+    }
+
+    #guide-info {
+        border-bottom: 1px solid #232833;
+        margin: 0 0 2rem 0;
+        }
+    #series {
+        width: 100%;
+        max-width: 1300px;
+        margin: 2rem auto;
+        box-sizing: border-box;
+        flex-direction: column;
+        display: flex;
+    }
+    .bar h2 {
+        margin: 0;
+        float: left;
+        width: auto;
+        border-radius: 100px;
+    }
+    @media screen and (min-width: 1000px) {
+        #series {
+            flex-direction: row;
+        }
+        #series-information {
+            width: calc(33.3% - 2rem);
+        }
+        #series-content {
+            margin: 0 0 0 2rem;
+            width: 66.6%;
+        }
+    }
+</style>
+<script defer type="text/javascript">
+if(document.querySelectorAll('.item .quiz').length > 0) {
+    Object.keys({ ...localStorage }).forEach(function(i) {
+        if(i.split('/quiz').length > 1) {
+            let el = document.querySelector(`a[href="${i}"]`);
+            if(el !== null) {
+                el.setAttribute('data-quiz-complete', true);
+                let score = parseFloat(localStorage[i]);
+                let medal = '😱';
+                let total = parseFloat(el.querySelector('.out-of').innerHTML);
+                let theScore = Math.ceil(total * score);
+                if(score >= 1) {
+                    medal = '🎖'
+                } else if(score >= 0.7) {
+                    medal = '🥈'
+                } else if(score >= 0.4) {
+                    medal = '🥉';                                    
+                }
+                el.setAttribute('data-medal', medal);
+                el.querySelector('.number').innerHTML = theScore;
+                el.querySelector('.medal-outcome').innerHTML = medal;
+                el.querySelector('.medal svg').remove();
+                el.querySelector('.progress .progress-percentage').style.width = `${score * 100}%`;
+            }
+        }
+    })
+    document.querySelectorAll('.item .quiz').forEach(function(item) {
+        let medal = item.querySelector('.medal-outcome').innerHTML;
+        let newEl = document.createElement('div');
+        newEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="#292b42" width="28" height="44" viewBox="0 0 117 179">
+            <circle class="cls-1" cx="58.5" cy="121.5" r="57.5"/>
+            <path class="cls-2" d="M19-3.343L37,88.671S80.754,89.814,82,90,98-3,98-3"/>
+        </svg>`;
+        newEl.classList.add('medal');
+        newEl.setAttribute('data-medal', medal)
+        document.getElementById('medal-holder').appendChild(newEl);
+    });
+}
+else {
+    if(document.getElementById('achievements') !== null) {
+        document.getElementById('achievements').remove();
+    }
+}
+</script>
+{{footer}}

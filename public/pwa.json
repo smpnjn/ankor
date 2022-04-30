@@ -1,0 +1,16 @@
+{
+    "name": "Fjolt.com",
+    "short_name": "Fjolt",
+    "description": "Daily Web Dev Tips from Fjolt",
+    "icons": [
+      {
+        "src": "images/icon.png",
+        "sizes": "1024x1024",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/",
+    "display": "fullscreen",
+    "theme_color": "white",
+    "background_color": "rgb(15 19 22)"
+  }

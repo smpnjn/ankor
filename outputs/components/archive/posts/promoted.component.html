@@ -1,0 +1,37 @@
+<!-- Default file for post combinations. Standard file across entire application. -->
+<!--
+    Use templates as shown below to fill in data about your posts. Here are all the templates you can use:
+    
+    title                 : Title of the Article
+    description           : Description of the Article
+    canonicalName         : the URL ID of the article (canonical name)
+    image                 : a link to the image for this article
+    lazyLoading           : intelligently decides if an image should be lazy loaded or not
+    qualifiedUrl          : a fully qualified URL with domain name, and protocol to the article
+    icon                  : the icon from the database for this article
+    categoryTitle         : the title of the category this article is in
+    categoryCanonicalName : the url-friendly category title (category canonical name)
+    categoryColor         : the first color defined in the database for this category
+    tags                  : any associated tags for this article, outputed as a simple list of <a> elements to each tag.
+
+-->
+<article class="archive-article" data-url="/article/{{canonicalName}}">
+    <div class="archive-article-icon">
+        {{icon}}
+    </div>
+    <div class="archive-article-title">
+        <h2><a href="/article/{{canonicalName}}">{{title}}</a></h2>
+        <div class="archive-article-category">
+            <a class="category promoted" style="color: {{categoryColor}};" href="/category/{{categoryCanonicalName}}">{{categoryTitle}}</a>
+        </div>
+        <div class="archive-article-description">
+            <a href="/article/{{canonicalName}}">{{description}}</a>
+        </div>
+        <div class="archive-article-tags">
+            {{tags}}
+        </div>
+    </div>    
+    <div class="archive-article-author">
+        {{author}}
+    </div>
+</article>

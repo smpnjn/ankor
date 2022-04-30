@@ -1,0 +1,91 @@
+<div class="item">
+    <a href="/article/{{canonicalName}}">
+        <span class="icon">{{icon}}</span>
+        <span class="title">{{title}}</span>
+        <span class="text">{{description}}</span>
+        <span class="complete"></span>
+    </a>
+    {{component-quiz}}
+</div>
+<style combined>
+.item > a {
+    width: calc(100% - 0px);
+    position: relative;
+    margin: 0;
+    line-height: 1rem;
+    min-height: 40px;
+    padding: 0.25em 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 1rem 1rem 0;
+    box-sizing: border-box;
+    border-bottom: 1px solid #191e27;
+}
+.item:last-of-type a {
+    border-bottom: none;
+}
+.item {
+    display: flex;
+    flex-direction: column;
+}
+.item .icon {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    font-size: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    line-height: 100%;
+    color: white;
+    background: linear-gradient(45deg, #0547ff, #8500ff);
+    padding: 2rem 1.5rem;
+    background: transparent;
+}
+
+.item span {display: flex;align-items: center;}
+.item .title {
+    position: relative;
+    left: 5rem;
+    width: calc(100% - 5rem);
+    padding: 0rem 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    float: left;
+}
+.item > a .text {
+    position: relative;
+    width: calc(100% - 5rem);
+    left: 5rem;
+    padding: 0 0 1.25rem 0;
+    padding-bottom: 0;
+    color: #d8dbeaad;
+    float: left;
+    line-height: 1.5rem;
+    font-size: 1rem;
+}
+.complete {
+    display: none;
+    position: absolute;
+    color: white;
+    font-size: 1rem;
+    line-height: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    letter-spacing: 1px;
+}
+.item-complete.complete {
+    display: block;
+}
+@media screen and (min-width: 1000px) {
+    .item {
+        flex-direction: row;
+    }
+}
+</style>
