@@ -30,6 +30,11 @@ I'm always open to new ideas, but currently I am considering this for the future
 
 Clone the repo to any location. Rename `.env.example` to `.env`, and change its content so that it is relevant to your project.
 
+If you want the githook script to run, then change the githook location by running the following command where you want to clone the repo:
+```
+git config core.hooksPath .githooks
+```
+
 Run `npm install`. You can then start the entire application by running the following two commands. Only the first is required if you don't plan to have a subscription service:
 
 ```
