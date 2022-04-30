@@ -325,7 +325,7 @@
     "resolve-from": "^2.0.0",
     "rimraf": "^2.7.1",
     "rss": "^1.2.2",
-    "rss-parser": "^3.10.0",
+    "rss-parser": "^3.12.0",
     "run-series": "^1.1.9",
     "safe-buffer": "^5.2.1",
     "safer-buffer": "^2.1.2",
