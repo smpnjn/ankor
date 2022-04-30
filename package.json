@@ -82,7 +82,7 @@
     "cookie": "^0.4.0",
     "cookie-parser": "^1.4.5",
     "cookie-signature": "^1.0.6",
-    "core-util-is": "^1.0.2",
+    "core-util-is": "^1.0.3",
     "cron": "^1.8.2",
     "csso": "^5.0.3",
     "cssom": "^0.4.4",
