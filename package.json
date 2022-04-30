@@ -123,7 +123,7 @@
     "estraverse": "^4.3.0",
     "esutils": "^2.0.3",
     "etag": "^1.8.1",
-    "eventemitter2": "^5.0.1",
+    "eventemitter2": "^6.4.5",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-rate-limit": "^5.2.3",
