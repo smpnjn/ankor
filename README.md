@@ -1,4 +1,4 @@
-FJOLT is a blog built in Node.JS and Express, designed to be lightweight and **Server Side Rendered** (SSR). It has a simple implementation of components, which accepts both **async** and **non-async** CSS, meaning you can optimise which CSS is loaded. It is optimized for Linux web servers. 
+%FJOLT is a blog built in Node.JS and Express, designed to be lightweight and **Server Side Rendered** (SSR). It has a simple implementation of components, which accepts both **async** and **non-async** CSS, meaning you can optimise which CSS is loaded. It is optimized for Linux web servers. 
 
 ## Features and Optimizations
 FJOLT currently has the following optimisations to improve page load speed:
@@ -250,7 +250,6 @@ If you have not submitted an article with the `/api/article` endpoint yet, then 
 md: true // SET TO true if a markdown document
 keepOldDate: true // SET TO true if you don't want the date to update when you update an existing article.
 ```
-
 
 #### /api/article/delete/
 For deleting an article with a specific `canonicalName`. Accepts a **POST** request with the following JSON body:
