@@ -25,6 +25,7 @@ I'm always open to new ideas, but currently I am considering this for the future
 ### PREREQUISITES
 - You must have Redis installed - [Find out how to install Redis](https://fjolt.com/article/redis-how-to-install).
 - You must have MongoDB installed - [Find out how to install MongoDB](https://www.mongodb.com/docs/manual/installation/). The connection string for your MongoDB install can be placed in your `.env` file.
+- If you want to use JWT tokens, please install OpenSSL.
 - **If** you want subscription emails, you will need to have a webmail server and login credentials. This is easy to do in systems like Plesk - just setup an email, and get SMTP login details for it.
 
 
