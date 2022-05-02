@@ -57,7 +57,7 @@
     "chalk": "^2.4.2",
     "character-entities": "^1.2.4",
     "character-entities-html4": "^1.1.4",
-    "character-entities-legacy": "^1.1.4",
+    "character-entities-legacy": "^3.0.0",
     "character-reference-invalid": "^1.1.4",
     "charm": "^0.1.2",
     "chokidar": "^3.4.3",
