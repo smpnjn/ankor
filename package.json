@@ -285,7 +285,7 @@
     "pify": "^3.0.0",
     "pm2": "^5.1.2",
     "pm2-axon": "^4.0.0",
-    "pm2-axon-rpc": "^0.6.0",
+    "pm2-axon-rpc": "^0.7.1",
     "pm2-deploy": "^1.0.2",
     "pm2-multimeter": "^0.1.2",
     "prelude-ls": "^1.1.2",
