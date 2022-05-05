@@ -176,7 +176,7 @@ app.use(async (req, res, next) => {
         req.cache = await client.get(`${req.cacheTerm}`);
 
         // Send cached data immediately
-        if(req.cache !== null && req.cache !== "" && req.header('x-forceCache') !== "true") {
+        if(req.method == "GET" && req.cache !== null && req.cache !== "" && req.header('x-forceCache') !== "true") {
             res.send(req.cache);
             next();
         }
