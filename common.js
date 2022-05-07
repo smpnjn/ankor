@@ -211,20 +211,18 @@ if(localStorage.getItem('#subscribe') !== null) {
     });
 }
 if(document.querySelector('#subscribe button') !== null || document.body.getAttribute('data-subscribe') == "true" || document.querySelector('.subscribe-button') !== null) {
-    if(document.querySelector('#subscribe button') !== null || document.querySelector('.subscribe-button') !== null) {
-        document.querySelectorAll('.subscribe-button').forEach(function(item) {
-            item.addEventListener('pointerdown', function(e) {
-                if(document.body.getAttribute('data-subscribe') == "true") {
-                    document.body.setAttribute('data-subscribe', false);
-                    window.location.hash = '';
-                } else {
-                    document.body.setAttribute('data-subscribe', true);
-                }
-            });
+    document.querySelectorAll('.subscribe-button').forEach(function(item) {
+        item.addEventListener('pointerdown', function(e) {
+            if(document.body.getAttribute('data-subscribe') == "true") {
+                document.body.setAttribute('data-subscribe', false);
+                window.location.hash = '';
+            } else {
+                document.body.setAttribute('data-subscribe', true);
+                window.location.hash = '#subscribe';
+            }
         });
-    }
+    });
     if(document.getElementById('subscribe-box') !== null) {
-        
         let validateEmail = function(email) {
             const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return regex.test(email);

@@ -16,13 +16,12 @@ quizRouter.get('/quiz/:quizName', async function(req, res, next) {
         if(quizData !== null) {
             // Change URL to base directory if no associated article is found
             let article = await Article.findOne({ 'canonicalName': quizData.associatedCanonical }).lean();
-            if(article == null) {
-                quizData.associatedCanonical = `/article/${quizData.associatedCanonical}`
+            if(article !== null) {
+                quizData.associatedCanonical = `/series/${article.series}`
             }
             else {
                 quizData.associatedCanonical = '/';
             }
-            
             req.output = await createPage('quiz.page.html', {
                 ...quizData,
                 totalQuestions : quizData.questions.length,

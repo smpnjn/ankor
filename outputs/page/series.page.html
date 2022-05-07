@@ -15,9 +15,10 @@
         <div class="bar">
             <h2>Series Progress</h2>
         </div>
-        <div class="fl">
+        <div class="fl series-progress">
+            <p>This is how long this series will take to complete.</p>
             <div id="series-meta" class="fl">
-                <!--<div id="series-time">Est. Length: {{<span class="hours">{{hours}}</span> <span class="mins">{{mins}}</span></div>-->
+                <div id="series-time">Est. Length: <span class="hours">{{hours}}</span>hr <span class="mins">{{mins}}</span>min</div>
                 <div id="series-progress"><div id="series-progress-amount"><div id="series-completion-amount">0%</div></div></div>
             </div>
         </div>
@@ -26,6 +27,10 @@
                 <h2>Quiz Medals</h2>
             </div>
             <div id="medal-holder"></div>
+        </div>
+        <div id="more-series" class="fl">
+            <h2>More Like This</h2>
+            {{more}}
         </div>
     </div>
     <div id="series-content">
@@ -37,8 +42,8 @@
     #advert {
         margin-bottom: 2rem;
     }
-    #advert h2 {
-        margin-bottom: 1rem;
+    .series-progress p {
+        margin: 0.5rem 0 0 0;
     }
     #series-progress:after {
         content: '';
@@ -232,6 +237,61 @@
         float: left;
         width: auto;
         border-radius: 100px;
+    }
+
+    #more-series h2 {
+        margin: 0 0 1rem 0;
+    }
+    #more-series ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    #more-series li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+    }
+    #more-series a {
+        text-decoration: none;
+        padding: 0.5rem 0rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1rem;
+        border-radius: 0;
+        background: #0c0e10;
+        transition: all 0.08s ease-out;
+        border-radius: 100px;
+        padding: 0.5rem 1rem 0.5rem 0.5rem;
+        font-weight: 600;
+    }
+    #more-series span {
+        margin: 0 0.5rem 0 0;
+    }
+    #advert h2 {
+        margin-bottom: 1rem;
+    }
+    #more-series a:hover {
+        background: white;
+        color: #1500ff;
+    }
+    #more-series .icon {
+        background: white;
+        padding: 0;
+        border-radius: 100px;
+        width: 36px;
+        height: 32px;
+        display: block;
+        display: flex;
+        color: #1500ff;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #more-series .icon svg {
+        transform: scale(0.75);
+        padding: 0;
     }
     @media screen and (min-width: 1000px) {
         #series {

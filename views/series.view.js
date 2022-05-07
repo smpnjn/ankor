@@ -16,6 +16,27 @@ const seriesStructure = {
             </div>`
         }
         return html;
+    },
+    generateMore: async function(exclude, category) {
+        try {
+            let getSeries = await Series.aggregate([{
+                $sample: { size: 8 } 
+            }]);
+            let html = '<ul>';
+            if(getSeries.length > 0) {
+                for(let i = 0; i < getSeries.length; ++i) {
+                    html += `<li><a href="/series/${getSeries[i].canonicalName}"><span class="icon">${getSeries[i].icon}</span> ${getSeries[i].title}</a></li>`;
+                }
+            } else {
+                html += `<li>No Relevant Series to Display.</li>`;
+            }
+            html += '</ul>';
+
+            return html;
+
+        } catch(e) {
+            console.log(e);
+        }
     }
 }
 export { seriesStructure };
