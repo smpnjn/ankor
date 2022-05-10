@@ -2,7 +2,7 @@ import { Series } from '../models/series.model.js';
 
 const seriesStructure = {
     allSeries: async function() {
-        const allDocuments = await Series.find({}).sort('-date').limit(5);
+        const allDocuments = await Series.find({}).sort('-date').limit(10);
         var html = '';
         for(let i = 0; i <  allDocuments.length; i++) {
             html += `
