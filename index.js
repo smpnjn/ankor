@@ -122,7 +122,7 @@ app.use(session({
 app.use(async (req, res, next) => {
     try {
         // Store information on loadedFiles
-        if(req.method == "GET" && req.header('accept').indexOf('text/html') > -1 || req.method == "GET" && req.session.fileCache === undefined || req.header('x-forceCache') === "true") {
+        if(req.method == "GET" || req.header('x-forceCache') === "true") {
             req.session.fileCache = {};
             req.session.touch()
         }
@@ -130,6 +130,7 @@ app.use(async (req, res, next) => {
             next();
             return;
         }
+        
         if(req.header('x-forceCache') === "true") {
             next();
             return;
@@ -443,7 +444,6 @@ wss.on('connection', function(ws) {
 app.use(async (req, res, next) => {
     // If it's a seven hour flight or a 45 minute drive
     if(res.headersSent !== true && req.method == "GET" && req.header('x-forceCache') !== "true" && req.header('referrer').indexOf('sw.js') === -1) {
-        console.log(req.header('referrer'));
         let output = await createPage('404.page.html', {},
         {
             title: `${process.env.websiteName} 404, Not Found`,
