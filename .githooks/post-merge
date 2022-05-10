@@ -15,13 +15,12 @@ for f in $(find . -name '*.png' -or -name '*.jpg' -or -name '*.jpeg'); do
         cwebp -q 60 $f -o ${f%.*}.webp
     fi
 done
-
+echo 'Shutting down the server..'
+pm2 delete 'all'
 echo 'Compressing CSS and HTML..'
 for f in $(find ./outputs -iname '*.html' ! -iname 'footer.generic.html' ! -iname './documents/*.html' ! -iname './documents/*.md' -type f); do
     html-minifier-terser -o $f --remove-comments --minify-js true $f
 done
-echo 'Shutting down the server..'
-pm2 delete 'all'
 echo 'Starting server..'
 set NODE_ENV=production && pm2 start index.js
 pm2 start ./daemons/subscription.daemons.js
