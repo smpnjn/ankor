@@ -2,7 +2,7 @@
     <a href="/article/{{canonicalName}}">
         <span class="icon">{{icon}}</span>
         <span class="title">{{title}}</span>
-        <span class="text">{{description}}</span>
+        <span class="text"><span class="info"></span><span class="inner-text">{{description}}</span></span>
         <span class="complete"></span>
     </a>
     {{component-quiz}}
@@ -25,6 +25,10 @@
 .item:last-of-type a {
     border-bottom: none;
 }
+
+.inner-text {
+    margin: 0 0 0 0.5rem;
+}
 .item {
     display: flex;
     flex-direction: column;
@@ -33,16 +37,16 @@
     position: absolute;
     top: 0;
     height: 100%;
-    font-size: 1.5rem;
+    font-size: 2rem;
     z-index: 9999;
-    display: flex;
     box-sizing: border-box;
-    align-items: center;
     line-height: 100%;
-    color: white;
-    background: linear-gradient(45deg, #0547ff, #8500ff);
-    padding: 2rem 1.5rem;
-    background: transparent;
+    color: #fff;
+    padding: 1.5rem 0;
+    background: 0 0;
+    width: 4.5rem;
+    display: block;
+    text-align: center;
 }
 
 .item span {display: flex;align-items: center;}
@@ -62,7 +66,9 @@
     left: 5rem;
     padding: 0 0 1.25rem 0;
     padding-bottom: 0;
-    color: #d8dbeaad;
+    font-weight: 500;
+    color: #d8dbea6b;
+    margin: 0.25rem 0 0 0;
     float: left;
     line-height: 1.5rem;
     font-size: 1rem;

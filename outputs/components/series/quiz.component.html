@@ -26,14 +26,14 @@
 .quiz a {
     padding: 1rem;
     display: block;
-    width: calc(100% - 2rem);
+    width: 100%;
     box-sizing: border-box;
     position: relative;
     text-align: left;
     font-size: 1.25rem;
     color: white;
     background: #242c3a;
-    padding: 1.75rem 1rem 1rem 1rem;
+    padding: 1.5rem 1rem 1rem 1rem;
     text-decoration: none;
     font-weight: 600;
     border-radius: 10px;
@@ -80,10 +80,10 @@
 @media screen and (min-width: 1000px) {
     .quiz a {
         margin: 0;
-        width: 100%;
+        width: calc(100% - 1rem);
+        margin-left: 1rem !important;
         border-radius: 0;
         background: transparent;
-        border-left: 1px solid #2a3242;
     }
 }
 </style>

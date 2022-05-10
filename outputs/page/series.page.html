@@ -2,38 +2,40 @@
 {{banner}}
 <div id="series">
     <div id="series-information">
+        <div id="advert">
+            <h2>Sponsor</h2>
+            {{advert}}
+        </div>
+        <div id="series-info-meta">
+            <h2>Series Progress</h2>
+            <div class="fl series-progress">
+                <p>This is how long this series will take to complete.</p>
+                <div id="series-meta" class="fl">
+                    <div id="series-time">Est. Length: <span class="hours">{{hours}}</span>hr <span class="mins">{{mins}}</span>min</div>
+                    <div id="series-progress"><div id="series-progress-amount"><div id="series-completion-amount">0%</div></div></div>
+                </div>
+            </div>
+            <h2>Quiz Medals</h2>
+            <p>When you finish quizzes, your medals will show here.</p>
+            <div id="achievements">
+                <div id="achievements-info">
+                    <span class="current">0</span> / <span class="total">0</span> Medals Complete
+                </div>
+                <div id="medal-holder"></div>
+            </div>
+            <div id="more-series" class="fl">
+                <h2>More Like This</h2>
+                {{more}}
+            </div>
+        </div>
+    </div>
+    <div id="series-content">
         <div id="top-section">
             <div id="guide-info">
                 <h1>{{title}}</h1>
                 <p>{{description}}</p>
             </div>
         </div>
-        <div id="advert">
-            <h2>Sponsor</h2>
-            {{advert}}
-        </div>
-        <div class="bar">
-            <h2>Series Progress</h2>
-        </div>
-        <div class="fl series-progress">
-            <p>This is how long this series will take to complete.</p>
-            <div id="series-meta" class="fl">
-                <div id="series-time">Est. Length: <span class="hours">{{hours}}</span>hr <span class="mins">{{mins}}</span>min</div>
-                <div id="series-progress"><div id="series-progress-amount"><div id="series-completion-amount">0%</div></div></div>
-            </div>
-        </div>
-        <div id="achievements">
-            <div id="achievements-info">
-                <h2>Quiz Medals</h2>
-            </div>
-            <div id="medal-holder"></div>
-        </div>
-        <div id="more-series" class="fl">
-            <h2>More Like This</h2>
-            {{more}}
-        </div>
-    </div>
-    <div id="series-content">
         {{seriesSections+}}
     </div>
 </div>
@@ -53,6 +55,13 @@
         position: absolute;
         background: #4e535cb0;
     }
+    #guide-info p {
+        background: #151b24;
+        padding: 1rem 1.5rem;
+        border-radius: 0 14px 14px 0;
+        line-height: 1.8;
+        border-left: 5px solid #74fa5f;
+    }
     #series-completion-amount {
         margin-right: 0;
         order: 3;
@@ -64,6 +73,7 @@
         right: 7px;
         opacity: 0.9;
         color: white;
+        text-shadow: 0 1px 0 #00000038;
         z-index: 9999;
     }
     #series-progress:before {
@@ -82,7 +92,7 @@
         max-width: 100%;
         left: 0;
         height: calc(100% - 8px);
-        background-image: linear-gradient(45deg, #951dfb, #0072ff);
+        background-image: linear-gradient(45deg,#6dfd56,#0262ff);
         min-width: 51px;
         border-radius: 100px;
         height: 100%;
@@ -99,24 +109,30 @@
     #series-time, #achievements h2 {
         margin: 0 1rem 0 0;
     }
-    #series-meta {
+    #series-meta, #achievements-info {
         position: relative;
         padding: 1rem 1rem;
         font-size: 1rem;
         font-weight: 600;
-        background: #27324c61;
-        margin: 1rem 0 2rem 0;
+        background: #151b24;
+        margin: 0 0 2rem 0;
         box-sizing: border-box;
         width: 100%;
         align-items: center;
-        border-radius: 10px;
+        border-radius: 14px;
+    }
+    #achievements-info {
+        padding: 0;
+        margin: 0;
     }
     #achievements h2 {
         font-weight: 600;
         font-size: 1rem;
         line-height: 2rem;
-        font-weight: normal;
         text-transform: initial;
+    }
+    #series-info-meta {
+        display: none;
     }
     #achievements-info {
         width: 100%;
@@ -129,7 +145,7 @@
         margin-top: 1rem;
     }
     #guide-info h1 {
-        font-weight: 600;
+        font-weight: 800;
     }
     #medal-holder .medal svg {
         fill: #2b303b;
@@ -188,8 +204,8 @@
         width: 100%;
         box-sizing: border-box;
         align-self: flex-start;
-        background: #27324c61;
-        border-radius: 10px;
+        background: #151b24;
+        border-radius: 14px;
         margin: 0 0 2rem 0;
         padding: 1rem;
     }
@@ -201,10 +217,16 @@
         font-size: 1.25rem;
     }
 
+    #series .bar h2 {
+
+    }
     #series-content a {
         min-height: 80px;
         text-decoration: none;
-        border-bottom: 1px solid #2a3242;
+        border-bottom: none;
+        background: #151b24;
+        border-radius: 14px;
+        margin: 0 0 1rem 0;
     }
 
     #series-content .item:last-of-type a {
@@ -216,14 +238,10 @@
         width: 100%;
     }
     #series-information p {
+        margin: 0.25rem 0 1rem 0;
         font-size: 1.125rem;
-        line-height: 2.2rem;
+        line-height: 1.5;
     }
-
-    #guide-info {
-        border-bottom: 1px solid #232833;
-        margin: 0 0 2rem 0;
-        }
     #series {
         width: 100%;
         max-width: 1300px;
@@ -249,21 +267,23 @@
     }
     #more-series li {
         padding: 0.5rem 0;
-        display: flex;
+        display: inline-flex;
         align-items: center;
+        margin: 0 1rem 0 0;
     }
     #more-series a {
         text-decoration: none;
-        padding: 0.5rem 0rem;
+        padding: 0.5rem 0;
         display: flex;
         align-items: center;
         justify-content: center;
         line-height: 1rem;
+        font-size: 0.9rem;
         border-radius: 0;
-        background: #0c0e10;
-        transition: all 0.08s ease-out;
-        border-radius: 100px;
-        padding: 0.5rem 1rem 0.5rem 0.5rem;
+        background: #151b24;
+        transition: all 80ms ease-out;
+        border-radius: 14px;
+        padding: 0 1rem 0 0;
         font-weight: 600;
     }
     #more-series span {
@@ -274,23 +294,24 @@
     }
     #more-series a:hover {
         background: white;
-        color: #1500ff;
+        color: black;
     }
     #more-series .icon {
-        background: white;
+        background: #fff;
         padding: 0;
-        border-radius: 100px;
-        width: 36px;
+        border-radius: 14px 0 0 14px;
+        width: 32px;
+        padding: 0.25rem;
         height: 32px;
         display: block;
         display: flex;
-        color: #1500ff;
+        color: #000000b5;
         align-items: center;
         justify-content: center;
     }
 
     #more-series .icon svg {
-        transform: scale(0.75);
+        width: 18px;
         padding: 0;
     }
     @media screen and (min-width: 1000px) {
@@ -304,6 +325,9 @@
             margin: 0 0 0 2rem;
             width: 66.6%;
         }
+        #series-info-meta {
+            display: block;
+        }
     }
 </style>
 <style async>
@@ -313,6 +337,7 @@
 </style>
 <script defer type="text/javascript">
 if(document.querySelectorAll('.item .quiz').length > 0) {
+    let current = 0;
     Object.keys({ ...localStorage }).forEach(function(i) {
         if(i.split('/quiz').length > 1) {
             let el = document.querySelector(`a[href="${i}"]`);
@@ -324,10 +349,13 @@ if(document.querySelectorAll('.item .quiz').length > 0) {
                 let theScore = Math.ceil(total * score);
                 if(score >= 1) {
                     medal = '🎖'
+                    ++current;
                 } else if(score >= 0.7) {
                     medal = '🥈'
+                    ++current;
                 } else if(score >= 0.4) {
-                    medal = '🥉';                                    
+                    medal = '🥉';          
+                    ++current;                          
                 }
                 el.setAttribute('data-medal', medal);
                 el.querySelector('.number').innerHTML = theScore;
@@ -337,6 +365,12 @@ if(document.querySelectorAll('.item .quiz').length > 0) {
             }
         }
     })
+
+    if(document.querySelectorAll('.item .quiz').length > 0) {
+        let total = document.querySelectorAll('.item .quiz').length;
+        document.querySelector('#achievements-info .total').innerHTML = total;
+        document.querySelector('#achievements-info .current').innerHTML = current;
+    }
     document.querySelectorAll('.item .quiz').forEach(function(item) {
         let medal = item.querySelector('.medal-outcome').innerHTML;
         let newEl = document.createElement('div');
