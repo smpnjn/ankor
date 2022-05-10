@@ -56,7 +56,6 @@ if(document.querySelector('.copy') !== null) {
         item.addEventListener('click', function(e) {
             const codeContent = item.parentNode.parentNode.querySelector('code').textContent;
             navigator.clipboard.writeText(codeContent);
-            this.textContent = 'Copied!';
             this.classList.add('active');
         });
     });

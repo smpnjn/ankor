@@ -226,7 +226,7 @@ const articleStructure = {
                     try {
                         // Code Options Menu
                         const newEl = dom.window.document.createElement('div');
-                        newEl.innerHTML = `${language} <span class="copy">Copy</span>`;
+                        newEl.innerHTML = `<span class="copy"></span>`;
                         newEl.classList.add('code-options');
                         
                         item.classList.add(`language-${item.getAttribute('class')}`);

@@ -9,74 +9,75 @@ a:hover {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: #5b858b;
-}
-.token.punctuation {
-	color: #f8f8f2;
+	color: #4a5f78;
 }
 
-.namespace {
+.token.punctuation {
+	color: #4a5f78;
+}
+
+.token.namespace {
 	opacity: .7;
 }
 
-.token.property,
 .token.tag,
-.token.symbol,
-.token.deleted {
-	color: #d67e5c;
-}
-
-.token.boolean,
-.token.number {
-	color: #b9b0ff;
-	font-weight: bold;
-}
-
-.token.selector,
-.token.attr-name,
-.token.char,
-.token.builtin,
-.token.inserted {
-	color: #f2ff64;
-}
-
-.token.attr-name, 
-.token.constant {
-    color: #d5971a;
-}
-
-.token.string {
-    color: #16b673;
-}
-
 .token.operator,
+.token.number {
+	color: #0aa370;
+}
+
+.token.property,
+.token.function {
+	color: #57718e;
+}
+
+.token.tag-id,
+.token.selector,
+.token.atrule-id {
+	color: #ebf4ff;
+}
+
+code.language-javascript,
+.token.attr-name {
+	color: #7eb6f6;
+}
+
+code.language-css,
+code.language-scss,
+.token.boolean,
+.token.string,
 .token.entity,
 .token.url,
 .language-css .token.string,
-.style .token.string {
-	color: #d67e5c;
-}
-
-.token.variable {
-    color: #e4b781;
-}
-
-.token.operator,
-.token.keyword {
-    color: #df769b;
-}
-
-.token.atrule,
+.language-scss .token.string,
+.style .token.string,
 .token.attr-value,
-.token.function,
-.token.class-name {
-	color: #16a3b6;
-	font-style: italic;
+.token.keyword,
+.token.control,
+.token.directive,
+.token.unit,
+.token.statement,
+.token.regex,
+.token.atrule {
+	color: #47ebb4;
 }
 
-.token.regex,
-.token.important {
-	color: #ffb86c;
+.token.placeholder,
+.token.variable {
+	color: #47ebb4;
+}
+
+.token.deleted {
+	text-decoration: line-through;
+}
+
+.token.inserted {
+	border-bottom: 1px dotted #ebf4ff;
+	text-decoration: none;
+}
+
+.token.italic {
+	font-style: italic;
 }
 
 .token.important,
@@ -84,16 +85,30 @@ a:hover {
 	font-weight: bold;
 }
 
-.token.italic {
-	font-style: italic;
+.token.important {
+	color: #7eb6f6;
 }
 
 .token.entity {
 	cursor: help;
 }
 
-.token.unit {
-    color: #ff79c6;
+pre > code.highlight {
+	outline: .4em solid #34659d;
+	outline-offset: .4em;
+}
+
+.line-numbers.line-numbers .line-numbers-rows {
+	border-right-color: #1f2932;
+}
+
+.line-numbers .line-numbers-rows > span:before {
+	color: #2c3847;
+}
+.line-highlight.line-highlight {
+	background: rgba(10, 163, 112, 0.2);
+	background: -webkit-linear-gradient(left, rgba(10, 163, 112, 0.2) 70%, rgba(10, 163, 112, 0));
+	background: linear-gradient(to right, rgba(10, 163, 112, 0.2) 70%, rgba(10, 163, 112, 0));
 }
 
 #pagination .no-results {
@@ -119,10 +134,6 @@ a:hover {
 #content-text a:hover {
     opacity: 0.5;
     border-bottom: none;
-}
-#content-text h2 .header-navigation:hover {
-    background: #1f2634;
-    border: 1px solid #1f2634;
 }
 #sidebar #subscribe input[type="email"]:focus {
     width: calc(100% + 2rem);

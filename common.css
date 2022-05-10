@@ -19,6 +19,9 @@ h1, h2 {
     font-weight: 600;
     line-height: 2rem;
 }
+#header-container h1 {
+    font-weight: 800;
+}
 h1 a, h2 a {
     color: white;
     text-decoration: none;
@@ -53,15 +56,15 @@ p {
     border-bottom: none;
 }
 #content-text h2 .header-navigation {
-    color: rgba(255,255,255,0.8);
+    color: rgb(255 255 255);
     font-weight: 600;
     font-size: 1.25rem;
-    transition: all 0.1s ease-out;
-    border: 1px solid #232a38;
+    transition: all .1s ease-out;
     text-decoration: none;
-    padding: 0rem 1rem;
+    padding: 0 1rem;
     height: 2rem;
-    margin: 0 1rem 0 0;
+    background: #151b24;
+    margin: 0 0 0 1rem;
     align-items: center;
     display: flex;
     line-height: 2rem;
@@ -217,7 +220,7 @@ canvas:not(.inline-canvas) {
     font-size: 1rem;
     line-height: 1.5rem;
     position: relative;
-    border-radius: 13px;
+    border-radius: 100px;
     cursor: pointer;
     font-weight: 600;
 }
@@ -254,30 +257,28 @@ pre {
     display: inline-block;
     max-width: 100%;
     overflow: auto;
-    font-family: Menlo, Monaco, 'Courier New', monospace;
+    font-family: Monaco, Menlo, 'Courier New', monospace;
     max-width: 100%;
     width: 100%;
 }
 
 pre code, .plain-code {
-    font-family: Menlo, Monaco, 'Courier New', monospace;
-    border-radius: 10px;
+    font-family: Monaco, Menlo, 'Courier New', monospace;
     left: 5px;
     margin-top: 0rem;
     overflow: auto;
     box-sizing: border-box;
-    padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+    padding: 1rem;
     display: block;
     max-height: 500px;
     line-height: 1.45rem;
-    border-radius: 9px;
+    border-radius: 14px;
     min-height: 111px;
     width: 100%;
     float: left;
-    background: #101316;
+    background: #151b24;
     font-size: .9rem;
     max-width: 100%;
-    border: 1px solid #2a3141;
 }
 
 .plain-code {
@@ -290,10 +291,8 @@ pre code, .plain-code {
     display: inline-block;
     padding: 0 0 0 0.5rem;
     margin: 0 1rem 0 0;
-    padding: 0.15rem 1rem 0.15rem 0;
-    color: #ffffff70;
-    border-right: 1px solid #293141;
-    text-align: right;
+    color: #ffffff42;
+    text-align: left;
 }
 .fl {
     float: left;
@@ -353,7 +352,7 @@ p > code, strong > code, li > code, td > code, .option > code, h3 > code {
     font-size: 0.95rem;
     box-shadow: 0 2px 15px rgb(0 0 0 / 5%);
     color: #fff;
-    font-family: Menlo,Monaco,Courier New,monospace;
+    font-family: Monaco, Menlo, Courier New, monospace;
     font-weight: 400;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -368,23 +367,23 @@ p > code {
     border-bottom: none;
     border-radius: 8px;
     padding: 0.5rem 1rem;
-    background: #5b657985;
+    background: #1e2632;
     height: auto;
     font-size: 0.9rem;
     right: 1.25rem;
     bottom: 1.25rem;
+    width: 1.35rem;
+    height: 1.75rem;
 }
 .code-options .copy {
     font-weight: 400;
     color: white;
     opacity: 0.8;
-    margin: 0 0 0 0.5rem;
+    margin: 0;
     cursor: pointer;
 }
 .copy.active {
-    color: #ffb233;
     opacity: 1;
-    font-weight: 600;
 }
 /* Carbon Ads */
 #carbonads {
@@ -408,7 +407,7 @@ p > code {
 #carbonads .carbon-wrap {
     display: flex;
     background: #151b24;
-    border-radius: 8px;
+    border-radius: 14px;
 }
 
 #carbonads .carbon-text,
