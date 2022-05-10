@@ -122,7 +122,7 @@ app.use(session({
 app.use(async (req, res, next) => {
     try {
         // Store information on loadedFiles
-        if(req.method == "GET" && req.header('accept').indexOf('text/html') > -1 || req.method == "GET" && app.locals.fileCache === undefined || req.header('x-forceCache') === "true") {
+        if(req.method == "GET" && req.header('accept').indexOf('text/html') > -1 || req.method == "GET" && req.session.fileCache === undefined || req.header('x-forceCache') === "true") {
             req.session.fileCache = {};
             req.session.touch()
         }
