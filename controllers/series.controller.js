@@ -61,6 +61,7 @@ seriesRouter.get([ '/course/:guideName', '/series/:guideName' ], async function(
                 mins = 0;
                 hours += 1;
             }
+            
             req.output = await createPage('series.page.html', {
                 ...seriesData,
                 hours: `${hours}`,

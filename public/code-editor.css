@@ -134,6 +134,7 @@ h3 {
         border-bottom: none;
         border-right: 1px solid rgb(49 54 60);
         margin: 0;
+        max-height: 100%;
     }
     #tryit {
         top: auto;
