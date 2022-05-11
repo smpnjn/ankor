@@ -173,7 +173,7 @@ articleApi.post('/article', jsonParser, async function(req, res) {
                     const getAuthor = Author.findOne({ "name" : `${req.body.author}` });
                     if(getAuthor !== null) {
                         if(req.body.series !== "none" && req.body.series !== false) {
-                            const getSeries = Series.findOne({ "canonicalName" : req.body.series })
+                            const getSeries = Series.findOne({ "canonicalName" : `${req.body.series}` })
                             if(getSeries !== null) {
                                 let newSeriesItem = {
                                     title: `${req.body.customSeries?.title}` || `${req.body.titles[0].title}`,
@@ -217,7 +217,48 @@ articleApi.post('/article/update', jsonParser, async function(req, res) {
         if(req.body.canonicalName !== "undefined") {
             let findArticle = await Article.findOne({"canonicalName" : `${req.body.canonicalName}`});
             if(findArticle !== null) {
-                Article.findOneAndUpdate({ canonicalName: `${req.body.canonicalName}` }, req.body, { upsert: true }, function(err, doc) {
+                let updateArr = {};
+                const articleKeys = Object.keys(Article.schema.obj);
+                Object.keys(req.body).forEach(function(item) {
+                    try {
+                        if(articleKeys.indexOf(item) > -1) {
+                            // Valid key
+                            if(item === 'titles') {
+                                updateArr['titles'] = [];
+                                if(Array.isArray(req.body.titles)) {
+                                    req.body.titles.forEach(function(item) {
+                                        if(item.title !== undefined) {
+                                            updateArr['titles'].push({ "title" : `${item.title}` })
+                                        }
+                                    })
+                                }
+                            }
+                            else if(item == 'tags') {
+                                if(Array.isArray(req.body.tags)) {
+                                    updateArr['tags'] = [];
+                                    req.body.tags.forEach(function(item) {
+                                        updateArr['tags'].push(`${item}`);
+                                    });
+                                }
+                            }  
+                            else if(item === 'date') {
+                                updateArr['date'] = parseInt(req.body.date);
+                            }
+                            else if(item == 'customSeries') {
+                                updateArr['customSeries'] = {};
+                                updateArra['customSeries'].icon = `${req.body.customSeries?.icon}`
+                                updateArra['customSeries'].subArea = `${req.body.customSeries?.subArea}`
+                            }
+                            else {
+                                updateArr[item] = `${req.body[item]}`
+                            }
+                        }
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                });
+                Article.findOneAndUpdate({ canonicalName: `${req.body.canonicalName}` }, updateArr, { upsert: true }, function(err, doc) {
                     if(err) return res.status(500).send({ "error" : err });
                     else {
                         res.status(200).send({ "message" : `Article ${req.body.canonicalName} has been updated`});

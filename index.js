@@ -395,7 +395,7 @@ wss.on('connection', function(ws) {
                 });
             }
             if(data.getAnswer == true && typeof data.question == 'number' && (typeof data.answer == 'number' || typeof data.answer == 'object')) {
-                Quiz.find({ 'canonicalName' : data.canonicalName }, async function(err, document) {  
+                Quiz.find({ 'canonicalName' : `${data.canonicalName}` }, async function(err, document) {  
                     try {
                         if(document.length !== 0) {
                             let getQuestion = document[0].questions[data.question];
@@ -417,7 +417,7 @@ wss.on('connection', function(ws) {
                 });
             }
             if(data.quizAnswer == true && typeof data.quizResponse == 'string') {
-                Quiz.find({ 'canonicalName' : data.canonicalName }, async function(err, document) {  
+                Quiz.find({ 'canonicalName' : `${data.canonicalName}` }, async function(err, document) {  
                     if(document.length !== 0) {
                         let getQuestion = document[0].questions[data.questionId];
                     } else {

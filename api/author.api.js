@@ -44,12 +44,12 @@ authorApi.post('/author', jsonParser, async function(req, res) {
 authorApi.post('/author/delete', jsonParser, async (req, res) => {
     try {
         if(typeof req.body.name !== "undefined") {
-            let findUser = await User.findOne({"name" : req.body.name});
+            let findUser = await User.findOne({"name" : `${req.body.name}`});
             if(findUser == null) {
                 return res.status(400).send({ "message" : "A user with that name doesn't exist!" })
             }
             else {
-                await User.deleteOne({ "name" : req.body.name });
+                await User.deleteOne({ "name" : `${req.body.name}` });
                 return res.status(400).send({ "message" : "User deleted." })
             }
         }

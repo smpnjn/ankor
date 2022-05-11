@@ -30,6 +30,13 @@ const articleStructure = {
         // Get it's category
         let category = await Category.findOne({ title: indexedArticle.category });
 
+        if(category === null) {
+            category = {
+                displayTitle: "Uncategorized",
+                title: "uncategorized",
+                color: [ "#999", "#999" ]
+            }
+        }
         promotionalSource = promotionalSource || ''
         
         // Return standard attributes for an archive story

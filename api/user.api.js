@@ -64,7 +64,7 @@ userApi.post('/user', jsonParser, async function(req, res) {
                 });
             }
 
-            const getRole = await Role.findOne({ role: req.body.role });
+            const getRole = await Role.findOne({ role: `${req.body.role}` });
             if(getRole === null) {
                 return res.status(400).send({ "error" : "Role does not exist" });
             }

@@ -13,7 +13,7 @@ accessApi.post('/access', jsonParser, async function(req, res) {
     try {
         const requiredKeys = Object.keys(Access.schema.obj);
         if(requiredKeys.every(key => requiredKeys.includes(key))) {
-            let findApi = await Access.findOne({ api: req.body.api });
+            let findApi = await Access.findOne({ api: `${req.body.api}` });
             if(findApi !== null) {
                 Access.findOneAndUpdate({ api: `${req.body.api}` }, { accessLevel: `${req.body.accessLevel}` }, { upsert: true }, function(err, doc) {
                     if(err) return false;

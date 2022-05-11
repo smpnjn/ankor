@@ -72,8 +72,8 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
                 let item = Object.keys(req.body.seriesItems)[k];
                 if(Array.isArray(req.body.seriesItems[`${item}`])) {
                     for(let j in req.body.seriesItems[`${item}`]) { 
-                        let arrItem = req.body.seriesItems[`${item}`][j];
-                        let findArticle = await Article.findOne({ canonicalName: arrItem });
+                        let seriesCanonicalName = req.body.seriesItems[`${item}`][j];
+                        let findArticle = await Article.findOne({ canonicalName: `${seriesCanonicalName}` });
                         if(findArticle !== null) {
                             newSeries.push({
                                 title: `${findArticle.titles[0].title}`,
@@ -82,10 +82,10 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
                                 description: `${findArticle.shortDescription}`,
                                 canonicalName: arrItem
                             });
-                            await Article.findOneAndUpdate({ canonicalName: arrItem }, { series: `${req.body.canonicalName}` }, { upsert: true })
+                            await Article.findOneAndUpdate({ canonicalName: `${seriesCanonicalName}` }, { series: `${req.body.canonicalName}` }, { upsert: true })
                         }
                         else {
-                            missingSeries.push(arrItem)
+                            missingSeries.push(`${seriesCanonicalName}`)
                         }
                     }
                 }
@@ -114,7 +114,7 @@ seriesApi.post('/series/delete/', async (req, res) => {
     try {
         if(req.body.canonicalName !== "undefined") {
             try {
-                Series.findOneAndDelete({ canonicalName: req.body.canonicalName }, function(err, doc) {
+                Series.findOneAndDelete({ canonicalName: `${req.body.canonicalName}` }, function(err, doc) {
                     if (err) return res.send(500, { "error": err });
                     return res.status(200).send({ "message" : "Object Deleted" })
                 });
