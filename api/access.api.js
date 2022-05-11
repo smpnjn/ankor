@@ -15,7 +15,7 @@ accessApi.post('/access', jsonParser, async function(req, res) {
         if(requiredKeys.every(key => requiredKeys.includes(key))) {
             let findApi = await Access.findOne({ api: req.body.api });
             if(findApi !== null) {
-                Access.findOneAndUpdate({ api: req.body.api }, { accessLevel: req.body.accessLevel }, { upsert: true }, function(err, doc) {
+                Access.findOneAndUpdate({ api: `${req.body.api}` }, { accessLevel: `${req.body.accessLevel}` }, { upsert: true }, function(err, doc) {
                     if(err) return false;
                     res.status(200).send({ "message" : "API Access Level Updated!" })
                 });
