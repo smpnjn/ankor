@@ -163,26 +163,26 @@ articleApi.post('/article', jsonParser, async function(req, res) {
         const requiredKeys = Object.keys(Article.schema.obj);
         
         if(requiredKeys.every(key => Object.keys(req.body).includes(key))) {
-            const checkForArticle = await Article.find({ canonicalName: req.body.canonicalName });
+            const checkForArticle = await Article.find({ canonicalName: `${req.body.canonicalName}` });
             if(checkForArticle.length > 0) {
                 return res.status(200).send({ message: 'An article with that canonicalName already exists! We did not create a new article.'});
             }
             else {
-                const category = await Category.findOne({ title: req.body.category });
+                const category = await Category.findOne({ title: `${req.body.category}` });
                 if(category !== null) {
-                    const getAuthor = Author.findOne({ "name" : req.body.author });
+                    const getAuthor = Author.findOne({ "name" : `${req.body.author}` });
                     if(getAuthor !== null) {
                         if(req.body.series !== "none" && req.body.series !== false) {
                             const getSeries = Series.findOne({ "canonicalName" : req.body.series })
                             if(getSeries !== null) {
                                 let newSeriesItem = {
-                                    title: req.body.customSeries?.title || req.body.titles[0].title,
-                                    icon: req.body.icon,
-                                    subArea: req.body.customSeries?.subArea || "Content",
-                                    description: req.body.shortDescription,
-                                    canonicalName: req.body.canonicalName
+                                    title: `${req.body.customSeries?.title}` || `${req.body.titles[0].title}`,
+                                    icon: `${req.body.icon}`,
+                                    subArea: `${req.body.customSeries?.subArea}` || "Content",
+                                    description: `${req.body.shortDescription}`,
+                                    canonicalName: `${req.body.canonicalName}`
                                 }
-                                Series.findOneAndUpdate({ canonicalName: req.body.series }, { $push: { seriesItems: newSeriesItem }}, { upsert: true }, function(err, doc) {
+                                Series.findOneAndUpdate({ canonicalName: `${req.body.series}` }, { $push: { seriesItems: newSeriesItem }}, { upsert: true }, function(err, doc) {
                                     if(err) return false;
                                 });
                             }
@@ -190,7 +190,7 @@ articleApi.post('/article', jsonParser, async function(req, res) {
                         const newArticle = new Article(req.body);
                         newArticle.save(async function (err) {
                             if (err) return res.status(400).send(err);
-                            let makeImage = await generateMainImage(req.body.canonicalName, category.color, req.body.titles[0].title, category.title, req.body.icon, "2");
+                            let makeImage = await generateMainImage(`${req.body.canonicalName}`, category.color, `${req.body.titles[0].title}`, category.title, `${req.body.icon}`, "2");
                             return res.status(200).send({ "message" : "Object saved", "imageStatus" : makeImage })
                         });
                     }
@@ -215,9 +215,9 @@ articleApi.post('/article', jsonParser, async function(req, res) {
 articleApi.post('/article/update', jsonParser, async function(req, res) {
     try {
         if(req.body.canonicalName !== "undefined") {
-            let findArticle = await Article.findOne({"canonicalName" : req.body.canonicalName});
+            let findArticle = await Article.findOne({"canonicalName" : `${req.body.canonicalName}`});
             if(findArticle !== null) {
-                Article.findOneAndUpdate({ canonicalName: req.body.canonicalName }, req.body, { upsert: true }, function(err, doc) {
+                Article.findOneAndUpdate({ canonicalName: `${req.body.canonicalName}` }, req.body, { upsert: true }, function(err, doc) {
                     if(err) return res.status(500).send({ "error" : err });
                     else {
                         res.status(200).send({ "message" : `Article ${req.body.canonicalName} has been updated`});
@@ -241,13 +241,13 @@ articleApi.post('/article/update', jsonParser, async function(req, res) {
 articleApi.post('/article/document/:draftName', htmlParser, async function(req, res) {
     try {
         if(typeof req.params.draftName !== "undefined") {  
-            let articleExists = await Article.findOne({ 'canonicalName' : req.params.draftName });
+            let articleExists = await Article.findOne({ 'canonicalName' : `${req.params.draftName}` });
             let updated = false;
             let moreMessage = '';
             if(articleExists !== null) {
                 try {
                     if(req.headers.keepOldDate == false || req.headers.keepOldDate == 'false') {
-                        await Article.findOneAndUpdate({ canonicalName: req.params.draftName }, { date: Date.now() }, { upsert: true }, function(err, doc) {
+                        await Article.findOneAndUpdate({ canonicalName: `${req.params.draftName}` }, { date: Date.now() }, { upsert: true }, function(err, doc) {
                             if (err) return res.send(500, { "error": err });
                             updated = true;
                         });
@@ -291,7 +291,7 @@ articleApi.post('/article/document/:draftName', htmlParser, async function(req, 
 articleApi.post('/article/delete/', jsonParser, async function(req, res) {
     if(typeof req.body.canonicalName !== "undefined") {
         try {
-            Article.findOneAndDelete({ canonicalName: req.body.canonicalName }, function(err, doc) {
+            Article.findOneAndDelete({ canonicalName: `${req.body.canonicalName}` }, function(err, doc) {
                 if (err) return res.send(500, { "error": err });
                 return res.status(200).send({ "message" : "Article Deleted" })
             });
