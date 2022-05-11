@@ -187,7 +187,7 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
                 title = article.titles[parseFloat(req.params.alias)].title;
             }
             // Generate article output
-            let htmlOutput = req.output = await createPage('article.page.html', {
+            req.output = await createPage('article.page.html', {
                 ...articleData,
                 more: await articleStructure.generateMore(article.canonicalName, article.category),
                 content : articleContent,
@@ -205,7 +205,7 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
                 classes: classes.join(' ')
             }, req);
             if(res.headersSent !== true) {
-                res.send(htmlOutput);
+                res.send(req.output);
             }
             next();
         });

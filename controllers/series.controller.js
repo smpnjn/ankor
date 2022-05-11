@@ -71,6 +71,7 @@ seriesRouter.get([ '/course/:guideName', '/series/:guideName' ], async function(
                 series: seriesData
             }, {
                 title: seriesData.title,
+                classes: "series",
                 description: seriesData.description,
                 canonical: `${process.env.rootUrl}/course/${seriesData.canonicalName}`,
             }, req);

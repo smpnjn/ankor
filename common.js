@@ -284,7 +284,7 @@ if(document.querySelector('#subscribe button') !== null || document.body.getAttr
     }
 }
 
-if(document.body.getAttribute('data-state') === 'learn') {
+if(document.body.classList.contains('series')) {
     document.querySelectorAll('.items .item').forEach(function(item) {
         Object.keys({ ...localStorage }).forEach(function(i) {
             if(i == item.querySelector('a').getAttribute('href')) {
