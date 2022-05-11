@@ -36,8 +36,8 @@ cacheApi.post('/cache', async (req, res, next) => {
                     }
                     
                     let checkUrl = url.parse(req.body.url);
-                    if(checkUrl.href === process.env.rootUrl) {
-                        let getHtml = await fetch(req.body.url, {
+                    if((checkUrl.protocol + '//' + checkUrl.host + '/') === process.env.rootUrl) {
+                        let getHtml = await fetch(process.env.rootUrl.slice(0, -1) + checkUrl.path, {
                             method: "GET",
                             headers: {
                                 "x-forceCache" : true
