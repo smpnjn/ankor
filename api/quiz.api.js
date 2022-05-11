@@ -32,12 +32,12 @@ quizApi.post('/quiz', jsonParser, async function(req, res) {
 quizApi.post('/quiz/delete', jsonParser, async (req, res) => {
     try {
         if(typeof req.body.canonicalName !== "undefined") {
-            let findQuiz = await Quiz.findOne({"canonicalName" : req.body.canonicalName});
+            let findQuiz = await Quiz.findOne({"canonicalName" : `${req.body.canonicalName}`});
             if(findQuiz == null) {
                 return res.status(400).send({ "message" : "A quiz with that canonicalName doesn't exist!" })
             }
             else {
-                await Quiz.deleteOne({ "canonicalName" : req.body.canonicalName });
+                await Quiz.deleteOne({ "canonicalName" : `${req.body.canonicalName}` });
                 return res.status(400).send({ "message" : "Quiz deleted." })
             }
         }

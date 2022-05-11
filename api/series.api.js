@@ -31,12 +31,12 @@ seriesApi.post('/series/add/:seriesName', jsonParser, async function(req, res) {
             }
         });
         
-        const findSeries = Series.findOne({ canonicalName: req.params.seriesName }, async function(err, series) {
+        const findSeries = Series.findOne({ canonicalName: `${req.params.seriesName}` }, async function(err, series) {
             if(findSeries !== null) {
                 let findSeriesItems = series.seriesItems;
                 findSeriesItems = [ ...findSeriesItems, ...succeededObjects ]
                 
-                Series.findOneAndUpdate({ canonicalName: req.params.seriesName }, { seriesItems: findSeriesItems }, { upsert: true }, function(err, doc) {
+                Series.findOneAndUpdate({ canonicalName: `${req.params.seriesName}` }, { seriesItems: findSeriesItems }, { upsert: true }, function(err, doc) {
                     if (err) {
                         return res.status(400).send({ "error" : err });
                     } else {
@@ -76,13 +76,13 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
                         let findArticle = await Article.findOne({ canonicalName: arrItem });
                         if(findArticle !== null) {
                             newSeries.push({
-                                title: findArticle.titles[0].title,
-                                icon: findArticle.icon || "",
-                                subArea: item || "Content",
-                                description: findArticle.shortDescription,
+                                title: `${findArticle.titles[0].title}`,
+                                icon: `${findArticle.icon}` || "",
+                                subArea: `${item}` || "Content",
+                                description: `${findArticle.shortDescription}`,
                                 canonicalName: arrItem
                             });
-                            await Article.findOneAndUpdate({ canonicalName: arrItem }, { series: req.body.canonicalName }, { upsert: true })
+                            await Article.findOneAndUpdate({ canonicalName: arrItem }, { series: `${req.body.canonicalName}` }, { upsert: true })
                         }
                         else {
                             missingSeries.push(arrItem)

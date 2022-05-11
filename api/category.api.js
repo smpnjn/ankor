@@ -35,12 +35,12 @@ categoryApi.post('/category', jsonParser, async function(req, res) {
 categoryApi.post('/category/delete', jsonParser, async (req, res) => {
     try {
         if(typeof req.body.title !== "undefined") {
-            let findCategory = await Category.findOne({"name" : req.body.title});
+            let findCategory = await Category.findOne({"name" : `${req.body.title}`});
             if(findCategory == null) {
                 return res.status(400).send({ "message" : "A category with that name doesn't exist!" })
             }
             else {
-                await Category.deleteOne({ "name" : req.body.title });
+                await Category.deleteOne({ "name" : `${req.body.title}` });
                 return res.status(400).send({ "message" : "Category deleted" })
             }
         }

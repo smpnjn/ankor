@@ -95,12 +95,12 @@ userApi.post('/user', jsonParser, async function(req, res) {
 userApi.post('/user/delete/', jsonParser, async (req, res) => {
     try {
         if(typeof req.body.username !== "undefined") {
-            let findUser = await User.findOne({ username: req.body.username });
+            let findUser = await User.findOne({ username: `${req.body.username}` });
             if(findUser == null) {
                 return res.status(200).send({ "message" : "No user with that username exists" })
             }
             try {
-                User.findOneAndDelete({ username: req.body.username }, function(err, doc) {
+                User.findOneAndDelete({ username: `${req.body.username}` }, function(err, doc) {
                     if (err) return res.send(500, { "error": err });
                     return res.status(200).send({ "message" : "User Deleted" })
                 });
@@ -123,7 +123,7 @@ userApi.post('/subscribe', jsonParser, async function(req, res) {
             const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return regex.test(email);
         }
-        let checkSubscription = await Subscription.find({ 'email' : req.body.email });
+        let checkSubscription = await Subscription.find({ 'email' : `${req.body.email}` });
         if(checkSubscription.length === 0) {
             if(validateEmail(req.body.email)) {
                 const newSubscription = new Subscription({

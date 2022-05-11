@@ -13,9 +13,9 @@ roleApi.post('/role', jsonParser, async function(req, res) {
     try {
         const requiredKeys = Object.keys(Role.schema.obj);
         if(requiredKeys.every(key => requiredKeys.includes(key))) {
-            let findRole = await Role.findOne({ role: req.body.role });
+            let findRole = await Role.findOne({ role: `${req.body.role}` });
             if(findRole !== null) {
-                Role.findOneAndUpdate({ role: req.body.role }, { importance: req.body.importance }, { upsert: true }, function(err, doc) {
+                Role.findOneAndUpdate({ role: `${req.body.role}` }, { importance: `${req.body.importance}` }, { upsert: true }, function(err, doc) {
                     if(err) return false;
                     res.status(200).send({ "message" : "Role updated!" })
                 });
@@ -44,7 +44,7 @@ roleApi.post('/role', jsonParser, async function(req, res) {
 roleApi.post('/role/delete', jsonParser, async function(req, res) {
     try {
         if(req.body.role !== undefined) {
-            Role.findOneAndDelete({ role: req.body.role }, function(err, doc) {
+            Role.findOneAndDelete({ role: `${req.body.role}` }, function(err, doc) {
                 if (err) return res.status(500).send({ "error": err });
                 return res.status(200).send({ "message" : "Role has been deleted" })
             });

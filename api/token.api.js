@@ -15,8 +15,8 @@ tokenApi.post('/token', jsonParser, async function(req, res) {
         // Generate a JWT
         let token = jwt.sign({ 
             data: {
-                username: req.headers.username,
-                apiKey: req.headers.apikey
+                username: `${req.headers.username}`,
+                apiKey: `${req.headers.apikey}`
             },
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
             issuer: `${process.env.rootUrl}`,
