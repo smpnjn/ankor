@@ -15,7 +15,7 @@
     tags                  : any associated tags for this article, outputed as a simple list of <a> elements to each tag.
 
 -->
-<article class="archive-article featured-post-article" data-url="/article/{{canonicalName}}">
+<article class="archive-article featured-post-article" data-url="{{qualifiedUrl}}">
     <div class="intro-image">
         <div class="archive-article-category">
             <a class="category" style="color: {{categoryColor}};" href="/category/{{categoryCanonicalName}}">{{categoryTitle}}</a>
@@ -23,9 +23,9 @@
         <a href="{{qualifiedUrl}}" aria-label="{{title}}"><img src="{{image}}" {{lazyLoading}} alt="{{title}}" onerror="this.style.display='none'" /></a>
     </div>
     <div class="archive-article-title">
-        <h2><a href="/article/{{canonicalName}}">{{title}}</a></h2>
+        <h2><a href="{{qualifiedUrl}}">{{title}}</a></h2>
         <div class="archive-article-description">
-            <a href="/article/{{canonicalName}}">{{description}}</a>
+            <a href="{{qualifiedUrl}}">{{description}}</a>
         </div>
         <div class="archive-article-tags">
             {{tags}}

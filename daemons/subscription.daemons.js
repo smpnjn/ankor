@@ -29,6 +29,7 @@ const mailer = async () => {
             host: process.env.contactHost,
             port: 465,
             debug: true,
+            pool: true,
             maxMessages: Infinity,
             secure: true,
             auth:{
@@ -50,6 +51,7 @@ const mailer = async () => {
                 'privacyPolicy' : `${process.env.rootUrl}/privacy` 
             });
             if(typeof item.email !== "undefined") {
+                console.log(item.email)
                 transporter.sendMail({
                     from   : `${process.env.websiteName} <${process.env.contactEmail}>`,
                     to     : item.email,
@@ -67,13 +69,15 @@ const mailer = async () => {
                 });
             }
         });
+        
+
     } catch(e) {
         console.log(e);
     }
 }
 
 if(process.env.subscriptionEnabled === "true" || process.env.subscriptionEnabled == true) {
-    schedule.scheduleJob('00 30 10 * * 1', async function() {
+    schedule.scheduleJob('*/10 * * * * *', async function() {
         try {
             mailer();
         } catch(e) {
