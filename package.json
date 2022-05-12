@@ -80,7 +80,7 @@
     "content-type": "^1.0.4",
     "continuation-local-storage": "^3.2.1",
     "cookie": "^0.4.0",
-    "cookie-parser": "^1.4.5",
+    "cookie-parser": "^1.4.6",
     "cookie-signature": "^1.0.6",
     "core-util-is": "^1.0.2",
     "cron": "^1.8.2",

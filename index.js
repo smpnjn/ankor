@@ -29,8 +29,7 @@ import rehypePrism from 'rehype-prism-plus'
 import nfs from 'fs'
 import rateLimit from 'express-rate-limit'
 import { JSDOM } from 'jsdom'
-import WebSocket from 'ws';
-import csrf from 'csurf'
+import WebSocket from 'ws'
 
 // *.controller.js
 import { articleRouter } from './controllers/article.controller.js';
@@ -115,6 +114,11 @@ app.use(session({
         return uuid() // use UUIDs for session IDs
     },
     resave: false,
+    cookie: {
+        domain: process.env.rootUrl,
+        secure: true,
+        sameSite: true
+    },
     saveUninitialized: false,
     secret: process.env.sessionSecret
 }))
@@ -469,7 +473,6 @@ app.use(async (req) => {
         await client.set(req.cacheTerm, req.output);
     }
 });
-app.use(csrf({ cookie: true }));
 
 // Hey.. Listen!
 server.listen(port);
