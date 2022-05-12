@@ -6,6 +6,7 @@ import { promises as fs } from 'fs'
 import nfs from 'fs'
 import canvas from '@napi-rs/canvas' // Don't upgrade this the new version is broken
 import cwebp from 'cwebp'
+import sanatizeFilename from 'sanitize-filename';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -132,7 +133,7 @@ const generateMainImage = async function(canonicalName, gradientColors, articleN
         try {
             const canvasData = await canvas.encode('png');
             // Save file
-            await fs.writeFile(path.join(__dirname, '../', `/public/images/intro-images/${canonicalName}.png`), canvasData);
+            await fs.writeFile(path.join(__dirname, '../', `/public/images/intro-images/${sanatizeFilename(canonicalName)}.png`), canvasData);
         }
         catch(e) {
             console.log(e);
@@ -299,9 +300,9 @@ articleApi.post('/article/document/:draftName', htmlParser, async function(req, 
                 }
             }
             
-            let writePath = path.join(__dirname, '../', `/documents/${req.params.draftName}.html`);
+            let writePath = path.join(__dirname, '../', `/documents/${sanatizeFilename(req.params.draftName)}.html`);
             if(req.headers.md == true || req.headers.md == 'true') {
-                writePath = path.join(__dirname, '../', `/documents/${req.params.draftName}.md`);
+                writePath = path.join(__dirname, '../', `/documents/${sanatizeFilename(req.params.draftName)}.md`);
             }
 
             nfs.writeFile(writePath, req.body, 'utf8', function(err) {

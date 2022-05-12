@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import CleanCSS from 'clean-css'
 import fs from 'fs'
 import jwt from 'jsonwebtoken'
+import sanatizeFilename from 'sanitize-filename';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -238,7 +239,7 @@ const createPage = async function(inputFile, ...args) {
                 //console.log(e);
             }
         }
-        let genericTemplates = await fsDirPromise(`./outputs/generic/`, true);
+        let genericTemplates = await fsDirPromise(`generic`, true);
         let filterGenerics = genericTemplates.filter(item => item.isFile());
         for(let key in filterGenerics) {
             let fileNamespace = filterGenerics[key].name.split('.generic')[0];
@@ -330,7 +331,7 @@ const fetchComponents = async (inputFile, data, req) => {
     }
     if(inputFile[0] !== undefined && inputFile[1] !== undefined) {
         try {
-            let directory = await fsDirPromise(`./outputs/components/${inputFile[0]}`, false);
+            let directory = await fsDirPromise(`${inputFile[0]}`, false);
             req.componentDirectory = inputFile[0];
             let additionalComponents = {};
             for(let file in directory) {
@@ -507,7 +508,7 @@ const fsPromise = (fileLocation) => {
 const fsDirPromise = (dirLocation, withFileTypes) => {
     return(new Promise((resolve, reject) => {
         try {
-            fs.readdir(dirLocation, { encoding: 'utf8', withFileTypes: withFileTypes }, function (err, data) {
+            fs.readdir('./outputs/' + sanatizeFilename(dirLocation), { encoding: 'utf8', withFileTypes: withFileTypes }, function (err, data) {
                 if(err) {
                     reject(err);
                 }

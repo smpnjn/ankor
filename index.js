@@ -193,7 +193,7 @@ app.use(async (req, res, next) => {
 });
 
 // Configure static pages
-let staticPages = await fsDirPromise('./outputs/page/', false);
+let staticPages = await fsDirPromise('page', false);
 let archivePages = [ "home", "category", "search", "article", "draft", "quiz", "404", "series" ]
 for(let key in staticPages) {
     if(archivePages.indexOf(staticPages[key].split('.')[0]) == -1) {

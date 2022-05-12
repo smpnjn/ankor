@@ -17,7 +17,7 @@ const createImage = async (req, res, location) => {
             let fileName = req.file.originalname;
             let buffer = req.file.buffer;
     
-            await fs.writeFile(`./public/images/${location}/${fileName}`, buffer);
+            await fs.writeFile(`./public/images/${sanatizeFilename(location)}/${sanatizeFilename(fileName)}`, buffer);
     
             if(req.file.mimetype !== 'image/webp') {
                 const encoder = new cwebp.CWebp(`./public/images/${location}/${fileName}`);
