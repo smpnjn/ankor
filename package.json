@@ -151,7 +151,7 @@
     "gauge": "^2.7.4",
     "get-uri": "^2.0.4",
     "getpass": "^0.1.7",
-    "glob": "^7.1.6",
+    "glob": "^8.0.1",
     "glob-parent": "^5.1.1",
     "good-listener": "^1.2.2",
     "googleapis": "^67.1.1",
