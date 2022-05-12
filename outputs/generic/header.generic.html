@@ -47,7 +47,8 @@
                             method: "POST",
                             body: JSON.stringify({url: `{{url}}`}),
                             headers: {
-                                'Content-Type': 'application/json'  
+                                'Content-Type': 'application/json', 
+                                'CSRF-Token' : {{csrfToken}}
                             },
                         });
                         response = await request.json();

@@ -30,6 +30,7 @@ import nfs from 'fs'
 import rateLimit from 'express-rate-limit'
 import { JSDOM } from 'jsdom'
 import WebSocket from 'ws'
+import csrf from 'csurf'
 
 // *.controller.js
 import { articleRouter } from './controllers/article.controller.js';
@@ -122,6 +123,8 @@ app.use(session({
     saveUninitialized: false,
     secret: process.env.sessionSecret
 }))
+
+app.use(csrf());
 
 app.use(async (req, res, next) => {
     try {
