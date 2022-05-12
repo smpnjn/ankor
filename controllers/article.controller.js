@@ -2,6 +2,7 @@
 import express from 'express'
 import { createPage, fsPromise } from '../util.js'
 import md from 'markdown-it'
+import sanatizeFilename from 'sanitize-filename';
 
 // create application/json parser
 let htmlParser = express.text({ type: 'text/html', limit: '50mb' });
@@ -48,14 +49,14 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
     try {          
         // This is for parsing the code editor to have lines and colors 
         // We check for an HTML document first..
-        const getFile = await fsPromise(`./documents/${req.params.articleName}.html`)
+        const getFile = await fsPromise(`./documents/${sanatizeFilename(req.params.articleName)}.html`)
         articleContent = await articleStructure.parseCode(getFile);
 
     }
     catch(e) {
         try {
             // If we don't find one, we look for a markdown document
-            let data = await fsPromise(`./documents/${req.params.articleName}.md`);
+            let data = await fsPromise(`./documents/${sanatizeFilename(req.params.articleName)}.md`);
             let markdownIt = blockAddonForMarkdown(md({
                 html:         true,
                 xhtmlOut:     false,
@@ -138,7 +139,7 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
     // Now that we've parsed code, we check if it's an article or a draft.
     // Articles are more complicated
     if(req.originalUrl.indexOf('/article/') > -1) {
-        Article.findOne({ 'canonicalName' : req.params.articleName }, async function(err, article) {
+        Article.findOne({ 'canonicalName' : `${req.params.articleName}` }, async function(err, article) {
             if(article == null) {
                 next();
                 return false;
@@ -147,7 +148,7 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
             let seriesData = {};
             let classes = [ 'article' ];   
             if(typeof article.series !== "undefined" && article.series !== null && article.series !== "none") {
-                let getSeries = await Series.findOne({ canonicalName: article.series }).lean();
+                let getSeries = await Series.findOne({ canonicalName: `${article.series}` }).lean();
                 seriesData = Object.assign({}, getSeries);
                 if(seriesData !== null) {
                     classes.push('series-item');
@@ -189,21 +190,22 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
             // Generate article output
             req.output = await createPage('article.page.html', {
                 ...articleData,
-                more: await articleStructure.generateMore(article.canonicalName, article.category),
+                more: await articleStructure.generateMore(`${article.canonicalName}`, `${article.category}`),
                 content : articleContent,
             },
             {
-                category: await Category.findOne({ title: article.category }).lean(),
-                author: await Author.findOne({ name: article.author }).lean(),
-                quiz: await Quiz.findOne({ associatedCanonical: article.canonicalName }).lean(),
+                category: await Category.findOne({ title: `${article.category}` }).lean(),
+                author: await Author.findOne({ name: `${article.author}` }).lean(),
+                quiz: await Quiz.findOne({ associatedCanonical: `${article.canonicalName}` }).lean(),
                 series: seriesData,
             },
             {
-                title: title,
-                description: articleData.description,
+                title: `${title}`,
+                description: `${articleData.description}`,
                 canonical: `${process.env.rootUrl}/article/${article.canonicalName}`,
                 classes: classes.join(' ')
             }, req);
+
             if(res.headersSent !== true) {
                 res.send(req.output);
             }
