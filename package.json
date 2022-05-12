@@ -87,6 +87,7 @@
     "csso": "^5.0.3",
     "cssom": "^0.4.4",
     "cssstyle": "^2.3.0",
+    "csurf": "^1.11.0",
     "cwebp": "^2.0.5",
     "dashdash": "^1.14.1",
     "data-uri-to-buffer": "^1.2.0",

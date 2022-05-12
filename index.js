@@ -30,7 +30,7 @@ import nfs from 'fs'
 import rateLimit from 'express-rate-limit'
 import { JSDOM } from 'jsdom'
 import WebSocket from 'ws';
-
+import csrf from 'csurf'
 
 // *.controller.js
 import { articleRouter } from './controllers/article.controller.js';
@@ -469,6 +469,7 @@ app.use(async (req) => {
         await client.set(req.cacheTerm, req.output);
     }
 });
+app.use(csrf({ cookie: true }));
 
 // Hey.. Listen!
 server.listen(port);
