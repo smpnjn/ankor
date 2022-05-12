@@ -125,7 +125,7 @@ const generateMainImage = async function(canonicalName, gradientColors, articleN
 
     }
 
-    if(nfs.existsSync(path.join(__dirname, '../', `/public/images/intro-images/${canonicalName}.png`))) {
+    if(nfs.existsSync(path.join(__dirname, '../', `/public/images/intro-images/${sanatizeFilename(canonicalName)}.png`))) {
         return 'Images Exist! We did not create any'
     } 
     else {
