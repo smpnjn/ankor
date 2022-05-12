@@ -124,7 +124,7 @@ app.use(session({
     secret: process.env.sessionSecret
 }))
 
-app.use(csrf());
+//app.use(csrf());
 
 app.use(async (req, res, next) => {
     try {

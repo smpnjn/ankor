@@ -215,8 +215,7 @@ const createPage = async function(inputFile, ...args) {
             year: new Date().getFullYear(),
             image: process.env.rootUrl + '/images/intro-images/default.webp',
             robots: 'index,follow',
-            commonJs:  commonJs,
-            csrfToken: req.csrfToken()
+            commonJs:  commonJs
         }
         if(typeof generic === "object") {
             genericTemplateTags = {

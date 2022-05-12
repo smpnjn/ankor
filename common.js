@@ -173,6 +173,8 @@ if(document.getElementById('pagination') !== null) {
                 document.getElementById('pagination').innerHTML = '<div class="loader"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>';
                 // Data to send to get posts
                 let jsonBody = { offset: offset }
+                let csrf = document.querySelector('[name="csrf-token"]').getAttribute('content');
+                console.log(csrf);
                 // Check for a term
                 let getPosts = await fetch('/api/load-posts', {
                     method: 'POST',

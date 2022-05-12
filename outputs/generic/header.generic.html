@@ -18,7 +18,6 @@
     <meta name="twitter:title" content="{{title}}">
     <meta name="twitter:description" content="{{description}}">
     <meta name="twitter:image" content="{{image}}">
-    <meta name="csrf-token" content="{{csrfToken}}">
 
     <meta property="og:title" content="{{title}}" />
     <meta property="og:description" content="{{description}}" />
@@ -47,8 +46,7 @@
                             method: "POST",
                             body: JSON.stringify({url: `{{url}}`}),
                             headers: {
-                                'Content-Type': 'application/json', 
-                                'CSRF-Token' : {{csrfToken}}
+                                'Content-Type': 'application/json'
                             },
                         });
                         response = await request.json();
