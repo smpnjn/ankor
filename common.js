@@ -150,7 +150,10 @@ if(document.querySelector('.ellipsis') !== null){
 if(document.querySelector('#search input') !== null) {
     document.querySelector('#search input').addEventListener('keyup', function(e) {
         if(e.which == 13) {
-            window.location.href = `/search/${this.value}`;
+            if(typeof this.value == "string") {
+                let createUrl = new URL(`/search/${this.value}`, window.location);
+                window.location.href = createUrl.href;
+            }
         }
     });
 }
