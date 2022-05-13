@@ -149,9 +149,8 @@ if(document.querySelector('.ellipsis') !== null){
 }
 if(document.querySelector('#search input') !== null) {
     document.querySelector('#search input').addEventListener('keyup', function(e) {
-        let thisContent = this.value;
         if(e.which == 13) {
-            window.location.href = `/search/${thisContent}`;
+            window.location.href = `/search/${this.value}`;
         }
     });
 }
