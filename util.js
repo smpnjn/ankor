@@ -240,7 +240,7 @@ const createPage = async function(inputFile, ...args) {
             }
         }
         let genericTemplates = await fsDirPromise(`generic`, true);
-        let filterGenerics = genericTemplates.filter(item => item.isFile());
+        let filterGenerics = genericTemplates.filter(item => item.isFile == true);
         for(let key in filterGenerics) {
             let fileNamespace = filterGenerics[key].name.split('.generic')[0];
             if(fileNamespace == "header") {
@@ -335,16 +335,16 @@ const fetchComponents = async (inputFile, data, req) => {
             req.componentDirectory = `${inputFile[0]}`;
             let additionalComponents = {};
             for(let file in directory) {
-                let fileName = directory[file].split('.component.html')[0];
+                let fileName = directory[file].name.split('.component.html')[0];
                 if(data !== undefined && data[fileName] !== undefined && data[fileName] !== null && data[fileName] || data[inputFile[0]] !== undefined && data[inputFile[0]] !== null) {
-                    let getFile = await loadFile(`./outputs/components/${inputFile[0]}/${directory[file]}`, `${directory[file]}`, req);
+                    let getFile = await loadFile(`./outputs/components/${inputFile[0]}/${directory[file].name}`, `${directory[file].name}`, req);
                     additionalComponents[fileName] = await parseTemplate(getFile, data[fileName], `./outputs/components/${inputFile[0]}`, req);
                 }
                 else if(data[fileName] == null) {
                     additionalComponents[fileName] = "";
                 }
                 else {                        
-                    additionalComponents[fileName] = await loadFile(`./outputs/components/${inputFile[0]}/${directory[file]}`, `${directory[file]}`, req)
+                    additionalComponents[fileName] = await loadFile(`./outputs/components/${inputFile[0]}/${directory[file].name}`, `${directory[file].name}`, req)
                 }
             }
             return additionalComponents;
@@ -513,7 +513,16 @@ const fsDirPromise = (dirLocation, withFileTypes) => {
                     reject(err);
                 }
                 else {
-                    resolve(data);
+                    let items = [];
+                    data.forEach(function(item) {
+                        let newItem = { name: `${item}` };
+                        if(typeof item.isFile == "function") {
+                            newItem.name = item.name;
+                            newItem.isFile = item.isFile();
+                        }
+                        items.push(newItem);
+                    })
+                    resolve(items);
                 }
             })
         }

@@ -203,12 +203,12 @@ app.use(async (req, res, next) => {
 let staticPages = await fsDirPromise('page', false);
 let archivePages = [ "home", "category", "search", "article", "draft", "quiz", "404", "series" ]
 for(let key in staticPages) {
-    if(archivePages.indexOf(staticPages[key].split('.')[0]) == -1) {
-        if(Object.keys(definedPages).indexOf(staticPages[key]) > -1) {
-            let getPage = await definedPages[staticPages[key]]();
+    if(archivePages.indexOf(staticPages[key].name.split('.')[0]) == -1) {
+        if(Object.keys(definedPages).indexOf(staticPages[key].name) > -1) {
+            let getPage = await definedPages[staticPages[key].name]();
             if(getPage.done !== true) {
                 app.get(getPage.route, async(req, res, next) => {
-                    getPage = await definedPages[staticPages[key]](req);
+                    getPage = await definedPages[staticPages[key].name](req);
                     if(getPage.beforeStart !== undefined) {
                         await getPage.beforeStart({
                             Subscription: Subscription,
@@ -218,7 +218,7 @@ for(let key in staticPages) {
                             Quiz: Quiz
                         });
                     }
-                    req.output = await createPage(staticPages[key], {
+                    req.output = await createPage(staticPages[key].name, {
                         ...getPage
                     }, req)
                     if(res.headersSent !== true) {
