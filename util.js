@@ -332,7 +332,7 @@ const fetchComponents = async (inputFile, data, req) => {
     if(inputFile[0] !== undefined && inputFile[1] !== undefined) {
         try {
             let directory = await fsDirPromise(`${inputFile[0]}`, false);
-            req.componentDirectory = inputFile[0];
+            req.componentDirectory = `${inputFile[0]}`;
             let additionalComponents = {};
             for(let file in directory) {
                 let fileName = directory[file].split('.component.html')[0];
@@ -375,7 +375,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
                 if(getComponent !== '') {
                     // Component File exists
                     let parsedData = await parseTemplate(getComponent, replacement[dataStream], iterable, req);
-                    replacement[`component-${dataStream}`] = parsedData;
+                    replacement[`component-${dataStream}`] = `${parsedData}`;
                 }
             }
         }
@@ -396,7 +396,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
                     }
                 }
                 
-                replacement[`${key}+`] = createOutput;
+                replacement[`${key}+`] = `${createOutput}`;
                 delete replacement[`${key}`];
             }
             catch(e) {
@@ -419,7 +419,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
                 try {
                     index[x] = (!isNaN(parseFloat(index[x]))) ? parseFloat(index[x]) : index[x];
                     if(newData !== undefined && newData[index[x]] !== undefined) {
-                        newData = newData[index[x]];
+                        newData = `${newData[index[x]]}`;
                     }
                 } catch(e) {
                     console.log(e);
@@ -428,7 +428,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
             }
         }
         else {
-            newData = replacement[key];
+            newData = `${replacement[key]}`;
         }
         return newData || "";
     });
@@ -462,12 +462,12 @@ const removeCss = async function(input, fileName, req) {
 const loadFile = async (fileLocation, fileName, req) => {
     try {
         if(req.email === true) {
-            return await fsPromise(fileLocation, 'utf8');
+            return await fsPromise(`${fileLocation}`, 'utf8');
         }
         if(req.session.fileCache !== undefined && req.session.fileCache[fileName] !== undefined && req.session.fileCache[fileName].data !== undefined) {
-            return req.session.fileCache[fileName].data;
+            return `${req.session.fileCache[fileName].data}`;
         }
-        let loadFile = await fsPromise(fileLocation, 'utf8');
+        let loadFile = await fsPromise(`${fileLocation}`, 'utf8');
         loadFile = loadFile.replace(/<style combined>/gmi, `<style combined data-id="${fileName}">`);
         loadFile = loadFile.replace(/<style async>/gmi, `<style async data-id="${fileName}">`);
         
@@ -475,8 +475,8 @@ const loadFile = async (fileLocation, fileName, req) => {
             req.session.fileCache[fileName] = {}
         }
         if(req !== undefined && req.session !== undefined && req.session.fileCache !== undefined && req.session.fileCache[fileName] !== undefined) {
-            loadFile = await removeCss(loadFile, fileName, req);
-            req.session.fileCache[fileName].data = loadFile;
+            loadFile = await removeCss(`${loadFile}`, `${fileName}`, req);
+            req.session.fileCache[fileName].data = `${loadFile}`;
 
         }
         return loadFile;

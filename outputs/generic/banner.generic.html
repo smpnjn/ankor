@@ -9,38 +9,40 @@
                 </svg>
             </a>
         </div>
-        <!--#logo-->
-        <nav id="dropdown">
-            <div class="menu-item learn">
-                <span>
-                    Categories 
-                </span> 
-                <div class="sub-menu-items">
-                    <h3>Categories</h3>
-                    {{categories}}        
+        <div id="navigation">
+            <!--#logo-->
+            <nav id="dropdown">
+                <div class="menu-item learn">
+                    <span>
+                        Categories 
+                    </span> 
+                    <div class="sub-menu-items">
+                        <h3>Categories</h3>
+                        {{categories}}        
+                    </div>
                 </div>
-            </div>
-            <div class="menu-item all-courses">
-                <span>
-                    Series
-                </span> 
-                <div class="sub-menu-items">
-                    <h3 class="sub-heading">Series</h3>
-                    {{series}}
+                <div class="menu-item all-courses">
+                    <span>
+                        Series
+                    </span> 
+                    <div class="sub-menu-items">
+                        <h3 class="sub-heading">Series</h3>
+                        {{series}}
+                    </div>
                 </div>
+                <div class="menu-item mobile">
+                    <span></span> 
+                </div>
+            </nav>
+            <!--#dropdown-->
+            <div href="#" id="search">
+                <input type="text" value="" placeholder="Search..." />
+                <div class="icon"></div>
             </div>
-            <div class="menu-item mobile">
-                <span></span> 
+            <div id="social" class="fl">
+                <a href="https://twitter.com/smpnjn" rel="noreferrer" id="twitter-main" target="_blank" rel="noopener" aria-label="Twitter"></a>
+                <a href="https://github.com/smpnjn/fjolt" rel="noreferrer" id="github-main" target="_blank" rel="noopener" aria-label="Github"></a>
             </div>
-        </nav>
-        <!--#dropdown-->
-        <div href="#" id="search">
-            <input type="text" value="" placeholder="Search..." />
-            <div class="icon"></div>
-        </div>
-        <div id="social" class="fl">
-            <a href="https://twitter.com/smpnjn" rel="noreferrer" id="twitter-main" target="_blank" rel="noopener" aria-label="Twitter"></a>
-            <a href="https://github.com/smpnjn/fjolt" rel="noreferrer" id="github-main" target="_blank" rel="noopener" aria-label="Github"></a>
         </div>
     </div>
 </header>
@@ -71,7 +73,12 @@
     perspective-origin: 200px 200px;
     perspective: 100px;
 }
-
+#navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+}
 .menu-item.mobile {
     display: flex;
     margin: 0 0 0 1rem;
