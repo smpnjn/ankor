@@ -450,7 +450,7 @@ wss.on('connection', function(ws) {
 // I'm going back to 404
 app.use(async (req, res, next) => {
     // If it's a seven hour flight or a 45 minute drive
-    if(res.headersSent !== true && req.method == "GET" && req.header('x-forceCache') !== "true" && req.header('referrer').indexOf('sw.js') === -1) {
+    if(res.headersSent !== true && req.method == "GET" && req.header('x-forceCache') !== "true" && req.header('referrer') !== undefined && req.header('referrer').indexOf('sw.js') === -1) {
         let output = await createPage('404.page.html', {},
         {
             title: `${process.env.websiteName} 404, Not Found`,
