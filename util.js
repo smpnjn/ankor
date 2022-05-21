@@ -239,7 +239,7 @@ const createPage = async function(inputFile, ...args) {
                 //console.log(e);
             }
         }
-        let genericTemplates = await fsDirPromise(`generic`, true);
+        let genericTemplates = await fsDirPromise(`generic`, false);
         let filterGenerics = genericTemplates.filter(item => item.isFile == true);
         for(let key in filterGenerics) {
             let fileNamespace = filterGenerics[key].name.split('.generic')[0];
@@ -271,6 +271,9 @@ const createPage = async function(inputFile, ...args) {
             }
             if(replacement['style'] !== undefined) {
                 css += replacement['style'];
+            }
+            if(req.header('x-forceCache') == "true" || req.header('x-forceCache') == true) {
+                console.log(Object.keys(req.session.fileCache));
             }
             if(req.session.fileCache !== undefined) {
                 try {
@@ -331,7 +334,8 @@ const fetchComponents = async (inputFile, data, req) => {
     }
     if(inputFile[0] !== undefined && inputFile[1] !== undefined) {
         try {
-            let directory = await fsDirPromise(`${inputFile[0]}`, false);
+            let directory = await fsDirPromise(`${inputFile[0]}`, true);
+            console.log(directory);
             req.componentDirectory = `${inputFile[0]}`;
             let additionalComponents = {};
             for(let file in directory) {
@@ -505,11 +509,16 @@ const fsPromise = (fileLocation) => {
     }))
 }
 
-const fsDirPromise = (dirLocation, withFileTypes) => {
+const fsDirPromise = (dirLocation, inComponents) => {
     return(new Promise((resolve, reject) => {
+        let prePath = './outputs/'
+        if(inComponents == true) {
+            prePath = './outputs/components/'
+        }
         try {
-            fs.readdir('./outputs/' + sanatizeFilename(dirLocation), { encoding: 'utf8', withFileTypes: withFileTypes }, function (err, data) {
+            fs.readdir(prePath + sanatizeFilename(dirLocation), { encoding: 'utf8', withFileTypes: true }, function (err, data) {
                 if(err) {
+                    console.log(err);
                     reject(err);
                 }
                 else {
@@ -527,6 +536,7 @@ const fsDirPromise = (dirLocation, withFileTypes) => {
             })
         }
         catch(e) {
+            console.log(e);
             reject(e);
         }
     }))

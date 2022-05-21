@@ -24,7 +24,9 @@ self.addEventListener("install", async (e) => {
 self.addEventListener("message", async (e) => {
     if(typeof e.data.cachePosts !== "undefined") {
         const cache = await caches.open(cacheName);
-        e.data.cachePosts.push(e.data.recache.url);
+        if(typeof e.data.recache !== "undefined" && typeof e.data.recache.url !== "undefined") {
+            e.data.cachePosts.push(e.data.recache.url);
+        }
         e.data.cachePosts.forEach(async function(item) {
             //console.log(`${item} Added to Offline Mode`);
             return cache.add(item);
