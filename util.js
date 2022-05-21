@@ -375,7 +375,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
                 if(getComponent !== '') {
                     // Component File exists
                     let parsedData = await parseTemplate(getComponent, replacement[dataStream], iterable, req);
-                    replacement[`component-${dataStream}`] = `${parsedData}`;
+                    replacement[`component-${dataStream}`] = parsedData;
                 }
             }
         }
@@ -419,7 +419,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
                 try {
                     index[x] = (!isNaN(parseFloat(index[x]))) ? parseFloat(index[x]) : index[x];
                     if(newData !== undefined && newData[index[x]] !== undefined) {
-                        newData = `${newData[index[x]]}`;
+                        newData = newData[index[x]];
                     }
                 } catch(e) {
                     console.log(e);
@@ -428,7 +428,7 @@ const parseTemplate = async (inputFile, replacement, iterable, req) => {
             }
         }
         else {
-            newData = `${replacement[key]}`;
+            newData = replacement[key];
         }
         return newData || "";
     });
