@@ -30,7 +30,7 @@ quizRouter.get('/quiz/:quizName', async function(req, res, next) {
             }, {
                 title: quizData.title,
                 description: quizData.description,
-                canonical: `${process.env.rootUrl}/quiz/${quizData.canonicalName}`
+                canonical: `${process.env.rootUrl}quiz/${quizData.canonicalName}`
             }, req);
             if(res.headersSent !== true) {
                 res.send(req.output);

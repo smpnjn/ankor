@@ -19,7 +19,7 @@ categoryRouter.get([ '/category/:categoryName/', '/category/:categoryName/page?/
         }, {
             title: `${process.env.websiteName} - ${thisCategory.displayTitle}`,
             description: thisCategory.description,
-            canonical: `${process.env.rootUrl}${req.originalUrl}`
+            canonical: `${process.env.rootUrl}category/${req.params.categoryName}`
         }, req);
         if(res.headersSent !== true) {
             res.send(req.output);

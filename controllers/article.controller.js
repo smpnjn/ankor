@@ -202,7 +202,7 @@ articleRouter.get(['/article/:articleName/:alias?', '/draft/:articleName/:alias?
             {
                 title: `${title}`,
                 description: `${articleData.description}`,
-                canonical: `${process.env.rootUrl}/article/${article.canonicalName}`,
+                canonical: `${process.env.rootUrl}article/${article.canonicalName}`,
                 classes: classes.join(' ')
             }, req);
 

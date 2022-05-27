@@ -73,7 +73,7 @@ seriesRouter.get([ '/course/:guideName', '/series/:guideName' ], async function(
                 title: seriesData.title,
                 classes: "series",
                 description: seriesData.description,
-                canonical: `${process.env.rootUrl}/course/${seriesData.canonicalName}`,
+                canonical: `${process.env.rootUrl}course/${seriesData.canonicalName}`,
             }, req);
             
             if(res.headersSent !== true) {
