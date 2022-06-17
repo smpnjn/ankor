@@ -328,12 +328,12 @@ articleApi.post('/article/document/:draftName', htmlParser, async function(req, 
                         let urlHash = await md5(req.params.draftName + '-file-cache');
                         let openFile;
                         try {
-                            openFile = await fsPromise('./documents/' + req.params.draftName + '.html', 'utf8');
+                            openFile = await fsPromise('./documents/' + sanatizeFilename(req.params.draftName) + '.html', 'utf8');
                         }
                         catch(e) {
                             try {
 
-                                openFile = await fsPromise('./documents/' + req.params.draftName + '.md', 'utf8');
+                                openFile = await fsPromise('./documents/' + sanatizeFilename(req.params.draftName) + '.md', 'utf8');
                                 openFile = await parseMarkdown(openFile, md);
 
                             }

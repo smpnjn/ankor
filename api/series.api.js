@@ -74,7 +74,7 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
                 if(Array.isArray(req.body.items)) {
 
                     for(let i of req.body.items) {
-                        let thisArticle = await Article.findOne({ canonicalName: i });
+                        let thisArticle = await Article.findOne({ canonicalName: { $eq:  i } });
                         if(thisArticle !== null) {
                             succeededObjects.push(thisArticle._id);
                         } 
