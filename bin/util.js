@@ -217,6 +217,12 @@ const consolidateCssAsync = async (additionalStyles, req, urlHash) => {
         let asyncCss, compressAsyncCss;
         try {
             css = await fsPromise('./common.css') || "";
+            try {
+                css += await fsPromise('./views/common/style.css');
+            }
+            catch(e) {
+                console.log(e);
+            }
             asyncCss = await fsPromise('./async.css') || "";
             commonJs = await fsPromise('./common.js') || "";
         } 
