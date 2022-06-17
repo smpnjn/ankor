@@ -81,7 +81,7 @@ app.use(rateLimit({
 
 // Setup server
 let server;
-if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev") {
+if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev" && process.env.environment !== "staging") {
     // HTTPS environment
     options = {
         key: await fsPromise(process.env.keyLocation),
@@ -105,9 +105,11 @@ app.use(session({
     genid: function(req) {
         return uuid() // use UUIDs for session IDs
     },
-    saveUninitialized: false,
+    saveUninitialized: false,    
     cookie: {
-        secure: true
+        domain: process.env.rootUrl,
+        secure: true,
+        sameSite: true
     },
     resave: true,
     secret: process.env.sessionSecret
@@ -183,6 +185,12 @@ for(let key of pages) {
         let openPage = await getRoutes(key.name);
         let pageRoutes = openPage.routes;
         if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
+            if(process.env.environment === "staging") {
+                pageRoutes.forEach((i, index) => {
+                    pageRoutes[index] = `/test${i}`
+                })
+            }
+            console.log(pageRoutes);
             app.get(pageRoutes, async (req, res, next) => {
                 if(openPage.cache == true) {
                     req.cacheTerm = await md5(req.originalUrl + '-full-metal-alchemist');
