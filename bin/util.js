@@ -11,6 +11,7 @@ import { md5 } from 'hash-wasm'
 import { parseHTML } from 'linkedom'
 import rehypePrism from 'rehype-prism-plus'
 import { createClient } from 'redis'
+import _ from 'lodash'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -495,7 +496,7 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
                     } 
                     if(filter !== undefined && filterOn !== undefined && related === undefined) {
                         if(search == "true") {
-                            let regexExp = new RegExp(filter, "gmi")
+                            let regexExp = new RegExp(_.escapeRegExp(filter), "gmi")
                             getFinalData = cachedData?.[`${table}`]?.filter((i) => {
                                 let data = i[`${filterOn}`];
                                 if(Array.isArray(filterOn)) {
@@ -888,7 +889,7 @@ const parseComponents = async (componentText, req) => {
                     finalFileContent = loadFileContent;
                 }
                 // Replace the multiply sign so it is escaped
-                let createComponentMatch = component.replace("*", "\\*");
+                let createComponentMatch = component.replaceAll("*", "\\*");
                 // Replace the component placeholder with the HTML contnet
                 let generateRegExp = new RegExp(`{{${createComponentMatch}}}`, "g");
                 processedFile = processedFile.replace(generateRegExp, finalFileContent);
