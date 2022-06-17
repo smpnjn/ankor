@@ -1,6 +1,6 @@
 Fjolt is a blog built in Node.JS and Express, designed to be lightweight and **Server Side Rendered** (SSR). It has a simple implementation of components, which accepts both **async** and **non-async** CSS, meaning you can optimise which CSS is loaded. It is optimized for Linux web servers.
 
-When I started building Fjolt, I wanted it to be fast, and have no build step. I was sick of building applications with a long build cycle with other frameworks. I also wanted it to be static, meaning it took data from a database, and displayed it on a page. As such, Fjolt has no build step, and currently has no computed properties. It takes data and files from a database, and puts them on your screen. Database data is loaded async and object manipulation is optimised which means entire page rendering time on the server is usually sub-50ms with only minor Redis caching resulting in usually perfect lighthouse scores.
+When I started building Fjolt, I wanted it to be fast, and have no build step. I was sick of building applications with a long build cycle with other frameworks. I also wanted it to be static, meaning it took data from a database, and displayed it on a page. As such, Fjolt has no build step, and currently has no computed properties. It takes data and files from a database, and puts them on your screen. Database data is loaded async and object manipulation is optimised which means entire page rendering time on the server is lightning fast.
 
 ## Features and Optimizations
 We currently have the following optimisations to improve page load speed:
