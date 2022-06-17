@@ -1,0 +1,219 @@
+<template>
+    <data-header> 
+        <div class="header">
+            <span class="title">{{title}}</span>
+            <span class="go-back"><a href="/series/{{canonicalName}}">Back to Index</a></span>
+        </div>
+    </data-header>
+    <div class="ellipsis prev-items"></div>
+    <data-loop of="items">
+        <div class="nav-item">
+            <a href="/article/{{canonicalName}}">
+                <span class="icon">{{icon}}</span>
+                <span class="title">{{titles[0].title}}</span>
+            </a>
+        </div>
+    </data-loop>
+    <div class="series-loader"></div>
+    <div class="ellipsis next-items"></div>
+</template>
+<script async type="text/javascript">
+    document.querySelectorAll('.series-nav .nav-item a').forEach((i) => {
+        if(i.getAttribute('href') == window.location.pathname || i.getAttribute('href') === window.location.pathname.slice(0, -1)) {
+            i.parentElement.classList.add('current');
+        }
+    })
+    if(document.querySelectorAll('.series-nav .nav-item a.current').length === 0) {
+        document.querySelector('.series-nav .nav-item a').classList.add('current');
+    }
+    document.querySelectorAll('.series-nav .nav-item').forEach((i) => {
+        if(i.nextElementSibling !== null && i.nextElementSibling.classList.contains('current') || i.nextElementSibling.nextElementSibling !== null && i.nextElementSibling.nextElementSibling.classList.contains('current')) {
+            i.classList.add('visible');
+        }
+        if(i.previousElementSibling !== null && i.previousElementSibling.classList.contains('current') || i.previousElementSibling.previousElementSibling !== null && i.previousElementSibling.previousElementSibling.classList.contains('current')) {
+            i.classList.add('visible');
+        }
+        if(i.classList.contains('current')) {
+            i.classList.add('visible');
+        }
+        if(!i.previousElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.header + .ellipsis') !== null) {
+            i.parentElement.querySelector('.header + .ellipsis').remove();
+        }
+        if(!i.nextElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.nav-item + .ellipsis') !== null) {
+            i.parentElement.querySelector('.nav-item + .ellipsis').remove();
+        }
+    })
+    document.querySelectorAll('.series-loader').forEach(function(i) {
+        i.remove();
+    });
+    document.querySelectorAll('.series-nav').forEach(function(i) {
+        i.classList.add('loaded');
+    });
+</script>
+<style combined>
+    .series-nav {
+        padding: 2rem 0;
+        float: left;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2rem;
+        justify-content: space-between;
+        border-top: none;
+        background: #191f2b;
+        min-width: 350px;
+        border-radius: 12px;
+        border: none;
+        margin: 2rem 0 3rem 0;
+        padding: 0;
+        box-sizing: border-box;
+        background: transparent;
+        width: 100%;
+        border: 1px solid #232a38;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotateZ(0deg);
+        }
+        100% {
+            transform: rotateZ(360deg);
+        }
+    }
+    .series-loader {
+        content: '';
+        width: 24px;
+        background: white;
+        position: relative;
+        border-radius: 100px;
+        animation: rotate 0.5s infinite;
+        height: 24px;
+        margin: 1rem;
+    }
+    .series-loader:after {
+        content: '';
+        width: 18px;
+        background: rgb(15 19 22);
+        border-radius: 100px;
+        height: 18px;
+        position: relative;
+        top: 3px;
+        display: block;
+        left: 3px;
+        z-index: 9999;
+    }
+    .series-loader:before {
+        content: '';
+        width: 9px;
+        background: rgb(15 19 22);
+        height: 10px;
+        position: absolute;
+        top: -2px;
+        display: block;
+        left: 7px;
+        z-index: 9999;
+    }
+    .series-nav:empty {
+        display: none;
+    }
+    .series-item .series-nav {
+        display: flex;
+    }
+    .series-nav .header {
+        padding: 1rem 1.25rem;
+        display: flex;
+        border-bottom: 1px solid #191f2b;
+        justify-content: space-between;
+    }
+    
+    .header + .ellipsis {
+        border-bottom: 1px solid #191f2b;
+    }
+    .series-nav .header .title {
+        font-weight: 600;
+    }
+    
+    .series-nav .ellipsis-container {
+        display: flex;
+        border-bottom: 1px solid #232a38;
+    }
+    .series-nav .ellipsis-container:last-child {
+        border-bottom: none;
+    }
+    .series-nav .ellipsis, .series-nav .ellipsis {
+        text-align: center;
+        padding: 0.75rem 0;
+        opacity: 0.8;
+        display: flex;
+        width: 100%;
+        cursor: pointer;
+        color: white;
+        font-size: 1.25rem;
+        min-height: auto !important;
+        height: 20px;
+        line-height: 1rem;
+    }
+    
+    .series-nav .ellipsis:hover {
+        background: rgb(33 41 56 / 14%);
+    }
+    
+    .series-nav .ellipsis:before {
+        margin: 0px auto;
+    }
+    
+    .series-nav .nav-item .icon {
+        padding: 0 0.5rem 0 0;
+        left: 1.25rem;
+        width: 1.25rem;
+        display: block;
+    }
+    .series-nav .text {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        left: 3.5rem;
+    }
+    
+    #content-text .series-nav .nav-item a, .series-nav .nav-item a {
+        text-align: left;
+        float: left;
+        width: 100%;
+        display: flex;
+        text-decoration: none;
+        margin: 0;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #232a38;
+    }
+    .series-nav .nav-item.this a {
+        background: #212732;
+        box-shadow: 0 2px 5px rgb(0 0 0 / 10%), 0 2px 10px rgb(0 0 0 / 10%), 0 1px 0 0 #2d3646;
+        opacity: .9;
+        z-index: 9999;
+        position: relative;
+    }
+    .nav-item.this a:hover {
+        background: #1d2430;
+    }
+    .nav-item {
+        display: none;
+    }
+    .nav-item.current {
+        font-weight: bold;
+    }
+
+    .series-nav.loaded .nav-item.visible {
+        display: block;
+    }
+    
+    @media screen and (min-width: 1000px) {
+        .series-nav {
+            width: 330px;
+        }
+        .series-nav .title {
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 250px;
+            width: 250px;
+            text-overflow: ellipsis;
+        }
+    }
+    </style>

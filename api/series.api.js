@@ -5,8 +5,8 @@ import express from 'express'
 var jsonParser = express.json()
 
 // Models
-import { Series } from '../models/series.model.js';
 import { Article } from '../models/article.model.js';
+import { Series } from '../models/series.model.js';
 
 const seriesApi = express.Router();
 
@@ -16,33 +16,35 @@ seriesApi.post('/series/add/:seriesName', jsonParser, async function(req, res) {
             return res.status(400).send({ "error" : "You have not listed a seriesName in your call. Please call the route as /series/add/:seriesName" });            
         }
         if(!Array.isArray(req.body)) {
-            return res.status(400).send({ "error" : "The body of your request should be an array [] of objects you wish to add to your series" });            
+            return res.status(400).send({ "error" : "The body of your request should be an array [] of canonicalNames for the articles you wish to add to your series" });            
         }
         let failedObjects = [];
-        let requiredKeys = [ 'title', 'description', 'subArea', 'canonicalName', 'icon' ]
         let succeededObjects = [];
-        req.body.forEach((i, index) => {
-            const hasAllKeys = requiredKeys.every(j => i.hasOwnProperty(j));
-            if(hasAllKeys) {
-                succeededObjects.push(i);
+        if(Array.isArray(req.body.items)) {
+            for(let i of req.body.items) {
+                let thisArticle = await Article.findOne({ canonicalName: i });
+                if(thisArticle !== null) {
+                    succeededObjects.push(thisArticle._id);
+                } 
+                else {
+                    failedObjects.push(i);
+                }
             }
-            else {
-                failedObjects.push(index);
-            }
-        });
+            req.body.items = succeededObjects;
+        }
         
-        const findSeries = Series.findOne({ canonicalName: `${req.params.seriesName}` }, async function(err, series) {
+        Series.findOne({ canonicalName: `${req.params.seriesName}` }, async function(err, series) {
             if(findSeries !== null) {
                 let findSeriesItems = series.seriesItems;
                 findSeriesItems = [ ...findSeriesItems, ...succeededObjects ]
                 
-                Series.findOneAndUpdate({ canonicalName: `${req.params.seriesName}` }, { seriesItems: findSeriesItems }, { upsert: true }, function(err, doc) {
+                Series.findOneAndUpdate({ canonicalName: `${req.params.seriesName}` }, { items: findSeriesItems }, { upsert: true }, function(err, doc) {
                     if (err) {
                         return res.status(400).send({ "error" : err });
                     } else {
                         let message = { "message" : "Object saved" }
                         if(failedObjects.length > 0) {
-                            message["error"] = `Items with the indexes listed in "failedObjects" in your array could not be added, as they were missing properties. The required properties are: ${JSON.stringify(requiredKeys)}`
+                            message["error"] = `Items with the indexes listed in "failedObjects" in your array could not be added, since articles could not be found with their "canonicalName"s`
                             message["failedObjects"] = `${JSON.stringify(requiredKeys)}`;
                         }
                         return res.status(200).send(message)
@@ -65,44 +67,43 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
             req.body.date = Date.now();
         }      
         const requiredKeys = Object.keys(Series.schema.obj);
-        let newSeries = [];
-        let missingSeries = [];
+        let failedObjects = [];
+        let succeededObjects = [];
         if(typeof req.body.seriesItems == "object") {
             for(let k in Object.keys(req.body.seriesItems)) {
-                let item = Object.keys(req.body.seriesItems)[k];
-                if(Array.isArray(req.body.seriesItems[`${item}`])) {
-                    for(let j in req.body.seriesItems[`${item}`]) { 
-                        let seriesCanonicalName = req.body.seriesItems[`${item}`][j];
-                        let findArticle = await Article.findOne({ canonicalName: `${seriesCanonicalName}` });
-                        if(findArticle !== null) {
-                            newSeries.push({
-                                title: `${findArticle.titles[0].title}`,
-                                icon: `${findArticle.icon}` || "",
-                                subArea: `${item}` || "Content",
-                                description: `${findArticle.shortDescription}`,
-                                canonicalName: arrItem
-                            });
-                            await Article.findOneAndUpdate({ canonicalName: `${seriesCanonicalName}` }, { series: `${req.body.canonicalName}` }, { upsert: true })
-                        }
+                if(Array.isArray(req.body.items)) {
+
+                    for(let i of req.body.items) {
+                        let thisArticle = await Article.findOne({ canonicalName: i });
+                        if(thisArticle !== null) {
+                            succeededObjects.push(thisArticle._id);
+                        } 
                         else {
-                            missingSeries.push(`${seriesCanonicalName}`)
+                            failedObjects.push(i);
                         }
                     }
+
+                    req.body.items = succeededObjects;
                 }
             }
         }
-        req.body.seriesItems = newSeries;
+
         if(requiredKeys.every(key => Object.keys(req.body).includes(key))) {
             const newSeries = new Series(req.body);
             newSeries.save(async function (err) {
                 if (err) {
                     return res.status(400).send(err);
                 } else {
-                    return res.status(200).send({ "message" : "Object saved", "incorrectCanonicalNames" : missingSeries })
+                    if(failedObjects.length > 0) {
+                        return res.status(200).send({ "message" : "Object saved. Some articles couldn't be found as their 'canonicalName's don't exist.", "incorrectCanonicalNames" : failedObjects })
+                    }
+                    else {
+                        return res.status(200).send({ "message" : "Object saved." })
+                    }
                 }
             });
         } else {
-            return res.status(400).send({ "error" : `You are missing a key from your JSON. Check you have them all. You need at least ${JSON.stringify(requiredKeys)}`, "incorrectCanonicalNames" : missingSeries });
+            return res.status(400).send({ "error" : `You are missing a key from your JSON. Check you have them all. You need at least ${JSON.stringify(requiredKeys)}` });
         }
     } catch(e) {
         console.log(e);

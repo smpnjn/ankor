@@ -1,28 +1,31 @@
-FJOLT is a blog built in Node.JS and Express, designed to be lightweight and **Server Side Rendered** (SSR). It has a simple implementation of components, which accepts both **async** and **non-async** CSS, meaning you can optimise which CSS is loaded. It is optimized for Linux web servers. 
+Fjolt is a blog built in Node.JS and Express, designed to be lightweight and **Server Side Rendered** (SSR). It has a simple implementation of components, which accepts both **async** and **non-async** CSS, meaning you can optimise which CSS is loaded. It is optimized for Linux web servers.
+
+When I started building Fjolt, I wanted it to be fast, and have no build step. I was sick of building applications with a long build cycle with other frameworks. I also wanted it to be static, meaning it took data from a database, and displayed it on a page. As such, Fjolt has no build step, and currently has no computed properties. It takes data and files from a database, and puts them on your screen. Database data is loaded async and object manipulation is optimised which means entire page rendering time on the server is usually sub-50ms with only minor Redis caching resulting in usually perfect lighthouse scores.
 
 ## Features and Optimizations
-FJOLT currently has the following optimisations to improve page load speed:
+We currently have the following optimisations to improve page load speed:
 - **Componentization** - ading only the CSS and JS you need to the pages that load
 - **File compression** - CSS and JS is compressed upon `git pull` optimizing load speeds
 - **SEO** - optimized for social and SEO, with all meta tags you need including canonicals.
 - **Image optimization** - any valid image file loaded via API will be converted into an optimized .webp version as well.
 - **GZip** - GZip compression by default on all routes.
-- **Redis Cache** - every `GET` request caches page data in a local Redis store meaning instantaneous page loads, with very little delay in "time to first byte"
+- **Redis Cache** - every `GET` request caches page data like CSS in a local Redis store meaning fast page loads, with very little delay in "time to first byte".
 - **Custom Service Worker** - a service worker caches both the current page and the 20 latest posts, along with all categories, meaning almost instantaneous load for most users visiting your site and only viewing the latest content. This is performed after page load, so does not affect load times.
-- **Forced Recaching** - forced recaching is the term I use to describe the caching behaviour used on FJOLT. When you load a page, Redis caches it on the server, and then a service worker caches it locally. After caching with the service worker, the server will not generally be pinged again, meaning the Redis version of the site can go stale. To ensure content does not go stale, any page use will trigger a deferred recache API event, that updates the Redis cache in the background. That means the user will be served the latest cached version for optimum speed, but the server will update the page in the background, so that next time anyone visits, the page will be the most up to date version.
+- **PWA** - a PWA which means you can install it on your desktop (with an icon that fits in any MacOS dock properly).
+- **Forced Recaching** - we load all data asynchronously, meaning there is no database wait time. This makes the website load much more quickly than other sites with similar data sizes. 
 
 ## Future Feature ideas
-I'm always open to new ideas, but currently I am considering this for the future:
+I'm always open to new ideas, but my current list of to-dos has consisted of:
 - [x] **Progressive Web App Capabilities**
 - [ ] **History API for seamless loading**
-- [ ] **Exploration of other compression algorithms besides GZip and WebP**
-- [ ] **Improved componentization**
+- [x] **The `<data>` tag to bring data from DB to page**
+- [x] **Improved componentization**
 - [x] **Moving API importance to MongoDB rather than hardcoding**
-- [ ] **Standardization of all unique IDs for models to `canonicalName` - i.e. `title` for categories, `name` for author, etc**
+- [x] **Standardization of all unique IDs for models to `canonicalName` - i.e. `title` for categories, `name` for author, etc**
 
 ## Installation
 
-### PREREQUISITES
+### Prerequisites
 - You must have Redis installed - [Find out how to install Redis](https://fjolt.com/article/redis-how-to-install).
 - You must have MongoDB installed - [Find out how to install MongoDB](https://www.mongodb.com/docs/manual/installation/). The connection string for your MongoDB install can be placed in your `.env` file.
 - If you want to use JWT tokens, please install OpenSSL.
@@ -75,54 +78,104 @@ You can make your own custom roles too. By default, the first user made will hav
 By default, no authors will exist. Authors are different from users, in that they are not related to users in terms of data architecture, and you can have many authors whilst only maintaining one user. To create your first author so that you can write articles 
 
 ## Pages
-FJOLT has a bunch of default pages - these are: "home", "category", "search", "article", "draft", "quiz", "404" and "series". Each of these will have some form of customization in the codebase, to show categories, search results, or series pages. Any other page you create in the ./output/pages/ folder which does **not** have one of these names, will be served as a static page. These static pages have to be in the format *.page.html
+All pages are found in `./views/pages`. A page will use the route defined in the `<url>` tag at the top of the page. For example, an article route might be `<url routes="['/article/:articleName']" />`. The route must be valid JSON and a page can have multiple routes to get to it. The `:articleName` is a variable in the URL that can be anything, and can be used in the `<config>` tag as a title or description.
+
+## Config Tag
+The config tag lets you define some attributes about the page. These are 
+- `<title>`, the title of the page, 
+- `<description>`, the description of the page, 
+- `<robots>`, the robots configuration of the page and 
+- `<classes>`, the classes on the body tag.
 
 ### Templating
-FJOLT has a limited template engine. Essentially, almost all HTML is stored in `./outputs`, with a few exceptions. These exceptions are stored in `./views`. In the future, all content within `./views` will slowly be moved into pure HTML templates. On all pages, anything found in the `./outputs/generic` folder is available, so that we can use headers, footers, and sidebars on any page you like.
-
-When a page is created in the `./outputs/page` folder, it can also have a corresponding template folder. For example, and HTML file in the `./outputs/article` folder will be available to the `./outputs/page/article.page.html` file. 
-
-For example, if a new component is created within the `./outputs/article` folder called `someComponent.component.html`, it would be accessible in `article.page.html` by adding `{{someComponent}}`. **Currently, new components must be static and have no associated database data**, unless you change the controller itself. In the future, this will change.
-
-The `createPage` function is used to bind components and data together in the controller. It has the format:
-`createPage('pageName.page.html', { ...customTagsAvailableToPage }, { dataBoundToComponents }, { SEOandCanonicalData })`
-
-For example, on the `/article/:canonicalName` endpoint in `article.controller.js`, we use the function like so:
-```javascript
-req.output = await createPage('article.page.html', {
-    ...articleData,
-    more: await articleStructure.generateMore(article.canonicalName, article.category),
-    content : articleContent,
-}, {
-    category: await Category.findOne({ title: article.category }).lean(),
-    author: await Author.findOne({ name: article.author }).lean(),
-    quiz: await Quiz.findOne({ associatedCanonical: article.canonicalName }).lean(),
-    series: seriesData,
-}, {
-    title: title,
-    description: articleData.description,
-    canonical: `${process.env.rootUrl}/article/${article.canonicalName}`,
-    classes: classes.join(' ')
-}, req);
+There is a templating engine based mostly on a tag called the `<data>` tag. Fjolt is built to display data straight from a database with little to no manipulation. We don't have calculated fields (yet), so we take data from a table and filter it as appropriate. Fjolt supports a number of tables defined in its code. In the future, this will become more flexible. For now the tables you can use are:
+```
+"article" 
+"quiz"
+"category"
+"series"
+"author" 
 ```
 
-### This does the following:
-- Adds a few custom template tags, such as `{{more}}` and `{{content}}`, which can be used within 'article.page.html'.
-- Adds data to some components, i.e. `await Category.findOne()` is added to `category`, so this means all the data within that query such as category names, canonical names, and descriptions, will be available to the `category.component.html` file within the `./outputs/article` folder.
-- Similarly, all the `await Author.findOne()` data will be available within the `./outputs/article/author.component.html` file.
-- Then, we pass across `title`, `description`, `canonical`, and any `<body class="*">` body classes.
-- Finally we pass along the request, which helps with caching.
+For example, let's say we have a MongoDB data collection called "article" with the following structure (with a model file in the `./models/` folder):
+```json
+{
+    "_id": 1,
+    "name": "Some Name",
+    "author": "Some Author"
+},
+{
+    "_id": 2,
+    "name" : "Some Name",
+    "author" : "Some Author"
+},
+```
 
-### Pros and Cons
-This kind of templating is quite useful, in that it confines a specific set of components to a specific page. It's useful for FJOLT where page structure is not complicated, but it does mean we can't use components across pages. In the future there will be the option of having cross-page components, although this does present some performance issues when loading a page for the first time. This is because on the first load, a page is not Redis-cached, so the time to first byte can be slow. After its first load, howevever, time to first byte is typically immediate and not a limiting factor to page speed.
+We can access this in Fjolt by using a `<data>` tag. Here, if we want to select all elements in this table, we would write:
+```html
+<data table="article" limit="12">
+    <data-item>
+        Name: {{name}}
+        Author: {{author}}
+    </data-item>
+    <data-item>
+        Another Name: {{name}}
+        Another Author: {{author}}
+    </data-item>
+</data>
+```
 
-#### Future Backlog Ideas 
-**These currently do not work, but may work in the future:**
-- **Binding data directly in HTML documents** - i.e. `<{ data: Table }>` at the top of a component will symbolise which MongoDB table to bind to this component. For example, if we wrote `<{ data: Category }>`, any field within the `Category` table would be available within that template.
-- **Common templates** - a new solution to be thought up to solve the problem of providing common templates to users.
+Every item would be looped through, but and the first two would be displayed, since we only defined two `data-item`s. If we wanted to loop through all, we could also use a `<data-loop>`, producing HTML for all items with the same format:
+```html
+<data table="articles" limit="12">
+    <data-loop>
+        Name: {{name}}
+        Author: {{author}}
+    </data-loop>
+</data>
+```
+
+We can also order items using typical MongoDB format: 
+```html
+<data table="articles" limit="12" sort="-_id">
+```
+
+.. And we can filter items on specific properties. Below, we only show documents who have an `"author"` property set to "Jane":
+```html
+<data table="articles" limit="12" sort="-_id" filter="Jane" filter-on="author">
+```
+
+We can also swap out filters for URL components. This will now filter on whatever the `:author` component in the URL is:
+```html
+<data table="articles" limit="12" sort="-_id" filter=":author" filter-on="author">
+```
+
+`<config>` tags follow the same conventions and use the same functions - so all the same filters work for them too.
+
+#### Related to
+We can also check items which are related to other items within the `<data>` tag using the `items-with-parents` tag. For example:
+```html
+<data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1">
+    <data table="quiz" items-with-parents="canonicalName" filter-on="associatedCanonical">
+        ...
+    </data>
+</data>
+```
+The above code will find the article with a `canonicalName` matching the `canonicalName` in the URL. Within that, we will find all `quiz`s which have the same `canonicalName` as the article, in their `associatedCanonical` property.
+
+
+#### Managing files in the ./documents folder
+Finally, any file or document in the `./documents` folder with a `.md` or `.html` extension can be accessed via the `<data>` tag. If you have any markdown code tags or `<pre><code>` tags in those files, you can parse them by using the `parse-code="true"` attribute. Below, we will find any article with the same `canonicalName` as the `:canonicalName` found in the URL route. We will then find any files with a file name like `canonicalName.html` or `canonicalName.md` in the `./documents/` folder. If one is found, it will be usable in your page with the `{{file}}` template tag.
+```html
+<url routes="[ '/article/:canonicalName' ]" />
+<data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" file-name="canonicalName" parse-code="true">
+```
+
+### Components
+Any file in the `./views/component` folder can be accessed from a page by writing `{{component-*}}` where `*` is the name of the file (without the extension). This will literally just copy the HTML content of the page straight into the `page` while compressing the JS and CSS simultaneously. Useful for if you want only certain CSS to load on certain pages.
 
 ## APIs
-There are 7 sets of APIs which are used to update and submit new content to the database. **All API endpoints are POST**, while all controller endpoints are GET requests with few exceptions. They can all be accessed easily with a tool like Postman.
+Fjolt is entirely API driven and has no admin panel (yet). There are 7 sets of APIs which are used to update and submit new content to the database. **All API endpoints are POST**, while all controller endpoints are GET requests with few exceptions. They can all be accessed easily with a tool like Postman.
 
 ### Table of Contents
 - [API Authentication](#API-Authentication)
@@ -138,7 +191,7 @@ There are 7 sets of APIs which are used to update and submit new content to the 
 - [Access APIs](#Access-APIs)
 
 ### API Authentication
-FJOLT supports two authentication methodologies - **Basic Username/Password Authentication** and **JWT Based Authentication**. You can set this in your `.env` file:
+Fjolt supports two authentication methodologies - **Basic Username/Password Authentication** and **JWT Based Authentication**. You can set this in your `.env` file:
 
 Once a user is created, please add the following headers to all API requests:
 ```
@@ -197,8 +250,8 @@ Creates a new article which will show up in archives, categories, searches and t
     "mainPage" : true | false,
     // Name of an associated series
     "series" : "none" | false | "name of series"
-    // customSeries is not used if "series" (above) is set to "none" or false, or if the series name is invalid.
-    "customSeries" : {
+    // additionalSeriesData is not used if "series" (above) is set to "none" or false, or if the series name is invalid.
+    "additionalSeriesData" : {
         "title" : false | "name of item in series view",
         "subArea": false | "name of sub area within series view"
     },

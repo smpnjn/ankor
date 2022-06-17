@@ -18,7 +18,7 @@ done
 echo 'Shutting down the server..'
 pm2 delete 'all'
 echo 'Compressing CSS and HTML..'
-for f in $(find ./outputs -iname '*.html' ! -iname 'footer.generic.html' ! -iname './documents/*.html' ! -iname './documents/*.md' -type f); do
+for f in $(find ./views -iname '*.html' ! -iname 'footer.generic.html' ! -iname './documents/*.html' ! -iname './documents/*.md' -type f); do
     html-minifier-terser -o $f --remove-comments --minify-js true $f
 done
 echo 'Starting server..'

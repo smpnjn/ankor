@@ -31,6 +31,7 @@ const defaultAccess = {
     "author" : 1,
     "cache" : 0,
     "load-posts" : 0,
+    "unsubscribe" : 0,
     "category" : 2,
     "image" : 1,
     "quiz" : 2,

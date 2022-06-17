@@ -1,0 +1,17 @@
+<url routes="[ '/search/:search' ]" />
+<config>
+    <title>Search results for ":search"</title>
+</config>
+<template>
+<div id="container">
+    <section id="content">
+        <h1>Search Results</h1>            
+        <data table="article" limit="12" search="true" filter=":search" filter-on="canonicalName" sort="-date">
+            {{component-firstPost}}
+            {{component-triplePost}}
+            {{component-doublePost*4}}
+        </data>
+    </section>
+    <div id="pagination"><a href="#" class="next-page">View More Articles</a></div>
+</div>
+</template>

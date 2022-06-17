@@ -97,49 +97,31 @@ if(document.querySelector('.sub-menu-items .close') !== null) {
 if(document.querySelector('.ellipsis') !== null){
     document.querySelectorAll('.ellipsis').forEach(function(item) {
         item.addEventListener('click', function(e) {
-            let thisSeriesNav = item.parentElement.parentElement;
+            let thisSeriesNav = item.parentElement;
             if(item.classList.contains('next-items')) {
                 let allItems = thisSeriesNav.querySelectorAll('.visible');
                 let lastItem = allItems[allItems.length - 1];
-                if(lastItem.nextElementSibling !== null && lastItem.nextElementSibling.classList.contains('next')) {
-                    lastItem.nextElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
-                }
-                if(lastItem.nextElementSibling?.nextElementSibling !== null && lastItem.nextElementSibling?.nextElementSibling.classList.contains('next')) {
-                    lastItem.nextElementSibling.nextElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
-                }
-                if(lastItem.nextElementSibling?.nextElementSibling?.nextElementSibling !== null && lastItem.nextElementSibling?.nextElementSibling?.nextElementSibling.classList.contains('next')) {
-                    lastItem.nextElementSibling.nextElementSibling?.nextElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
+                let itemsToCheck = [ lastItem.nextElementSibling, lastItem.nextElementSibling?.nextElementSibling, lastItem.nextElementSibling?.nextElementSibling?.nextElementSibling ];
+                for(let x of itemsToCheck) {
+                    if(x !== null && x !== undefined) {
+                        x.classList.add('visible');
+                    }
+                    else {
+                        item.style.display = 'none'
+                    }
                 }
             }
             if(item.classList.contains('prev-items')) {
                 let allItems = thisSeriesNav.querySelectorAll('.visible');
                 let lastItem = allItems[0];
-                if(lastItem.previousElementSibling !== null && lastItem.previousElementSibling.classList.contains('previous')) {
-                    lastItem.previousElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
-                }
-                if(lastItem.previousElementSibling?.previousElementSibling !== null && lastItem.previousElementSibling?.previousElementSibling.classList.contains('previous')) {
-                    lastItem.previousElementSibling.previousElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
-                }
-                if(lastItem.previousElementSibling?.previousElementSibling?.previousElementSibling !== null && lastItem.previousElementSibling?.previousElementSibling?.previousElementSibling.classList.contains('previous')) {
-                    lastItem.previousElementSibling.previousElementSibling?.previousElementSibling.classList.add('visible');
-                }
-                else {
-                    item.parentElement.style.display = 'none'
+                let itemsToCheck = [ lastItem.previousElementSibling, lastItem.previousElementSibling?.previousElementSibling, lastItem.previousElementSibling?.previousElementSibling?.previousElementSibling ];
+                for(let x of itemsToCheck) {
+                    if(x !== null && x !== undefined) {
+                        x.classList.add('visible');
+                    }
+                    else {
+                        item.style.display = 'none'
+                    }
                 }
             }
             e.preventDefault();
@@ -158,44 +140,76 @@ if(document.querySelector('#search input') !== null) {
     });
 }
 if(document.getElementById('pagination') !== null) {
-    let offset = 1;
+    let skip = 12;
+    let limit = 11;
+    let filterOn = undefined;
+    let filter = undefined
+    let search = false;
     let fetchingInProgress = false;
-    let currentPage = document.querySelector('#pagination a').getAttribute('href').split('/')[2];
     window.addEventListener('scroll', async function(e) { 
         let documentHeight = document.body.scrollHeight;
         let currentScroll = window.scrollY + window.innerHeight;
-        // When the user is [modifier]px from the bottom, fire the event.
-        let modifier = 200; 
-        let nextPage = 0;
-        if(currentScroll + modifier > documentHeight) {
+        // When the user is 200px from the bottom, fire the event.
+        if(currentScroll + 200 > documentHeight) {
             if(fetchingInProgress == false) {
                 // Fetching..
                 fetchingInProgress = true;
                 // Update pagination to loading
                 document.getElementById('pagination').innerHTML = '<div class="loader"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>';
                 // Data to send to get posts
-                let jsonBody = { offset: offset }
+                let page = window.location.pathname;
+                if(page.indexOf('/search/') > -1) {
+                    search = true;
+                    filter = window.location.pathname.split('/search/')[1].split('/')[0];
+                    filterOn = 'canonicalName';
+                }
+                if(page.indexOf('/category/') > -1) {
+                    filter = window.location.pathname.split('/category/')[1].split('/')[0];
+                    filterOn = 'category';
+                }
+                if(page.indexOf('/tag/') > -1) {
+                    filter = window.location.pathname.split('/tag/')[1].split('/')[0];
+                    filterOn = 'associatedWith.tags';
+                }
+                let jsonBody = { 
+                    skip: skip,
+                    limit: limit,
+                    search: search,
+                    filter: filter,
+                    filterOn: filterOn,
+                };
+                let csrf = document.querySelector('[name="csrf-token"]').getAttribute('content');
                 // Check for a term
                 let getPosts = await fetch('/api/load-posts', {
                     method: 'POST',
-                    body: JSON.stringify(jsonBody),
+                    credentials: 'include', 
                     headers: {
-                        'content-type': 'application/json'
-                    }
+                        'content-type': 'application/json',
+                        'X-CSRF-Token': csrf
+                    },
+                    body: JSON.stringify(jsonBody)
                 });
-                let response = await getPosts.json();
-                if(response.html !== "undefined") {
-                    let newEl = document.createElement('div');
-                    newEl.innerHTML = response.html;
-                    document.getElementById('content').innerHTML += newEl.innerHTML;
-                    document.getElementById('pagination').innerHTML = `<a href="/page/${response.newOffset}" class="next-page">View More Articles</a>`
-                    nextPage += 1;
-                    if(typeof response.newOffset == "number") {
-                        offset = response.newOffset;
-                    } else {
-                        offset = 999999;
+                let response = await getPosts.text();
+                if(response.trim() !== "") {
+                    try {
+                        let parseJson = JSON.parse(response);
+                        if(parseJson.error !== undefined) {
+                            document.getElementById('pagination').innerHTML = "<div class='no-results'>We ran into an error. Try again later</div>"  
+                        }
                     }
-                    fetchingInProgress = false;
+                    catch(e) {
+                        try {
+                            let newEl = document.createElement('div');
+                            newEl.innerHTML = response;
+                            document.getElementById('content').innerHTML += newEl.innerHTML;
+                            document.getElementById('pagination').innerHTML = `<a href="/page/${response.newOffset}" class="next-page">View More Articles</a>`
+                            skip += limit;
+                            fetchingInProgress = false;
+                        }
+                        catch(e) {
+                            console.log(e);
+                        }
+                    }
                 } 
                 else if(document.querySelector('.no-results') == null) {
                     document.getElementById('pagination').innerHTML = "<div class='no-results'>No More Results!</div>"   

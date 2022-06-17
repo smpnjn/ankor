@@ -1,0 +1,70 @@
+<template>
+    <div id="author">
+        <div id="author-image">
+            <img src="/images/author-images/{{associatedWith.author.image}}" alt="{{associatedWith.author.displayName}}" />
+        </div>
+        <div id="author-content">
+            <div id="author-name">{{associatedWith.author.displayName}}</div>
+            <div id="author-description">{{associatedWith.author.description}}</div>
+            <div id="author-social">{{associatedWith.author.socialHtml}}</div>
+        </div>
+    </div>
+</template>
+<style combined>
+#author {
+    width: 100%;
+    border-top: 1px solid #ffffff17;
+    position: relative;
+    display: flex;
+    padding: 2rem 0rem;
+    border-bottom: 1px solid #ffffff17;
+}
+#author-image {
+    width: 72px;
+    height: 72px;
+    border-radius: 100px;
+    overflow: hidden;
+    margin: 0  1rem 0 0;
+}
+#author-image img {
+    width: 100%;
+    max-width: 100%;
+}
+
+#author-name {
+    font-size: 1.25rem;
+    padding: 0 0 0 1rem;
+    font-weight: 600;
+}
+
+#author-social {
+    padding: 0.5rem 0 0 1rem;
+}
+
+.twitter:before, .github:before {
+    position: relative;
+    top: 2px;
+    font-size: 0.875rem;
+    padding: 0 0.25rem 0 0;
+    color: #4c5360;
+}
+
+#author-social a {
+    color: white;
+    text-decoration: none;
+    transition: all 0.1s ease-out;
+    font-size: 1rem;
+    line-height: 2rem;
+    margin: 0.5rem 1rem 0 0;
+    background: #191f2b;
+    line-height: 1.25rem;
+    display: block;
+    float: left;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+}
+#author-social a:hover {
+    color: white;
+}
+</style>

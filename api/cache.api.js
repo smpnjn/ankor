@@ -2,6 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import { createClient } from 'redis'
 import path from 'path'
+import { nanoid } from "nanoid";
 import url from 'url';
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -45,7 +46,6 @@ cacheApi.post('/cache', async (req, res, next) => {
                         })
                         let response = await getHtml.text();
                         // Redis connection
-                        await client.set(`${req.cacheTerm}`, response);
                         return res.status(200).send({ "message" : "Recached URL", "url" : cacheTerm });
                     }
                     else {
@@ -66,4 +66,20 @@ cacheApi.post('/cache', async (req, res, next) => {
     }
 });
 
+cacheApi.post('/cache/session', (req, res, next) => {
+    try {
+        if(req.session == undefined) {
+            req.session = {};
+        }
+        if(req.session.csrf == undefined) {
+            req.session.csrf = nanoid(64);
+        }
+        if(req.session.csrf !== undefined) {
+            return res.status(200).send({ "csrf" : req.session.csrf })
+        }
+    }
+    catch(e) {
+        console.log(e);
+    }
+})
 export { cacheApi }

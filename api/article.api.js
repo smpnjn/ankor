@@ -6,7 +6,11 @@ import { promises as fs } from 'fs'
 import nfs from 'fs'
 import canvas from '@napi-rs/canvas' // Don't upgrade this the new version is broken
 import cwebp from 'cwebp'
-import sanatizeFilename from 'sanitize-filename';
+import md from 'markdown-it'
+import { md5 } from 'hash-wasm'
+import sanatizeFilename from 'sanitize-filename'
+import { createClient } from 'redis'
+import { parseFileCode, parseMarkdown, fsPromise } from '../bin/util.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,14 +21,18 @@ const { createCanvas, GlobalFonts } = canvas;
 let jsonParser = express.json()
 let htmlParser = express.text({ type: 'text/html', limit: '50mb' });
 
+
+// Redis Connection
+const client = createClient();
+client.on('error', (err) => console.log('Redis Client Error', err));
+await client.connect();
+
+
 // *.model.js
 import { Article } from '../models/article.model.js';
+import { Series } from '../models/series.model.js';
 import { Category } from '../models/category.model.js';
 import { Author } from '../models/author.model.js';
-import { Series } from '../models/series.model.js';
-
-// *.view.js
-import { articleStructure } from '../views/article.view.js';
 
 const articleApi = express.Router();
 
@@ -161,7 +169,12 @@ articleApi.post('/article', jsonParser, async function(req, res) {
         if(typeof req.body.date == "undefined") {
             req.body.date = Date.now();
         }      
-        const requiredKeys = Object.keys(Article.schema.obj);
+        let requiredKeys = [];
+        for(let x of Object.keys(Article.schema.obj)) {
+            if(Article.schema.obj[x].required !== false) {
+                requiredKeys.push(x);
+            }
+        }
         
         if(requiredKeys.every(key => Object.keys(req.body).includes(key))) {
             const checkForArticle = await Article.find({ canonicalName: `${req.body.canonicalName}` });
@@ -169,31 +182,33 @@ articleApi.post('/article', jsonParser, async function(req, res) {
                 return res.status(200).send({ message: 'An article with that canonicalName already exists! We did not create a new article.'});
             }
             else {
+                req.body.associatedWith = {};
                 const category = await Category.findOne({ title: `${req.body.category}` });
                 if(category !== null) {
+                    req.body.associatedWith.category = category._id;
                     const getAuthor = Author.findOne({ "name" : `${req.body.author}` });
+                    if(req.body.tags !== undefined) {
+                        req.body.associatedWith.tags = req.body.tags
+                    }
                     if(getAuthor !== null) {
-                        if(req.body.series !== "none" && req.body.series !== false) {
-                            const getSeries = Series.findOne({ "canonicalName" : `${req.body.series}` })
-                            if(getSeries !== null) {
-                                let newSeriesItem = {
-                                    title: `${req.body.customSeries?.title}` || `${req.body.titles[0].title}`,
-                                    icon: `${req.body.icon}`,
-                                    subArea: `${req.body.customSeries?.subArea}` || "Content",
-                                    description: `${req.body.shortDescription}`,
-                                    canonicalName: `${req.body.canonicalName}`
-                                }
-                                Series.findOneAndUpdate({ canonicalName: `${req.body.series}` }, { $push: { seriesItems: newSeriesItem }}, { upsert: true }, function(err, doc) {
-                                    if(err) return false;
-                                });
-                            }
-                        }
+                        req.body.associatedWith.author = getAuthor._id;
                         const newArticle = new Article(req.body);
-                        newArticle.save(async function (err) {
+                        newArticle.save(async function (err, data) {
+                            console.log(data);
                             if (err) return res.status(400).send(err);
                             let makeImage = await generateMainImage(`${req.body.canonicalName}`, category.color, `${req.body.titles[0].title}`, category.title, `${req.body.icon}`, "2");
                             return res.status(200).send({ "message" : "Object saved", "imageStatus" : makeImage })
                         });
+                        if(req.body.series !== "none" && req.body.series !== false) {
+                            const getSeries = Series.findOne({ "canonicalName" : `${req.body.series}` })
+                            if(getSeries !== null) {
+                                req.body.associatedWith.series = series._id;
+                                let currentItems = getSeries.items;
+                                Series.findOneAndUpdate({ canonicalName: `${req.body.series}` }, { $push: { items: newSeriesItem }}, { upsert: true }, function(err, doc) {
+                                    if(err) return false;
+                                });
+                            }
+                        }
                     }
                     else {
                         return res.status(400).send({ "error" : "Author does not exist. Please create an author first." });
@@ -245,10 +260,10 @@ articleApi.post('/article/update', jsonParser, async function(req, res) {
                             else if(item === 'date') {
                                 updateArr['date'] = parseInt(req.body.date);
                             }
-                            else if(item == 'customSeries') {
-                                updateArr['customSeries'] = {};
-                                updateArra['customSeries'].icon = `${req.body.customSeries?.icon}`
-                                updateArra['customSeries'].subArea = `${req.body.customSeries?.subArea}`
+                            else if(item == 'additionalSeriesData') {
+                                updateArr['additionalSeriesData'] = {};
+                                updateArra['additionalSeriesData'].icon = `${req.body.additionalSeriesData?.icon}`
+                                updateArra['additionalSeriesData'].subArea = `${req.body.additionalSeriesData?.subArea}`
                             }
                             else {
                                 updateArr[item] = `${req.body[item]}`
@@ -305,11 +320,33 @@ articleApi.post('/article/document/:draftName', htmlParser, async function(req, 
                 writePath = path.join(__dirname, '../', `/documents/${sanatizeFilename(req.params.draftName)}.md`);
             }
 
-            nfs.writeFile(writePath, req.body, 'utf8', function(err) {
+            nfs.writeFile(writePath, req.body, 'utf8', async function(err) {
                 if(err) {
                     return res.status(400).send({ "error" : err });
                 } else {
                     try {
+                        let urlHash = await md5(req.params.draftName + '-file-cache');
+                        let openFile;
+                        try {
+                            openFile = await fsPromise('./documents/' + req.params.draftName + '.html', 'utf8');
+                        }
+                        catch(e) {
+                            try {
+
+                                openFile = await fsPromise('./documents/' + req.params.draftName + '.md', 'utf8');
+                                openFile = await parseMarkdown(openFile, md);
+
+                            }
+                            catch(e) {
+                                // file doesn't seem to exist.. so do nothing
+                                console.log(e);
+                            }
+                        }
+                        if(openFile !== undefined) {
+                            openFile = await parseFileCode(openFile);
+                            console.log(openFile);
+                            await client.set(urlHash, openFile);
+                        }
                         if(updated === true) {
                             moreMessage = 'Last updated date has also changed.'
                         }
@@ -320,8 +357,7 @@ articleApi.post('/article/document/:draftName', htmlParser, async function(req, 
                     }
                 }
             })
-        } else {
-            return res.status(400).send({ "error" : "You did not provide a draft name. Please create the article via the route /article/document/:draftName where :draftName is the slug you want to use for your article." });
+
         }
     } catch(e) {
         console.log(e);
@@ -346,50 +382,5 @@ articleApi.post('/article/delete/', jsonParser, async function(req, res) {
     }
 })
 
-// Load a set of articles
-articleApi.post('/load-posts', jsonParser, async function(req, res) {
-    if(typeof req.body == "object") {
-        if(typeof req.body.offset === "number") {
-            try {        
-                let allDocuments, term, search, tag;
-                if(req.header('referer').split('/category/').length > 1) {
-                    term = req.header('referer').split('/category/')[1];
-                }
-                else if(req.header('referer').split('/search/').length > 1) {
-                    search = true;
-                    term = req.header('referer').split('/search/')[1];
-                }
-                else if(req.header('referer').split('/tag/').length > 1) {
-                    tag = true;
-                    term = req.header('referer').split('/tag/')[1];
-                }
-
-                if(tag === true || search === true) {
-                    allDocuments = await articleStructure.singleColumn(term, req.body.offset, req, search);
-                }
-                else {
-                    allDocuments = await articleStructure.generateArchiveArticles(term, req.body.offset, req);
-                }
-
-                if(allDocuments == '') {
-                    allDocuments = undefined;
-                }
-
-                return res.status(200).send({
-                    "html": `${allDocuments}`,
-                    "newOffset": req.body.offset + 1
-                });
-
-            } catch(e) {
-                console.log(e);
-            }
-    
-        } else {
-            return res.status(400).send({ "error" : "Error occurred" });
-        }
-    } else {
-        return res.status(400).send({ "error" : "Error occurred" });
-    }
-});
 
 export { articleApi }

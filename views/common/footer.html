@@ -1,0 +1,237 @@
+<div class="fl">
+    <div id="copyright">
+        <a href="/privacy">Privacy</a> &emsp; &copy; Fjolt.com {{year}}
+    </div>
+</div>
+<div id="subscribe">
+    <button class="hover-button subscribe-button" data-filter-color="#e64b755e">
+        <span>
+            <span class="hide-text">
+                Subscribe to Newsletter
+            </span>
+            <span class="completed-subscription">
+                Subscribed
+            </span>
+        </span>
+    </button>
+</div>
+<div id="main-cover"></div>
+<div id="subscribe-box">
+    <h2>Subscribe for Daily Dev Tips</h2>
+    <div class="close"></div>
+    <p>Subscribe to our weekly newsletter, to stay up to date with our latest web development and software engineering posts via email. You can opt out at any time.</p>
+    <div class="error-message">
+        Not a valid email
+    </div>
+    <div class="form-holder">
+        <input type="text" value="" placeholder="dev@email.com..." />
+        <input type="submit" value="Subscribe" />
+    </div>
+</div>
+<script defer type="text/javascript" id="common">{{js}}</script>
+</body></html>
+<style combined>
+#subscribe, #subscribe-box {
+    display: none;
+}
+#main-cover {
+    background: linear-gradient(45deg, #0007ca24, #000000bd);
+    z-index: 99999;
+    position: fixed;
+    top: 0;
+    transition: all 0.1s ease-out;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.1s ease-out;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+}
+</style>
+<style async>
+#subscribe-box .error-message {
+    box-shadow: 0 2px 20px rgb(0 0 0 / 10%);
+    border-radius: 10px;
+    color: black;
+    padding: 0.5rem 1rem;
+    bottom: 5rem;
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    background: white;
+    transition: all 0.1s ease-out;
+    position: absolute;
+    z-index: 999;
+}
+
+#subscribe-box input::placeholder {
+    color: rgba(0,0,0,0.5);
+}
+
+#subscribe-box .error-message.active {
+    opacity: 1;
+}
+#subscribe-box .error-message:after {
+    content: '';
+    border-color: white transparent transparent transparent;
+    border-style: solid;
+    border-width: 15px;
+    position: absolute;
+    bottom: -1.75rem;
+    left: 1rem;
+}
+#subscribe-box {
+    position: fixed;
+    background: white;
+    border-radius: 4px;
+    top: 100px;
+    box-sizing: border-box;
+    display: block;
+    max-width: 100%;
+    padding: 2rem;
+    transform: scale(0.8);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 999999;
+    left: 0;
+    width: 100%;
+}
+#subscribe-box h2 {
+    color: rgba(0,0,0,0.8);
+}
+#subscribe-box .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    color: black;
+}
+
+#subscribe-box .close svg {
+    width: 1rem;
+}
+
+#subscribe-box input {
+    background: white;
+    border: 1px solid #d8d8d8;
+    text-transform: initial;
+    border-radius: 4px;
+    color: black;
+    width: 70%;
+    margin: 0 1rem 0 0;
+}
+#subscribe-box .form-holder {
+    display: flex;
+    justify-content: space-between;
+}
+#subscribe-box input[type="submit"] {
+    background: black;
+    color: white;
+    cursor: pointer;
+    border: 1px solid black;
+    margin: 0;
+    width: 30%;
+    font-weight: 600;
+}
+
+body[data-subscribe="true"] #subscribe-box,
+body[data-subscribe="true"] #main-cover {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all;
+    transition: all 0.1s ease-out;
+}
+#subscribe-box p {
+    color: rgba(0,0,0,0.4);
+    letter-spacing: 0px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+#subscribe {
+    position: fixed;
+    display: block;
+    transition: all 0.1s ease-out;
+    width: 255px;
+    z-index: 99999;
+    left: 2rem;
+    bottom: 2rem;
+}
+
+#subscribe a {
+    background: linear-gradient(45deg, #1928de, #d65f5f);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 100px;
+    white-space: nowrap;
+    width: 170px;
+    font-size: 1rem;
+    transition: width 0.1s ease-out;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: block;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+}
+#subscribe.completed button {
+    width: 10.5rem;
+}
+
+#subscribe.completed .hide-text {
+    opacity: 0;
+}
+#subscribe.completed .completed-subscription {
+    opacity: 1;
+}
+#subscribe .completed-subscription {
+    display: inline-block;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#copyright {
+    margin: 0;
+    padding: 1.5rem 0rem;
+    box-sizing: border-box;
+    font-weight: 600;
+    width: 100%;
+    float: left;
+    border-top: 1px solid #282a35;
+}
+#copyright a {
+    color: white;
+    font-weight: 400;
+}
+
+#subscribe .hide-text {
+    display: inline-block;
+    opacity: 1;
+    width: 100%;
+    white-space: nowrap;
+}
+@media screen and (min-width: 1000px) {
+    #subscribe-box {
+        left: calc(50% - 250px);
+        width: 500px;
+    }
+    #copyright {
+        text-align: right;
+        color: #d8dbeaad;
+        max-width: 1300px;
+        float: none;
+        padding: 1.5rem 0;
+        margin: 0px auto;
+    }
+    #subscribe {
+        right: 2rem;
+        bottom: 2rem;
+    }
+}
+</style>

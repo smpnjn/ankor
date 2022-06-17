@@ -4,7 +4,7 @@
     "description": "Daily Web Dev Tips from Fjolt",
     "icons": [
       {
-        "src": "images/icon.png",
+        "src": "images/pwaicon.png",
         "sizes": "1024x1024",
         "type": "image/png"
       }

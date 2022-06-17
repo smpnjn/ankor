@@ -1,0 +1,7 @@
+<url routes="[ '/api/load-posts' ]" headless="true" /> 
+<template>
+    <data table="article" limit="$limit" sort="-date" skip="$skip" filter="$filter" search="$search" filter-on="$filterOn">
+        {{component-triplePost}}
+        {{component-doublePost*4}}
+    </data>
+</template>

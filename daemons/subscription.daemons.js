@@ -9,13 +9,10 @@ dotenv.config({ path: path.join(__dirname, '../', '.env') });
 
 import mail from 'nodemailer'
 import schedule from 'node-schedule'
-import { promises as fs } from 'fs'
 import mongoose from 'mongoose'
-import { parseTemplate } from '../util.js'
+import { createPage } from '../bin/util.js'
 import * as Subscription from '../models/subscription.model.js';
 
-// *.view.js
-import { articleStructure } from '../views/article.view.js';
 
 const connection = mongoose.connect(process.env.mongooseUri, {
     useNewUrlParser: true,
@@ -24,7 +21,6 @@ const connection = mongoose.connect(process.env.mongooseUri, {
 
 const mailer = async () => {	
     try {
-        let email = await fs.readFile('./outputs/email/subscription.email.html', { encoding:'utf-8' } );
         let transporter = mail.createTransport({
             host: process.env.contactHost,
             port: 465,
@@ -42,16 +38,10 @@ const mailer = async () => {
         });
 
         let allSubs = await Subscription.Subscription.find();
-        let latestArticles = await articleStructure.generateArchiveArticles('email', 0, { email: true });
 
         allSubs.forEach(async function(item) {
-            let text = await parseTemplate(email, {
-                'latestArticles' : latestArticles,
-                'unsubscribeLink' : `${process.env.rootUrl}/unsubscribe/${item.email}`,
-                'privacyPolicy' : `${process.env.rootUrl}/privacy` 
-            });
+            let text = await createPage('subscription', { session: { data: [] } }, true);
             if(typeof item.email !== "undefined") {
-                console.log(item.email)
                 transporter.sendMail({
                     from   : `${process.env.websiteName} <${process.env.contactEmail}>`,
                     to     : item.email,

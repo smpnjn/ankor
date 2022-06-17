@@ -1,0 +1,30 @@
+<url routes="[ '/category/:category' ]" />
+<config table="category" filter=":category" filter-on="canonicalName" limit="1">
+    <description>{{description}}</description>
+    <title>Fjolt - {{displayTitle}}</title>
+    <classes>archive</classes>
+</config>
+<template>
+    <div id="container">
+        <section id="content">
+            <data table="category" filter=":category" limit="1" filter-on="title">
+                <h1>All <a class="category inline" href="#">{{displayTitle}}<span style="background: {{color.0}};" class="color"></span></a> Content</h1>
+            </data>
+            <data table="article" limit="12" sort="-date" filter=":category" filter-on="category">
+                {{component-firstPost}}
+                {{component-triplePost}}
+                {{component-doublePost*4}}
+            </data>
+        </section>
+        <div id="pagination"><a href="#" class="next-page">View More Articles</a></div>
+    </div>
+</template>
+<style class="combined">
+    h1 {
+        display: flex;
+        align-items: center;
+    }
+    h1 .category.inline {
+        margin: 0 1rem;
+    }
+</style>

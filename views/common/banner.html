@@ -1,0 +1,544 @@
+<header>
+    <div id="header-content">
+        <div id="logo">            
+            <a href="/" aria-label="Fjolt">       
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 600 143">
+                    <title>FJOLT</title>
+                    <path id="FJOLT" class="cls-1" fill="white" d="M202.3,2.895h-85.49L90.056,139.948h27.118l11.675-59.76h53.133l4.688-23.867H133.537l5.7-29.559h58.373Zm-0.628,137.282a83.187,83.187,0,0,0,20.039,2.433,63.751,63.751,0,0,0,18.753-2.571,42.113,42.113,0,0,0,14.524-7.619,37.1,37.1,0,0,0,9.928-12.943q3.768-7.895,6.8-23.5L290.009,2.895H229.8l-4.78,23.867H258.2L244.6,95.977q-2.483,12.854-7.676,17.809t-15.857,4.957a36.676,36.676,0,0,1-17.6-4.361,51.269,51.269,0,0,1-15.305-13.173l-5.976,31.578A89.746,89.746,0,0,0,201.669,140.177ZM360.714,62.333q-1.378,9.135-4.044,19.69-1.841,7.621-3.907,13.632a73.619,73.619,0,0,1-4.183,10.051,27.5,27.5,0,0,1-7.951,9.593,16.76,16.76,0,0,1-9.974,3.259q-7.446,0-11.123-5.416t-3.677-16.432a108.918,108.918,0,0,1,1.379-16.019q1.379-9.133,4.044-19.69,2.113-8.445,4.091-14.366a55.309,55.309,0,0,1,4-9.5,26.461,26.461,0,0,1,7.905-9.593,16.969,16.969,0,0,1,10.02-3.259q7.446,0,11.123,5.508t3.677,16.523A108.9,108.9,0,0,1,360.714,62.333ZM298.3,131q10.387,11.614,30.335,11.613a49.033,49.033,0,0,0,25.877-6.977,52.245,52.245,0,0,0,18.707-19.92q7.722-13.86,12.226-32.817a161.826,161.826,0,0,0,4.5-37.5q0-21.846-10.434-33.414t-30.2-11.566a49.034,49.034,0,0,0-25.831,6.931,51.506,51.506,0,0,0-18.569,19.782,133.268,133.268,0,0,0-12.41,32.955,156.243,156.243,0,0,0-4.6,37.178Q287.909,119.385,298.3,131Zm174.765,8.951,4.688-23.868h-58L441.807,2.895H414.689l-26.75,137.053h85.123ZM557.74,26.579h34.84l4.688-23.684H499.919l-4.5,23.684h35.207l-21.97,113.37h27.026Z"/>
+                    <path id="_" data-name="❯" fill="#75fa5f" class="cls-2" d="M31.7,142.508L77.265,71.748,31.7,0.892H0.441L46.857,71.748,0.441,142.508H31.7Z"/>
+                </svg>
+            </a>
+        </div>
+        <div id="navigation">
+            <!--#logo-->
+            <nav id="dropdown">
+                <div class="menu-item learn">
+                    <span>
+                        Categories 
+                    </span> 
+                    <div class="sub-menu-items">
+                        <h3>Categories</h3>
+                        <data table="category">
+                            <data-loop>
+                                <a href="/category/{{title}}" class="category" data-category="{{title}}"><span class="menu-icon">{{icon}}</span>{{displayTitle}}</a>
+                            </data-loop>
+                        </data>
+                    </div>
+                </div>
+                <div class="menu-item all-courses">
+                    <span>
+                        Series
+                    </span> 
+                    <div class="sub-menu-items">
+                        <h3 class="sub-heading">Series</h3>
+                        <data table="series" populate="items">
+                            <data-loop>
+                                <div class="sub-menu-item">
+                                    <a href="/series/{{canonicalName}}">
+                                        <span class="sub-menu-item-icon">
+                                            {{icon}}  
+                                        </span>
+                                        <span class="sub-menu-item-description"><span>{{title}}</span><span>{{shortDescription}}</span></span>
+                                    </a>
+                                </div>
+                            </data-loop>
+                        </data>
+                    </div>
+                </div>
+                <div class="menu-item mobile">
+                    <span></span> 
+                </div>
+            </nav>
+            <!--#dropdown-->
+            <div href="#" id="search">
+                <input type="text" value="" placeholder="Search..." />
+                <div class="icon"></div>
+            </div>
+            <div id="social" class="fl">
+                <a href="https://twitter.com/smpnjn" rel="noreferrer" id="twitter-main" target="_blank" rel="noopener" aria-label="Twitter"></a>
+                <a href="https://github.com/smpnjn/fjolt" rel="noreferrer" id="github-main" target="_blank" rel="noopener" aria-label="Github"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<nav id="mobile">
+    <div class="sub-menu-items">
+        <span class="close"></span>
+        <h3>Categories</h3>
+        {{categories}}           
+        <h3 class="sub-heading">Series</h3>
+        {{series}}
+    </div>
+</nav>
+<style combined>
+.sub-menu-items {
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: white;
+    margin: 0 1rem 0 0;
+    display: none;
+    transform-style: preserve-3d;
+    font-weight: 500;
+    perspective-origin: 200px 200px;
+    perspective: 100px;
+}
+#navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+}
+.menu-item.mobile {
+    display: flex;
+    margin: 0 0 0 1rem;
+}
+.menu-item.mobile svg {
+    margin: 0;
+}
+.menu-item > span {
+    display: flex;
+    align-items: center;
+    background: #151b24;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+#logo svg path {
+    transition: all 0.1s ease-out;
+}
+#logo {
+    transition: transform 0.1s ease-out;
+    position: relative;
+    transform: scale(1);
+    display: flex;
+    align-items: center;
+    margin: 0 1rem 0 0;
+}
+#logo svg {
+    padding: 0;
+}
+#logo a {
+    height: 24px;
+}
+#logo span {
+    position: absolute;
+    top: 0px;
+    transition: all 0.1s ease-out;
+    opacity: 0;
+    left: 0;
+    transform: scale(1.01);
+}
+#header-content {
+    display: flex;
+    transform-style: preserve-3d;
+    width: 100%;
+    text-align: center;
+    max-width: 1300px;
+    position: relative;
+    z-index: 99999;
+    margin: 1rem auto 0 auto;
+    height: 4.5rem;
+    padding: 0 0 1rem 0;
+    border-bottom: 1px solid #232a38;
+    box-sizing: border-box;
+}
+header {
+    display: flex;
+    float: left;
+    margin: 0 0 2rem 0;
+    width: 100%;
+}
+#dropdown {
+    display: flex;
+    align-items: center;
+    order: 6;
+}
+#search {
+    position: relative;
+    max-width: 200px;
+    left: 2rem;
+    background: #151b24;
+    margin: 0.75rem 2rem 0.75rem 0.5rem;
+    width: 400px;
+    display: flex;
+    border-radius: 15px;
+    order: 4;
+    transition: none;
+    border: 0px solid #192740;
+}
+#search .icon:after {
+    position: absolute;
+    top: 0;
+    left: 0.75rem;
+    font-size: 1rem;
+    width: 16px;
+    padding: 0.5rem 0rem;
+    height: 100%;
+    border-radius: 0;
+    box-sizing: border-box;
+}
+#search input {
+    border: none;
+    font-size: 1rem;
+    height: 100%;
+    margin-top: 0rem;
+    text-transform: initial;
+    border-radius: 100px;
+    background: transparent;
+    color: white;
+    padding: 0rem 1rem 0rem 2.5rem;
+    position: relative;
+    letter-spacing: 0;
+    font-weight: 400;
+}
+#header-content #search input:focus + svg {
+    color: rgba(0,0,0,0.5);
+}
+#social svg {
+    font-size: 1.25rem;
+    padding: 0 0.25rem;
+}
+#social .search {
+    margin: 0 1rem 0 0;
+}
+#social .search:before {
+    border-right: 1px solid #ffffff17;
+    margin: 0 0 0 0;
+    padding: 0 1.25rem 0 0;
+}
+header #social > a {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 2rem;
+}
+header #social {
+    justify-content: flex-end;
+    display: flex;
+    order: 2;
+    margin-left: auto;
+    position: relative;
+}
+.menu-item > span:after {
+    margin: 0 0 0 0.5rem;
+    padding: 0;
+}
+.all-courses, #search {
+    display: none;
+}
+#mobile .sub-menu-items {
+    height: 100%;
+    transform: scale(1);
+    max-height: 100vh;
+    width:80vw;
+    top: 0;
+    opacity: 0;
+    left: auto;
+    padding: 1rem;
+    background: #f0f0f0;
+    right: 0;
+    box-shadow: -5px 0 100px #1d3c5b;
+    pointer-events: none;
+    border-radius: 0;
+}
+
+#mobile .sub-menu-items.active {
+    pointer-events: all;
+}
+#mobile .sub-menu-items h3 {
+    font-weight: 600;
+    background: transparent;
+    margin: 0;
+    font-size: 1.25rem;
+    border-radius: 0;
+}
+
+#mobile .sub-menu-items .category, #mobile .sub-menu-item-description > span:first-of-type {
+    width: calc(100% - 1.5rem);
+    box-sizing: border-box;
+    color: black;
+    font-weight: 500;
+    font-size: 1.125rem;
+    padding: 1rem 0;
+}
+
+#mobile .sub-menu-item-description > span:first-of-type {
+    padding: 0rem;
+}
+#mobile .sub-menu-item-description {
+    width: 100%;
+}
+#mobile .sub-menu-item-description > span:last-of-type {
+    font-size: 1.125rem;
+}
+#mobile .sub-menu-items .category .menu-icon {
+    background: #bcc8e2c9;
+    margin: 0 1rem 0 0;
+}
+
+#mobile .sub-menu-item-icon {
+    text-align: center;
+    background: #c7d0e5b3;
+    border-radius: 100px;
+}
+
+@media screen and (min-width: 1000px) {
+    .learn .courses {
+        display: none;
+    }
+    .all-courses {
+        display: flex;
+    }
+    #search {
+        display: block;
+    }
+    #dropdown {
+        order: 2;
+    }
+    #dropdown .sub-menu-items {
+        position: absolute;
+        top: 100%;
+        left: -2rem;
+        width: 400px;
+        max-height: auto;
+        top: 3.25rem;
+    }
+    .menu-item {
+        position: relative;
+        display: flex;
+    }
+    .menu-item.mobile {
+        display: none;
+    }
+}
+</style>
+<style async>
+.sub-menu-items svg {
+    color: #1500ff;
+    padding: 0;
+    height: 16px;
+}
+
+.all-courses .sub-menu-items svg {
+    height: 20px;
+}
+.sub-menu-items:before {
+    content: '';
+    position: absolute;
+    top: -25px;
+    left: 4rem;
+    border-color: transparent transparent white transparent;
+    border-width: 15px;
+    border-style: solid
+}
+#search input:focus {
+    outline: none;
+    background: white;
+    color: black;
+}
+.sub-menu-items {
+    position: fixed;
+    transition: all 0.1s ease-out;
+    top: 4rem;
+    box-sizing: border-box;
+    transform: scale(0.95) rotateX(-2deg);
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 0rem 0 1rem 0;
+    left: 5vw;
+    box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
+    z-index: 999999999999;
+    max-height: calc(100vh - 4rem);
+    width: 90vw;
+    display: block;
+    overflow: auto;
+}
+#header-content .sub-menu-items.closed {
+    opacity: 0 !important;
+    top: calc(100% + 0rem);
+    pointer-events: none !important;
+    transform: scale(0.95) rotateX(0deg) !important;
+}
+.sub-menu-items .category {    
+    color: #232343e0;
+    text-transform: initial;
+    width: calc(50% - 2rem);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin: 0 0.5rem 0 1rem;
+    padding: 0.5rem 0;
+    float: left;
+    font-weight: 500;
+}
+.sub-menu-items h3 {
+    color: #000;
+    text-align: left;
+    font-size: 1rem;
+    border-bottom: 1px solid #3f3b3b2e;
+    padding: 0.75rem 0rem;
+    margin: 0 2rem;
+    margin: 2rem;
+    box-sizing: border-box;
+    width: calc(100% - 3rem);
+    float: left;
+    margin: 0.5rem 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+.sub-menu-items .category .menu-icon {
+    margin: 0 0.5rem 0 0;
+    border-radius: 100px;
+    transition: all 0.1s ease-out;
+    width: 2rem;
+    box-sizing: border-box;
+    height: 2rem;
+    display: flex;
+    transform: scale(1);
+    align-items: center;
+    justify-content: center;
+}
+.sub-menu-items .category:hover .menu-icon {
+    background: #004cff;
+    box-shadow: 0 2px 3px rgb(15 33 74 / 30%);
+    transform: scale(1.1);
+}
+.sub-menu-items .category:hover .menu-icon svg {
+    color: white;
+}
+.sub-menu-item {
+    margin: 0;
+    width: 100%;
+    float: left;
+    height: 100%;
+}
+#mobile .sub-menu-item {
+    height: auto;
+}
+.sub-menu-item a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
+.sub-menu-item-description {
+    text-align: left;
+    text-transform: initial;
+    letter-spacing: 0;
+}
+.sub-menu-item-description > span {
+    display: block;
+}
+.sub-menu-item-description > span:first-of-type {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: initial;
+    margin: 0 0 0.25rem 0;
+    color: #232343e0;
+}
+.sub-menu-item-description > span:last-of-type {    
+    color: rgb(67 69 88 / 53%);
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
+    line-height: 1.5rem;
+}
+.sub-menu-item-icon {
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    color: white;
+    border-radius: 10px;
+    min-width: 32px;
+    height: 32px;
+    margin: 0 1rem 0 0.5rem;
+}
+.sub-menu-items .close {
+    height: 2.75rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    font-size: 1.25rem;
+    color: black;
+}
+.close:before {
+    pointer-events: none;
+}
+.sub-menu-items .category:hover {
+    transform: scale(1);
+    color: black;
+}
+.menu-item:hover .sub-menu-items, .sub-menu-items.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1) rotateX(0deg);
+}
+@keyframes scrollSideways {
+    0% {
+        right: -80vw;
+        opacity: 1;
+    }
+    100% {
+        right: 0;
+        opacity: 1;
+    }
+}
+@keyframes scrollBackwards {
+    0% {
+        right: 0vw;
+        opacity: 1;
+    }
+    99% {
+        right: -80vw;
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+#mobile .sub-menu-item a {
+    width: calc(100% - 1rem);
+    border-radius: 15px;
+}
+#mobile .sub-menu-item a:hover {
+    background: white;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05), 0 2px 3px rgba(0,0,0,0.05);
+}
+#mobile .sub-menu-items.active {
+    animation: scrollSideways 0.2s ease-out forwards 1;
+}
+#mobile .sub-menu-items.closed {
+    animation: scrollBackwards 0.2s ease-out forwards 1;
+}
+#mobile .sub-menu-item {
+    margin: 0 0 2rem 0;
+}
+.sub-menu-item a:hover {
+    opacity: 1;
+    background: #e9eaef;
+}
+#logo:hover a > svg path {
+    fill: #0b71ff !important;
+    animation: transformColor 20s ease-out forwards infinite;
+}
+#logo:hover a > svg {
+    transform: scale(1.08);
+}
+@keyframes transformColor {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+</style>

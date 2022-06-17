@@ -1,0 +1,31 @@
+<url routes="[ '/unsubscribe/:email' ]" />
+<config>
+    <title>Fjolt - Unsubscribe</title>
+    <description>The page for unsubscribing from the Fjolt newsletter</description>
+    <robots>noindex,nofollow</robots>
+</config>
+<section id="container">
+    <article id="content">
+        <div class="go-home"><a href="/">🧑‍💻 Go back to the homepage</a></div>
+        <div id="header-container">
+            <h1 headline>Unsubscribe</h1>
+        </div>
+        <div id="content-text" class="fl">  
+            <p>We have removed your email from our database, and you will no longer receive emails. Have a good day!</p>
+        </div>
+    </article>
+</section>
+<script>
+    (async () => {
+        let csrf = document.querySelector('[name="csrf-token"]').getAttribute('content');
+        let email = window.location.pathname.split('/unsubscribe/')[1];
+        let removeEmail = await fetch(`/unsubscribe/${email}`, {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json',
+                'X-CSRF-Token': csrf
+            },
+        })
+        let response = await removeEmail.text();
+    })()
+</script>

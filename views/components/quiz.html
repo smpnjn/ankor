@@ -1,0 +1,71 @@
+<div class="inline-quiz">
+    <a href="/quiz/{{canonicalName}}">
+        <span class="title">Try the "{{title}}" Quiz</span>
+        <span class="description">Test your knowledge on this topic!</span>
+    </a>
+</div>
+<style combined>
+.inline-quiz .progress-percentage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 1rem;
+    background-image: linear-gradient(45deg, #09ce90, #97da15);
+    height: 100%;
+}
+.inline-quiz .medal svg {
+    display: none !important;
+    width: 12px;
+    position: absolute;
+    bottom: 5px;
+    right: 0.75rem;
+}
+.inline-quiz .medal .medal-outcome {
+    position: absolute;
+    top: 1.5rem;
+    font-size: 1.5rem;
+    right: calc(1rem + 1px);
+}
+.inline-quiz .percentage {
+    font-size: 0.825rem;
+    display: flex;
+    gap: 3px;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+}
+
+.inline-quiz a:before {
+    content: '💭';
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: 20px;
+    height: 100%;
+    font-size: 2rem;
+}
+
+.inline-quiz a .title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+.inline-quiz a .description {
+    display: block;
+    font-weight: 500;
+    font-size: 1rem;
+    margin: 0.5rem 0 0 0;
+    color: #ffffff9c;
+}
+
+#content-text .inline-quiz a {
+    color: white;
+    padding: 1.5rem 1.5rem 1.5rem 4.5rem;
+    transition: transform 0.15s ease-out;
+    background: #191f2b;
+    float: left;
+    text-decoration: none;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1.25rem;
+}
+</style>
