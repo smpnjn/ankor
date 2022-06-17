@@ -34,7 +34,6 @@ self.addEventListener("message", async (e) => {
     }
 })
 self.addEventListener('fetch', async function(e) {
-    console.log(e.request);
     if(e.request.method === "GET" && e.request.url.startsWith(self.location.origin)) {
         e.respondWith(
             caches.match(e.request).then(cachedResponse => {
