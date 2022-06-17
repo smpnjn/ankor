@@ -85,7 +85,7 @@ app.use(rateLimit({
 
 // Setup server
 let server;
-if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev" && process.env.environment !== "staging") {
+if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev") {
     // HTTPS environment
     options = {
         key: await fsPromise(process.env.keyLocation),
