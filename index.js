@@ -446,8 +446,14 @@ app.use(async (req, res, next) => {
             res.send(output);
         }
     }
-    else if(res.headersSent !== true) {
+    else if(res.headersSent !== true && req.method == "POST") {
         res.send({ "error" : "404 - that page was not found" })
+    }
+    else if(req.method == "GET" && res.headersSent !== true) {
+        let output = await createPage('404', req);
+        if(res.headersSent !== true) {
+            res.send(output);
+        }
     }
     next();
 });
