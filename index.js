@@ -106,6 +106,9 @@ app.use(session({
         return uuid() // use UUIDs for session IDs
     },
     saveUninitialized: false,
+    cookie: {
+        secure: true
+    },
     resave: true,
     secret: process.env.sessionSecret
 }))

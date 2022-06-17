@@ -25,54 +25,51 @@ self.addEventListener("message", async (e) => {
     if(typeof e.data.cachePosts !== "undefined") {
         const cache = await caches.open(cacheName);
         e.data.cachePosts.forEach(async function(item) {
-            //console.log(`${item} Added to Offline Mode`);
-            return cache.add(item);
+            let matchCache = await cache.match(item);
+            if(matchCache === undefined) {
+                console.log(`${item} Added to Offline Mode`);
+                return cache.add(item);
+            }
         })
     }
 })
-
 self.addEventListener('fetch', async function(e) {
+    console.log(e.request);
     if(e.request.method === "GET" && e.request.url.startsWith(self.location.origin)) {
         e.respondWith(
             caches.match(e.request).then(cachedResponse => {
                 if (cachedResponse) {
                     caches.open(cacheName).then(async (cache) => {
-                        console.log('ok');
                         const newRequest = new Request(e.request, {
                             mode: 'cors',
                             credentials: 'omit',
                             headers: {
                                 'x-service': true
                             }
-                        })
-                        return fetch(newRequest).then(response => {
+                        });
+                        fetch(newRequest).then(response => {
                             // Put a copy of the response in the runtime cache.
-                            return cache.put(e.request, response.clone()).then(() => {
-                                return response;
-                            });
+                            cache.put(e.request, response.clone())
                         });
                     });
                     return cachedResponse;
                 }
 
-                if(cachedResponse) {
-                    return caches.open(cacheName).then(async (cache) => {
-                        console.log('ok');
-                        const newRequest = new Request(e.request, {
-                            mode: 'cors',
-                            credentials: 'omit',
-                            headers: {
-                                'x-service': true
-                            }
-                        })
-                        return fetch(newRequest).then(response => {
-                            // Put a copy of the response in the runtime cache.
-                            return cache.put(e.request, response.clone()).then(() => {
-                                return response;
-                            });
+                return caches.open(cacheName).then(async (cache) => {
+                    const newRequest = new Request(e.request, {
+                        mode: 'cors',
+                        credentials: 'omit',
+                        headers: {
+                            'x-service': true
+                        }
+                    })
+                    return fetch(newRequest).then(response => {
+                        // Put a copy of the response in the runtime cache.
+                        return cache.put(e.request, response.clone()).then(() => {
+                            return response;
                         });
                     });
-                }
+                });
             })
         )
         }

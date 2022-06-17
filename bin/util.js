@@ -1430,7 +1430,7 @@ const loadFile = async (fileLocation, fileName, req) => {
 const fsPromise = (fileLocation) => {
     return(new Promise((resolve, reject) => {
         try {
-            fs.readFile(fileLocation, { encoding: 'utf8' }, function (err, data) {
+            fs.readFile(`${fileLocation}`, { encoding: 'utf8' }, function (err, data) {
                 if(err) {
                     reject(err);
                 }
