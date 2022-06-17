@@ -206,7 +206,6 @@ for(let key of pages) {
     }
 }
 
-<<<<<<< HEAD
 // Configure all post routes
 let posts = await fsDirPromise('post', false);
 for(let key of posts) {
@@ -221,23 +220,6 @@ for(let key of posts) {
                 }
             });
         }
-=======
-// Defined route for default page + pagination.
-app.get([ '/', '/page/:pageNumber?' ], async (req, res, next) => {
-    let fullUrl = '';
-    if(req.params.pageNumber !== undefined) {
-        fullUrl = req.originalUrl
-    }
-    req.output = await createPage('home.page.html', {
-        'content' : await articleStructure.generateArchiveArticles('home', (typeof req.params.pageNumber == "number") ? req.params.pageNumber || 0 : 0, req)
-    }, {
-        title: process.env.websiteName,
-        description: process.env.websiteDescription,
-        canonical: `${process.env.rootUrl}${fullUrl}`
-    }, req);
-    if(res.headersSent !== true) {
-        res.send(req.output);
->>>>>>> 5dafc5353099f93c2c8b6e9e20b5781998c57d72
     }
 }
 // *.controller.js files
