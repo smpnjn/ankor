@@ -134,9 +134,10 @@ app.use(async (req, res, next) => {
             req.session.fileCache = {};
         }
         else if(req.method === "POST") {
+            /*
             if(req.session.csrf !== req.header('X-CSRF-Token') && req.originalUrl !== '/api/cache/session') {
                 res.status(403).send({ "error" : "Incorrect CSRF" });
-            }
+            }*/
             let getAccess = await Access.find();
             let getAccessKeys = [];
             if(getAccess !== null) {
