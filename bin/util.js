@@ -380,7 +380,6 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
             }
             if(datasets[`${table}`] !== undefined) {
                 if(cachedData?.[`${table}`] == undefined) {
-                    console.log('ok');
                     if(filter !== undefined && filterOn !== undefined && related === undefined) {
                         if(search == "true") {
                             gatherData = datasets[`${table}`].find({ [filterOn] : { $regex: `${filter}`, $options: "i" } });
@@ -502,7 +501,7 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
                     } 
                     if(filter !== undefined && filterOn !== undefined && related === undefined) {
                         if(search == "true") {
-                            let regexExp = new RegExp(_.escapeRegExp(filter), "gmi")
+                            let searchArray = filter.split(' ');
                             getFinalData = cachedData?.[`${table}`]?.filter((i) => {
                                 let data = i[`${filterOn}`];
                                 if(Array.isArray(filterOn)) {
@@ -513,7 +512,14 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
                                         }
                                     }
                                 }
-                                return data.match(regexExp) !== null;
+                                let checkReturn = true;
+                                for(let x of searchArray) {
+                                    let regexExp = new RegExp(`${_.escapeRegExp(x)}`, "gmi");
+                                    if(!data.match(regexExp)) {
+                                        checkReturn = false;   
+                                    }
+                                }
+                                return checkReturn;
                             });
                         }
                         else {
