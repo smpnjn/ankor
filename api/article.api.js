@@ -186,7 +186,7 @@ articleApi.post('/article', jsonParser, async function(req, res) {
                 const category = await Category.findOne({ title: `${req.body.category}` });
                 if(category !== null) {
                     req.body.associatedWith.category = category._id;
-                    const getAuthor = Author.findOne({ "name" : `${req.body.author}` });
+                    const getAuthor = await Author.findOne({ name : `${req.body.author}` });
                     if(req.body.tags !== undefined) {
                         req.body.associatedWith.tags = req.body.tags
                     }
@@ -194,7 +194,6 @@ articleApi.post('/article', jsonParser, async function(req, res) {
                         req.body.associatedWith.author = getAuthor._id;
                         const newArticle = new Article(req.body);
                         newArticle.save(async function (err, data) {
-                            console.log(data);
                             if (err) return res.status(400).send(err);
                             let makeImage = await generateMainImage(`${req.body.canonicalName}`, category.color, `${req.body.titles[0].title}`, category.title, `${req.body.icon}`, "2");
                             return res.status(200).send({ "message" : "Object saved", "imageStatus" : makeImage })

@@ -190,7 +190,6 @@ for(let key of pages) {
         let openPage = await getRoutes(key.name);
         let pageRoutes = openPage.routes;
         if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
-            console.log(pageRoutes);
             app.get(pageRoutes, async (req, res, next) => {
                 if(openPage.cache == true) {
                     req.cacheTerm = await md5(req.originalUrl + '-full-metal-alchemist');
