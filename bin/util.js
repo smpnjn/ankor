@@ -1156,6 +1156,7 @@ const createPage = async function(inputFile, req, headless, post) {
                 description: req.session.meta.description || process.env.websiteDescription || "No description!",
                 robots: req.session.meta.robots || "index,follow",
                 year: new Date().getFullYear(),
+                canonical: req.protocol + '://' + req.get('host') + req.originalUrl,
                 pwaCache: pwa,
                 css: getCss.css,
                 asyncCss: getCss.asyncCss,
