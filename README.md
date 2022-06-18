@@ -516,7 +516,7 @@ Allows a user to subscribe to the newsletter. Accepts a **POST** request. No aut
 
 ### Access APIs
 
-#### /access
+#### /api/access
 
 Allows you to update or create a new access code for an API. Accepts a **POST** request with the following JSON:
 ```javascript
