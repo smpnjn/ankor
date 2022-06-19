@@ -7,6 +7,7 @@
 <template>
     <section id="container">
         <article id="content">
+            <nav id="secondary-navigation"></nav>
             <div class="go-home"><a href="/">🧑‍💻 Go back to the homepage</a></div>
             <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" file-name="canonicalName" parse-code="true">
                 <div class="fl series-holder">
@@ -351,7 +352,7 @@ body.series-item #content, body.nav-enabled #content {
     .sponsor-us {
         float: right;
     }
-    #content #secondary-navigation, .go-back, #article-progress {
+    .nav-enabled #content #secondary-navigation, .go-back, #article-progress {
         display: block;
     }
     body.series-item #content, body.nav-enabled #content {
@@ -428,20 +429,18 @@ body.series-item #content, body.nav-enabled #content {
         allRetained.append(script);
     });
 }
-let floatingNav = '<nav id="secondary-navigation">';
 if(document.querySelectorAll('#content-text h2').length > 0) {
+    let floatingNav = '';
     document.querySelectorAll('#content-text h2:not(#carbonadcontainer h2)').forEach(function(item) {  
         let thisContent = item.textContent.toLowerCase().replace(/ /g, "-");
         floatingNav += `<div class="navigation-item"><a href="#${thisContent}">${item.textContent}</a></div>`;
         item.setAttribute('id', thisContent);
         item.innerHTML = `${item.textContent} <a class="header-navigation" href="#${thisContent}">#</a>`
     });
-    floatingNav += '</nav>';
+
     if(document.getElementById('nav-init') !== null || document.body.classList.contains('series-item')) {
-        let floatingNavContainer = document.createElement('div');
         document.body.classList.add('nav-enabled');
-        floatingNavContainer.innerHTML = floatingNav;
-        document.getElementById('content').prepend(floatingNavContainer.children[0]);
+        document.getElementById('secondary-navigation').innerHTML = floatingNav;
         if(document.getElementById('nav-init') !== null) {
             document.getElementById('nav-init').remove();
         }

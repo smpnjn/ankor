@@ -762,6 +762,28 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
                             }
                         }
                     }
+                    try {
+                        let checkSeries = allItemData.data?.[0]?.series !== "none" && allItemData.data?.[0]?.series !== undefined && dataItem?.file !== undefined
+                        if(dataItem?.file !== undefined || checkSeries) {
+                            if(dataItem.file.match(/<div id="nav-init"><\/div>/gmi) !== null) {
+                                if(req.session == undefined) {
+                                    req.session = {};
+                                }
+                                if(req.session.meta == undefined) {
+                                    req.session.meta = {};
+                                }
+                                if(req.session?.meta?.classes == undefined) {
+                                    req.session.meta.classes = 'nav-enabled'
+                                }
+                                else {
+                                    req.session.meta.classes = `${req.session.meta.classes} nav-enabled`;
+                                }
+                            }
+                        }
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
                 }
             }
             let index = 0;
