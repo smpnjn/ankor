@@ -1148,6 +1148,18 @@ const createPage = async function(inputFile, req, headless, post) {
                 additionalStyles = commonFileTemplates.style;
             }
             
+            let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/default.webp`;
+            console.log();
+            try {
+                let potentialUrl = req.originalUrl.slice(1).split('/')[1];
+                let findFile = await fsPromise(`./public/images/intro-images/${potentialUrl}.webp`);
+                image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl}.webp`;
+            }
+            catch(e) {
+                console.log(e);
+
+            }
+
             let getCss = await consolidateCss(additionalStyles, req)
             let pwa = pwaCache(cachedData);
             let pageMeta = {
@@ -1159,6 +1171,7 @@ const createPage = async function(inputFile, req, headless, post) {
                 canonical: req.protocol + '://' + req.get('host') + req.originalUrl,
                 pwaCache: pwa,
                 css: getCss.css,
+                image: image,
                 asyncCss: getCss.asyncCss,
                 js: getCss.js,
                 classes: req.session.meta.classes || "",

@@ -3,6 +3,7 @@ import express from 'express'
 import { promises as fs } from 'fs'
 import multer from 'multer'
 import cwebp from 'cwebp';
+import sanatizeFilename from 'sanitize-filename'
 
 const imageApi = express.Router();
 const form = multer();
@@ -39,6 +40,7 @@ const createImage = async (req, res, location) => {
             }
         }
         catch(e) {
+            console.log(e);
             res.status(400).send({ "error" : "An error occurred. Please ensure you have a file attached and try again." })
         }
     }
