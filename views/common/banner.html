@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="menu-item mobile">
-                    <span></span> 
+                    <span> </span> 
                 </div>
             </nav>
             <!--#dropdown-->
@@ -65,9 +65,24 @@
     <div class="sub-menu-items">
         <span class="close"></span>
         <h3>Categories</h3>
-        {{categories}}           
+        <data table="category">
+            <data-loop>
+                <a href="/category/{{title}}" class="category" data-category="{{title}}"><span class="menu-icon">{{icon}}</span>{{displayTitle}}</a>
+            </data-loop>
+        </data>
         <h3 class="sub-heading">Series</h3>
-        {{series}}
+        <data table="series" populate="items">
+            <data-loop>
+                <div class="sub-menu-item">
+                    <a href="/series/{{canonicalName}}">
+                        <span class="sub-menu-item-icon">
+                            {{icon}}  
+                        </span>
+                        <span class="sub-menu-item-description"><span>{{title}}</span><span>{{shortDescription}}</span></span>
+                    </a>
+                </div>
+            </data-loop>
+        </data>
     </div>
 </nav>
 <style combined>
@@ -92,7 +107,6 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-}
 }
 .menu-item.mobile {
     display: flex;
@@ -251,19 +265,19 @@ header #social {
     pointer-events: all;
 }
 #mobile .sub-menu-items h3 {
-    font-weight: 600;
-    background: transparent;
-    margin: 0;
+    font-weight: 700;
+    background: 0 0;
+    margin: 0.5em 0rem 1rem 1rem;
     font-size: 1.25rem;
     border-radius: 0;
+    border-bottom: none;
 }
-
 #mobile .sub-menu-items .category, #mobile .sub-menu-item-description > span:first-of-type {
     width: calc(100% - 1.5rem);
     box-sizing: border-box;
     color: black;
     font-weight: 500;
-    font-size: 1.125rem;
+    font-size: 1rem;
     padding: 1rem 0;
 }
 
@@ -274,16 +288,16 @@ header #social {
     width: 100%;
 }
 #mobile .sub-menu-item-description > span:last-of-type {
-    font-size: 1.125rem;
+    font-size: 1rem;
 }
 #mobile .sub-menu-items .category .menu-icon {
-    background: #bcc8e2c9;
+    background: #dae1f0c9;
     margin: 0 1rem 0 0;
 }
 
 #mobile .sub-menu-item-icon {
     text-align: center;
-    background: #c7d0e5b3;
+    background: #dae1f0c9;
     border-radius: 100px;
 }
 
@@ -520,7 +534,7 @@ header #social {
     animation: scrollBackwards 0.2s ease-out forwards 1;
 }
 #mobile .sub-menu-item {
-    margin: 0 0 2rem 0;
+    margin: 0 0 1rem 0;
 }
 .sub-menu-item a:hover {
     opacity: 1;

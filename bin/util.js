@@ -169,7 +169,7 @@ const parseFileCode = async (file) => {
                     item.classList.add(`language-${item.getAttribute('class')}`);
                     item.textContent = item.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').toString();
                     
-                    const getCodeValue = await rehype().use(rehypePrism, { showLineNumbers: true }).process(item.parentElement.outerHTML);
+                    const getCodeValue = await rehype().use(rehypePrism, { showLineNumbers: true, ignoreMissing: true }).process(item.parentElement.outerHTML);
                     const merge = parseHTML(`<!DOCTYPE html><html><body id="main">${getCodeValue.value}</body></html>`);
                     if(merge.document.querySelector('code').children[0].textContent.trim() == '') {
                         merge.document.querySelector('code').children[0].remove();
