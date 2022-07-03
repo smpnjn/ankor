@@ -1178,8 +1178,7 @@ const createPage = async function(inputFile, req, headless, post) {
                 image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl}.webp`;
             }
             catch(e) {
-                console.log(e);
-
+                //console.log(e);
             }
 
             let getCss = await consolidateCss(additionalStyles, req)
