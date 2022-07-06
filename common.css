@@ -188,9 +188,7 @@ canvas:not(.inline-canvas) {
     height: auto;
     border-radius: 100px;
     overflow: hidden;
-    display: block;
     margin: 0px auto;
-    display: block;
     transform: rotateX(0deg) rotateY(0deg) scale(1);
     filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
     font-weight: 600;
@@ -247,6 +245,7 @@ h2 {
 }
 .subscribe-button span {
     filter: drop-shadow(0 10px 15px #e64b755e);
+    display: block;
 }
 
 pre {
