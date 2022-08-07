@@ -1,15 +1,16 @@
+<url routes="[ '/draft/:canonicalName' ]" />
 <config>
     <description>This is a draft article</description>
     <title>Draft</title>
     <robots>noindex,nofollow</robots>
 </config>
 <template>
-    <div id="container">
-        <div id="content">
-            <h1>{{title}}</h1>
+    <div id="container">          
+        <h1>Draft Article</h1>     
+        <data file-name="canonicalName" parse-code="true"> 
             <div id="content-text">
-                {{content}}
+                {{file}}                
             </div>
-        </div>
+        </data>
     </div>
 </template>
