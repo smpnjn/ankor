@@ -139,6 +139,10 @@ if(document.querySelector('#search input') !== null) {
         }
     });
 }
+
+if(document.querySelectorAll('article').length == 0 && document.getElementById('pagination') !== null) {
+    document.getElementById('pagination').remove();
+}
 if(document.getElementById('pagination') !== null) {
     let skip = 12;
     let limit = 11;

@@ -1,4 +1,4 @@
-<url routes="[ '/', '/page/:page']" />
+<url routes="[ '/' ]" />
 <config>
     <title>Fjolt</title>
     <classes>home</classes>
@@ -6,7 +6,7 @@
 <template>
     <div id="container">
         <section id="content">
-            <h1 id="main-latest-posts">Latest Post <button class="subscribe-button">Subscribe for Daily Dev Content</button></h1>
+            <h1 id="main-latest-posts">Latest Post</h1>
             <data table="article" limit="12" sort="-date">
                 {{component-firstPost}}
                 {{component-triplePost}}
@@ -19,19 +19,9 @@
 <style combined>
 #main-latest-posts {
     display: block;
-}
-h1 .subscribe-button {
-    border-radius: 100px;
-    background: transparent;
-    box-shadow: none;
-    display: block;
-    font-weight: 600;
-    text-decoration: underline;
+    font-weight: 800;
+    float: left; 
     width: 100%;
-    margin: 1rem 0;
-    text-align: left;
-    margin: 1rem 0;
-    padding: 0;
 }
 @media screen and (min-width: 1000px) {
     #main-latest-posts {

@@ -9,6 +9,7 @@
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 text-rendering: optimizeLegibility;
+                font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;
             }
             #email .promoted { 
                 border-bottom: 1px solid #e6e6e6;
@@ -39,10 +40,10 @@
                 width: calc(33.3% - 2rem);
                 margin-right: 2rem;
             }
-            #email h2 { font-size: 1.5rem; }
+            #email h2 { font-size: 1.75rem; font-weight: 800; }
             #email .archive-article-description a {
-                color: rgba(0,0,0,0.9);
-                font-size: 1rem;
+                color: rgba(0,0,0,0.6);
+                font-size: 1.125rem;
                 line-height: 1.75rem;
             }
             #email .double-posts {
@@ -64,9 +65,11 @@
             #email .category {
                 display: none;
             }
-            #email article { 
+            #email article {    
                 display: block;
-                max-width: 50%; 
+                max-width: 100%;
+                padding: 0.5rem 2rem 2rem 2rem;
+                border-bottom: 2px solid #e4e4e4;
             }
 
             #email article img {
@@ -123,33 +126,38 @@
         </style>
     </head>
     <body style="background: #f0f0f9; margin: 0px; padding: 0px; word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;">
-        <table id="email" style="font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <table id="email" style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody>
                 <tr>
                     <td style="padding: 0 0 0px 0;">
-                        <table align="center" border="0" style="margin: 2rem auto;" cellpadding="0" cellspacing="0" width="80%">
+                        <table align="center" border="0" style="max-width: 800px; border-radius: 8px; overflow: hidden; margin: 2rem auto;" cellpadding="0" cellspacing="0" width="80%">
                             <tbody>
                                     <tr>
-                                    <td bgcolor="#FFFFFF" style="border-collapse: collapse; padding: 0 2rem 2rem 2rem;">
+                                    <td bgcolor="#FFFFFF" style="border-collapse: collapse; padding: 0;">
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tbody>
                                                 <tr>
-                                                    <td style="padding: 2rem 0 2rem 0; font-size: 1.5rem; font-weight: bold; line-height: 1rem; letter-spacing: -0.5px; color: #262a2d;">
+                                                    <td style="padding: 2rem;
+                                                    font-size: 1.5rem;
+                                                    font-weight: bold;
+                                                    line-height: 1rem;
+                                                    letter-spacing: -0.5px;
+                                                    background: #318369;
+                                                    border-bottom: 4px solid #247b5e;
+                                                    color: white;">
                                                         <a href="https://fjolt.com/">
                                                             <svg xmlns="http://www.w3.org/2000/svg" height="34" viewBox="0 0 499 129" aria-label="Fjolt">
                                                                 <title>Fjolt</title>
-                                                                <path id="FJOLT" fill="black" class="cls-1" d="M83.463,81.9l5.624-26.492H49.423l3.7-17.316H95.155L100.779,11.6H25.891L3.543,117.273H36.4L43.8,81.9H83.463Zm66.6-6.216q-1.63,7.992-4.81,11.692a10.336,10.336,0,0,1-8.214,3.7,9.119,9.119,0,0,1-7.4-3.182q-2.664-3.181-2.664-8.954a24.762,24.762,0,0,1,.3-3.4H93.823a60.548,60.548,0,0,0-.3,6.068q0,17.76,11.1,28.046t30.34,10.286q19.092,0,31.6-10.878t16.8-31.45L197.275,11.6h-33.6ZM278.6,111.427a57.883,57.883,0,0,0,20.942-22.792,67.648,67.648,0,0,0,7.4-31.6q0-14.947-5.994-25.826a40.413,40.413,0,0,0-16.724-16.576q-10.731-5.7-25.234-5.7a56.777,56.777,0,0,0-30.858,8.51A58.031,58.031,0,0,0,207.19,40.165a67.517,67.517,0,0,0-7.4,31.672q0,14.95,5.994,25.826a40.391,40.391,0,0,0,16.724,16.576q10.73,5.7,25.234,5.7A56.756,56.756,0,0,0,278.6,111.427ZM238.492,86.193q-3.774-5.03-3.774-14.5a49.865,49.865,0,0,1,2.96-17.834,28.107,28.107,0,0,1,8.066-11.988,17.545,17.545,0,0,1,11.47-4.218q7.251,0,11.026,5.032t3.774,14.5a49.878,49.878,0,0,1-2.96,17.834,28.116,28.116,0,0,1-8.066,11.988,17.547,17.547,0,0,1-11.47,4.218Q242.265,91.225,238.492,86.193Zm147.333,31.08,7.992-28.86H350.009L366.289,11.6h-33.6L310.345,117.273h75.48Zm55.055,0,16.28-76.812h29.452L492.68,11.6h-92.5l-6.068,28.86h29.452l-16.28,76.812h33.6Z"></path>
+                                                                <path id="FJOLT" fill="white" class="cls-1" d="M83.463,81.9l5.624-26.492H49.423l3.7-17.316H95.155L100.779,11.6H25.891L3.543,117.273H36.4L43.8,81.9H83.463Zm66.6-6.216q-1.63,7.992-4.81,11.692a10.336,10.336,0,0,1-8.214,3.7,9.119,9.119,0,0,1-7.4-3.182q-2.664-3.181-2.664-8.954a24.762,24.762,0,0,1,.3-3.4H93.823a60.548,60.548,0,0,0-.3,6.068q0,17.76,11.1,28.046t30.34,10.286q19.092,0,31.6-10.878t16.8-31.45L197.275,11.6h-33.6ZM278.6,111.427a57.883,57.883,0,0,0,20.942-22.792,67.648,67.648,0,0,0,7.4-31.6q0-14.947-5.994-25.826a40.413,40.413,0,0,0-16.724-16.576q-10.731-5.7-25.234-5.7a56.777,56.777,0,0,0-30.858,8.51A58.031,58.031,0,0,0,207.19,40.165a67.517,67.517,0,0,0-7.4,31.672q0,14.95,5.994,25.826a40.391,40.391,0,0,0,16.724,16.576q10.73,5.7,25.234,5.7A56.756,56.756,0,0,0,278.6,111.427ZM238.492,86.193q-3.774-5.03-3.774-14.5a49.865,49.865,0,0,1,2.96-17.834,28.107,28.107,0,0,1,8.066-11.988,17.545,17.545,0,0,1,11.47-4.218q7.251,0,11.026,5.032t3.774,14.5a49.878,49.878,0,0,1-2.96,17.834,28.116,28.116,0,0,1-8.066,11.988,17.547,17.547,0,0,1-11.47,4.218Q242.265,91.225,238.492,86.193Zm147.333,31.08,7.992-28.86H350.009L366.289,11.6h-33.6L310.345,117.273h75.48Zm55.055,0,16.28-76.812h29.452L492.68,11.6h-92.5l-6.068,28.86h29.452l-16.28,76.812h33.6Z"></path>
                                                             </svg>
                                                         </a>
+                                                        <p style="font-size: 1.25rem; font-weight: 400;">👋 Hello, here are a selection of articles we've published this week. Enjoy!</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size: 1.25rem; color: rgba(0,0,0,0.8); padding: 0 0 2rem 0; border-bottom: 1px solid #eee;">👋 Hello, here are a selection of articles we've published this week. Enjoy!</td>
-                                                </tr>
-                                                <tr>
                                                     <td style="padding: 0 0 30px 0;font-size: 16px; line-height: 28px;">
-                                                        <data table="article" limit="14" sort="-date">
-                                                            {{component-doublePost*7}}
+                                                        <data table="article" limit="10" sort="-date">
+                                                            {{component-singlePostEmail*10}}
                                                         </data>
                                                     </td>
                                                 </tr>

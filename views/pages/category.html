@@ -1,4 +1,4 @@
-<url routes="[ '/category/:category' ]" />
+<url routes="[ '/category/:category', '/tag/:category' ]" />
 <config table="category" filter=":category" filter-on="canonicalName" limit="1">
     <description>{{description}}</description>
     <title>Fjolt - {{displayTitle}}</title>
@@ -8,7 +8,7 @@
     <div id="container">
         <section id="content">
             <data table="category" filter=":category" limit="1" filter-on="title">
-                <h1>All <a class="category inline" href="#">{{displayTitle}}<span style="background: {{color.0}};" class="color"></span></a> Content</h1>
+                <h1>All {{displayTitle}} Content</h1>
             </data>
             <data table="article" limit="12" sort="-date" filter=":category" filter-on="category">
                 {{component-firstPost}}
@@ -21,10 +21,6 @@
 </template>
 <style class="combined">
     h1 {
-        display: flex;
-        align-items: center;
-    }
-    h1 .category.inline {
-        margin: 0 1rem;
+        font-weight: 800;
     }
 </style>

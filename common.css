@@ -15,7 +15,7 @@ body {
 }
 h1, h2 {
     margin: 0 0 1.5rem 0;
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 600;
     line-height: 1.5;
 }
@@ -28,7 +28,7 @@ h1 a, h2 a {
 }
 
 p {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     line-height: 1.5;
     margin-bottom: 2.5rem;
     text-decoration: none;
@@ -55,24 +55,20 @@ p {
     margin: 0 0 3rem 0;
     border-bottom: none;
 }
-#content-text h2 .header-navigation {
-    color: rgb(255 255 255);
+#content-text h2 .header-navigation {    
+    color: rgb(210 255 204 / 20%);
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 2rem;
     transition: all .1s ease-out;
     text-decoration: none;
-    padding: 0 1rem;
-    height: 2rem;
-    background: #151b24;
-    margin: 0 0 0 1rem;
+    margin: 0 0.5rem 0 0;
     align-items: center;
     display: flex;
     line-height: 1.5;
-    border-radius: 20px;
 }
 #header-container {
     float: left;
-    margin: 1.5rem 0 2rem 0;
+    margin: 0 0 2rem 0;
     width: 100%;
 }
 #header-container h1 {
@@ -122,7 +118,7 @@ button {
     font-size: 1rem;
 }
 ul li {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     line-height: 2.2rem;
     padding-bottom: 0.25rem;
     color: #ffffffd9;
@@ -219,7 +215,7 @@ canvas:not(.inline-canvas) {
     font-size: 1rem;
     line-height: 1.5rem;
     position: relative;
-    border-radius: 100px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
 }
@@ -252,33 +248,36 @@ h2 {
 pre {
     padding: 0;
     font-size: 1rem;
-    margin: 0rem 0 3rem 0;
+    margin: 0 0 3rem 0;
     position: relative;
     display: inline-block;
     max-width: 100%;
     overflow: auto;
-    font-family: Monaco, Menlo, 'Courier New', monospace;
+    box-shadow: 6px 6px #0e1316, 8px 8px #151b24;
+    font-family: Monaco,Menlo,'Courier New',monospace;
     max-width: 100%;
     width: 100%;
 }
 
 pre code, .plain-code {
-    font-family: Monaco, Menlo, 'Courier New', monospace;
+    font-family: Monaco,Menlo,'Courier New',monospace;
     left: 5px;
-    margin-top: 0rem;
+    margin-top: 0;
     overflow: auto;
+    border-radius: 10px;
     box-sizing: border-box;
-    padding: 1rem;
     display: block;
     max-height: 500px;
-    line-height: 1.45rem;
-    border-radius: 14px;
-    min-height: 111px;
+    line-height: 2rem;
     width: 100%;
     float: left;
     background: #151b24;
-    font-size: .9rem;
+    font-size: 1rem;
     max-width: 100%;
+    /* border: 1px solid #262e39; */
+    padding: 0;
+    box-shadow: -3px -3px #000;
+    border-radius: 4px;
 }
 
 .plain-code {
@@ -289,10 +288,12 @@ pre code, .plain-code {
     content: attr(line);
     min-width: 2rem;
     display: inline-block;
-    padding: 0 0 0 0.5rem;
-    margin: 0 1rem 0 0;
-    color: #ffffff42;
-    text-align: left;
+    background: #19202a;
+    position: relative;
+    padding: 0 0.5rem;
+    margin: 0 0.5rem 0 0;
+    color: #ffffff73;
+    text-align: center;
 }
 .fl {
     float: left;
@@ -365,15 +366,15 @@ p > code {
     font-weight: 500;
     font-family: 'Inter', sans-serif;
     border-bottom: none;
-    border-radius: 8px;
     padding: 0.5rem 1rem;
-    background: #1e2632;
     height: auto;
     font-size: 0.9rem;
     right: 1.25rem;
     bottom: 1.25rem;
     width: 1.35rem;
     height: 1.75rem;
+    border-radius: 3px;
+    background: #272e39;
 }
 .code-options .copy {
     font-weight: 400;
@@ -401,7 +402,6 @@ p > code {
     text-decoration: none;
 }
 #carbonads span {
-    position: relative;
     display: block;
 }
 #carbonads .carbon-wrap {
@@ -412,9 +412,10 @@ p > code {
 
 #carbonads .carbon-text,
 #carbonads .carbon-img {
-    padding: 10px;
+    padding: 0 0.75rem 0 0;
     font-size: 13px;
     line-height: 1.5;
+    position: relative;
     margin-bottom: 0;
 }
 
@@ -433,18 +434,29 @@ p > code {
 }
 
 #carbonadcontainer h3 {
-    font-size: 1rem;
-    margin: 0 0 1rem 0;
-    display: flex;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1rem;
+    padding: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem 0;
 }
 #carbonadcontainer {
     height: 181px;
+    background: #151b24;
+    height: 8.5rem;
+    padding: 1rem;
+    position: relative;
+    border-radius: 4px;
 }
 #content-text #carbonadcontainer {
-    height: 13rem;
+    height: 8.5rem;
     width: 100%;
     margin: 0;
     float: left;
+    background: #151b24;
+    padding: 1rem;
+    border-radius: 4px;
+}
 }
 #pagination {
     width: 100%;

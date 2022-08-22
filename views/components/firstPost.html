@@ -5,7 +5,7 @@
             <article class="archive-article featured-post-article" data-url="{{qualifiedUrl}}">
                 <div class="intro-image">
                     <div class="archive-article-category">
-                        <a class="category" style="color: {{associatedWith.category.color[0]}};" href="/category/{{associatedWith.category.title}}">{{associatedWith.category.displayTitle}}</a>
+                        <a class="category" href="/category/{{associatedWith.category.title}}">{{associatedWith.category.displayTitle}}</a>
                     </div>
                     <a href="{{qualifiedUrl}}" aria-label="{{title}}"><img src="/images/intro-images/{{canonicalName}}.webp" {{lazyLoading}} alt="{{title}}" onerror="this.style.display='none'" /></a>
                 </div>
@@ -13,11 +13,6 @@
                     <h2><a href="{{qualifiedUrl}}">{{titles[0].title}}</a></h2>
                     <div class="archive-article-description">
                         <a href="{{qualifiedUrl}}">{{description}}</a>
-                    </div>
-                    <div class="archive-article-tags">
-                        <array-loop of="associatedWith.tags">
-                            <a href="/tag/{{item}}"><span>#</span>{{item}}</a>
-                        </array-loop>
                     </div>
                 </div>    
             </article>
@@ -41,6 +36,7 @@
 
 .featured-post-article .archive-article-category {
     top: 0;
+    right: 2rem;
 }
 #content .featured-post-article {
     padding: 0;
@@ -57,8 +53,6 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-}
-.featured-post-article .category {
     background: white;
     transform: scale(1);
     transition: all 0.1s ease-out;
@@ -68,10 +62,12 @@
     box-shadow: 0 2px 20px rgb(0 0 0 / 10%);
     border-radius: 15px;
     z-index: 2;
+    color: black;
     padding: 0.25rem 0.75rem;
 }
 .featured-post-article .intro-image {
     display: none;
+    position: relative;
 }
 .featured-post-article .archive-article img {
     border-radius: 14px;
@@ -125,7 +121,7 @@
         height: 100%;
         overflow: hidden;
         background: #151b24;
-        border-radius: 14px;
+        border-radius: 4px;
         width: calc(100% - 2rem);
         min-width: calc(100% - 2rem);
         height: 200px;
@@ -142,7 +138,8 @@
     }
     .featured-post {
         grid-template-columns: calc(100% - 330px - 2rem) 330px;
-        border-bottom: 1px solid #232833;
+        border-bottom: 2px solid #49536875;
+        padding: 0 0 1rem 0;
     }
 }
 </style>

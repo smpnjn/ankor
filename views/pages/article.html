@@ -8,7 +8,6 @@
     <section id="container">
         <article id="content">
             <nav id="secondary-navigation"></nav>
-            <div class="go-home"><a href="/">🧑‍💻 Go back to the homepage</a></div>
             <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" file-name="canonicalName" parse-code="true">
                 <div class="fl series-holder">
                     <data table="series" limit="1" items-with-parents="series" filter-on="canonicalName" populate="items">
@@ -79,13 +78,16 @@ body.series-item #content, body.nav-enabled #content {
 #content-text h2:not(#carbonadcontainer h2) {
     font-weight: 800;
     line-height: 3rem;
-    font-size: 1.75rem;
-    letter-spacing: 0.25px;
+    font-size: 2rem;
+    letter-spacing: .25px;
     float: left;
     width: 100%;
     display: flex;
     align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
     color: #74fa5f;
+}
 }
 #content {
     box-sizing: border-box;
@@ -114,7 +116,7 @@ body.series-item #content, body.nav-enabled #content {
     border-bottom: 1px solid #191f2b;
     display: block;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: 1.125rem;
     color: white;
     overflow: hidden;
     text-decoration: none;
@@ -122,9 +124,9 @@ body.series-item #content, body.nav-enabled #content {
     white-space: nowrap;
 }
 
-#secondary-navigation {
+#secondary-navigation {    
     margin-bottom: 2rem;
-    padding: 0 1rem 0rem 0;
+    padding: 0 1rem 0 0;
     overflow: scroll;
     margin: 0;
     max-height: calc(100vh - 13rem);
@@ -133,14 +135,14 @@ body.series-item #content, body.nav-enabled #content {
     border: none;
     position: absolute;
     width: 13rem;
-    background: transparent;
+    background: 0 0;
     display: none;
-    margin: 0 0rem;
+    margin: 0 0;
     left: 0;
-    transform: translateY(0px);
+    transform: translateY(0);
     background: #151b24;
-    border-left: 4px solid #74fa5f;
-    border-radius: 0 14px 14px 0;
+    /* border-left: 4px solid #74fa5f; */
+    border-radius: 4px;
 }
 #secondary-navigation h2 {
     color: white;
@@ -167,7 +169,11 @@ body.series-item #content, body.nav-enabled #content {
     color: white;
 }
 #carbonadcontainer h2 {
-    font-size: 1rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1rem;
+    padding: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem 0;
 }
 #article-progress {
     display: none;
@@ -215,7 +221,7 @@ body.series-item #content, body.nav-enabled #content {
     border-bottom: 1px dotted #ffffff2e;
     padding: 0.25rem 0;
     font-weight: 600;
-    margin: 0 0 2rem 0;
+    margin: 0;
     letter-spacing: 0.25px;
 }
 .go-home + .fl {

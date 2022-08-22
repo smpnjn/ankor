@@ -98,6 +98,10 @@ pre > code.highlight {
 	outline-offset: .4em;
 }
 
+pre > code:not([class^="language"]) {
+    padding: 1rem;
+}
+
 .line-numbers.line-numbers .line-numbers-rows {
 	border-right-color: #1f2932;
 }
@@ -152,6 +156,9 @@ pre > code.highlight {
 input[type="text"]::placeholder {
     font-weight: 400;
     color: #babed2;
+}
+#search input[type="text"]::placeholder {
+    color: #333;
 }
 input::placeholder {
     color: #d8dbeaad;
