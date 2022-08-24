@@ -98,7 +98,7 @@ pre > code.highlight {
 	outline-offset: .4em;
 }
 
-pre > code:not([class^="language"]) {
+pre > code:not([class*="language"]) {
     padding: 1rem;
 }
 
