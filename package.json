@@ -235,7 +235,7 @@
     "mkdirp": "^1.0.4",
     "module-details-from-path": "^1.0.3",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.32",
+    "moment-timezone": "^0.5.37",
     "mongodb": "^3.6.3",
     "mongoose": "^6.0.8",
     "mongoose-legacy-pluralize": "^1.0.2",
