@@ -27,10 +27,10 @@
                 </div>
                 <div class="menu-item all-courses">
                     <span>
-                        Series
+                        Handbooks
                     </span> 
                     <div class="sub-menu-items">
-                        <h3 class="sub-heading">Series</h3>
+                        <h3 class="sub-heading">Complete Guides</h3>
                         <data table="series" populate="items">
                             <data-loop>
                                 <div class="sub-menu-item">
@@ -271,11 +271,12 @@ header #social {
     background: 0 0;
     margin: 0.5em 0rem 1rem 1rem;
     font-size: 1.25rem;
+    padding: 0;
     border-radius: 0;
     border-bottom: none;
 }
 #mobile .sub-menu-items .category, #mobile .sub-menu-item-description > span:first-of-type {
-    width: calc(100% - 1.5rem);
+    width: auto;
     box-sizing: border-box;
     color: black;
     font-weight: 500;
@@ -291,16 +292,6 @@ header #social {
 }
 #mobile .sub-menu-item-description > span:last-of-type {
     font-size: 1rem;
-}
-#mobile .sub-menu-items .category .menu-icon {
-    background: #dae1f0c9;
-    margin: 0 1rem 0 0;
-}
-
-#mobile .sub-menu-item-icon {
-    text-align: center;
-    background: #dae1f0c9;
-    border-radius: 100px;
 }
 
 @media screen and (min-width: 1000px) {
@@ -364,7 +355,7 @@ header #social {
     box-sizing: border-box;
     transform: scale(0.95) rotateX(-2deg);
     background: #ffffff;
-    border-radius: 14px;
+    border-radius: 4px;
     padding: 0rem 0 1rem 0;
     left: 5vw;
     box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
@@ -383,21 +374,21 @@ header #social {
 .sub-menu-items .category {    
     color: #232343e0;
     text-transform: initial;
-    width: calc(50% - 2rem);
+    width: calc(50% - 3rem);
     display: flex;
     align-items: center;
     text-decoration: none;
-    margin: 0 0.5rem 0 1rem;
+    margin: 0 0.5rem 0.5rem 1.5rem;
     padding: 0.5rem 0;
     float: left;
+    font-size: 1.1rem;
     font-weight: 500;
 }
 .sub-menu-items h3 {
-    color: #000;
+    color: #000000;
     text-align: left;
     font-size: 1rem;
-    border-bottom: 1px solid #3f3b3b2e;
-    padding: 0.75rem 0rem;
+    padding: 0.75rem 0;
     margin: 0 2rem;
     margin: 2rem;
     box-sizing: border-box;
@@ -406,27 +397,28 @@ header #social {
     margin: 0.5rem 1.5rem;
     font-weight: 500;
     letter-spacing: 0;
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 .sub-menu-items .category .menu-icon {
-    margin: 0 0.5rem 0 0;
-    border-radius: 100px;
-    transition: all 0.1s ease-out;
+    margin: 0 1rem 0 0;
+    border-radius: 0;
+    transition: all .1s ease-out;
     width: 2rem;
     box-sizing: border-box;
     height: 2rem;
     display: flex;
     transform: scale(1);
     align-items: center;
+    box-shadow: 0 3px 0 #dfdfdf, 0 -3px 0 #cdcdcd, 3px 0 0 #e3e3e3, -3px 0 0 #d9d9d9;
     justify-content: center;
 }
-.sub-menu-items .category:hover .menu-icon {
-    background: #004cff;
-    box-shadow: 0 2px 3px rgb(15 33 74 / 30%);
+.sub-menu-items a:hover .menu-icon, .sub-menu-items a:hover .sub-menu-item-icon {
+    background: #0037ff;
+    box-shadow: 0 3px 0 #10076f, 0 -3px 0 #2114b1, 3px 0 0 #2114b1, -3px 0 0 #10086f;
     transform: scale(1.1);
 }
-.sub-menu-items .category:hover .menu-icon svg {
+.sub-menu-items a:hover .menu-icon svg, .sub-menu-items a:hover .sub-menu-item-icon svg {
     color: white;
 }
 .sub-menu-item {
@@ -442,7 +434,7 @@ header #social {
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.75rem 1.5rem;
 }
 .sub-menu-item-description {
     text-align: left;
@@ -452,29 +444,28 @@ header #social {
 .sub-menu-item-description > span {
     display: block;
 }
-.sub-menu-item-description > span:first-of-type {
+.sub-menu-item-description > span:first-of-type {    
     display: block;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     text-transform: initial;
     margin: 0 0 0.25rem 0;
-    color: #232343e0;
+    color: #5b5b5b;
 }
 .sub-menu-item-description > span:last-of-type {    
-    color: rgb(67 69 88 / 53%);
-    font-weight: 400;
-    font-size: 1rem;
-    margin: 0.25rem 0 0 0;
-    line-height: 1.5rem;
+    display: none;
 }
-.sub-menu-item-icon {
-    padding: 0.5rem;
+.sub-menu-item-icon {     
     font-size: 1.5rem;
-    color: white;
-    border-radius: 10px;
-    min-width: 32px;
-    height: 32px;
-    margin: 0 1rem 0 0.5rem;
+    color: #fff;
+    min-width: 2rem;
+    display: flex;
+    align-items: center;
+    background: white;
+    justify-content: center;
+    height: 2rem;
+    box-shadow: 0 3px 0 #dfdfdf, 0 -3px 0 #cdcdcd, 3px 0 0 #e3e3e3, -3px 0 0 #eee;
+    margin: 0 1rem 0 0;
 }
 .sub-menu-items .close {
     height: 2.75rem;
@@ -522,12 +513,7 @@ header #social {
     }
 }
 #mobile .sub-menu-item a {
-    width: calc(100% - 1rem);
-    border-radius: 15px;
-}
-#mobile .sub-menu-item a:hover {
-    background: white;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.05), 0 2px 3px rgba(0,0,0,0.05);
+    width: calc(100% - 3rem);
 }
 #mobile .sub-menu-items.active {
     animation: scrollSideways 0.2s ease-out forwards 1;
@@ -538,9 +524,9 @@ header #social {
 #mobile .sub-menu-item {
     margin: 0 0 1rem 0;
 }
-.sub-menu-item a:hover {
+.sub-menu-item a:hover {    
     opacity: 1;
-    background: #e9eaef;
+    background: #f6f6f6;
 }
 #logo:hover a > svg path {
     fill: #0b71ff !important;

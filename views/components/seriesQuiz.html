@@ -2,7 +2,6 @@
     <data table="quiz" items-with-parents="canonicalName" filter-on="associatedCanonical"> 
         <div class="quiz">
             <a href="/quiz/{{canonicalName}}">
-                <span class="progress"><span class="progress-percentage"></span></span>
                 <span class="medal">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="28" height="44" viewBox="0 0 117 179"><circle class="cls-1" cx="58.5" cy="121.5" r="57.5"></circle><path class="cls-2" d="M19-3.343L37,88.671S80.754,89.814,82,90,98-3,98-3"></path></svg>
                     <span class="medal-outcome"></span>
@@ -18,7 +17,7 @@
     border: none;
     min-width: 175px;
 }
-.quiz a {
+#series-content .quiz a {    
     padding: 1rem;
     display: block;
     width: 100%;
@@ -26,14 +25,20 @@
     position: relative;
     text-align: left;
     font-size: 1.25rem;
-    color: white;
+    color: #4b4b4b;
     background: #242c3a;
     padding: 1.5rem 1rem 1rem 1rem;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 800;
     border-radius: 10px;
     overflow: hidden;
-    margin: 2rem;
+    /* margin: 2rem; */
+    background: #fff;
+    /* box-sizing: border-box; */
+    /* width: 100%; */
+    box-sizing: border-box;
+    border-radius: 0;
+    box-shadow: 0 -3px 0 #c9c9c9, 0 3px #ddd, -3px 0 #c9c9c9, 3px 0 #ddd, 0 -6px #000, 0 6px #000, -6px 0 #000, 6px 0 #000;
 }
 .quiz .progress {
     width: 100%;
@@ -76,9 +81,11 @@
     .quiz a {
         margin: 0;
         width: calc(100% - 1rem);
-        margin-left: 1rem !important;
         border-radius: 0;
         background: transparent;
+    }
+    .quiz {
+        margin-left: 1.25rem;
     }
 }
 </style>

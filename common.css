@@ -173,22 +173,24 @@ canvas:not(.inline-canvas) {
     float: none;
 }
 .hover-button > span {
-    background: linear-gradient(45deg, #ff6d1b, #e0417f);
+    background: linear-gradient(45deg,#74fa60,#47e95b);
     font-size: 1rem;
     padding: 0.75rem 1.5rem;
+    color: #365930;
     line-height: 1.5rem;
-    will-change: transform, filter;
+    will-change: transform,filter;
     display: block;
     float: none;
     margin: 0;
-    transition: all 0.15s ease-out;
+    transition: all .15s ease-out;
     height: auto;
     border-radius: 100px;
+    border-radius: 7px;
     overflow: hidden;
-    margin: 0px auto;
-    transform: rotateX(0deg) rotateY(0deg) scale(1);
-    filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
-    font-weight: 600;
+    margin: 0 auto;
+    transform: rotateX(0) rotateY(0) scale(1);
+    filter: drop-shadow(0 15px 15px rgba(0,0,0,.3));
+    font-weight: 800;
     perspective-origin: 0 0;
     letter-spacing: 0;
 }
@@ -241,7 +243,7 @@ h2 {
     font-size: 1.5rem;
 }
 .subscribe-button span {
-    filter: drop-shadow(0 10px 15px #e64b755e);
+    filter: drop-shadow(0 10px 15px #74fa6038);
     display: block;
 }
 

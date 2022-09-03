@@ -4,7 +4,7 @@
     </div>
 </div>
 <div id="subscribe">
-    <button class="hover-button subscribe-button" data-filter-color="#e64b755e">
+    <button class="hover-button subscribe-button" data-filter-color="#74fa6038">
         <span>
             <span class="hide-text">
                 Subscribe to Newsletter
@@ -37,11 +37,15 @@
 #subscribe {
     display: block;
 }
+#subscribe .hide-text:before {
+    position: relative;
+    top: 2px;
+    margin: 0 0.25rem 0 0;
+}
 #subscribe {
     position: fixed;
     display: block;
     transition: all 0.1s ease-out;
-    width: 255px;
     z-index: 99999;
     left: 2rem;
     bottom: 2rem;

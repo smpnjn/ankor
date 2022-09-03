@@ -6,29 +6,6 @@
 </config>
 <template>
     <div id="series">
-        <div id="series-information">
-            <div id="advert">
-                <h2>Sponsor</h2>
-                {{advert}}
-            </div>
-            <div id="series-info-meta">
-                <h2>Series Progress</h2>
-                <div class="fl series-progress">
-                    <p>This is how long this series will take to complete.</p>
-                    <div id="series-meta" class="fl">
-                        <div id="series-progress"><div id="series-progress-amount"><div id="series-completion-amount">0%</div></div></div>
-                    </div>
-                </div>
-                <h2>Quiz Medals</h2>
-                <p>When you finish quizzes, your medals will show here.</p>
-                <div id="achievements">
-                    <div id="achievements-info">
-                        <span class="current">0</span> / <span class="total">0</span> Medals Complete
-                    </div>
-                    <div id="medal-holder"></div>
-                </div>
-            </div>
-        </div>
         <div id="series-content">
             <div id="top-section">
                 <data table="series" filter=":seriesName" filter-on="canonicalName" limit="1">
@@ -46,7 +23,7 @@
                             <a href="/article/{{canonicalName}}">
                                 <span class="icon">{{icon}}</span>
                                 <span class="title">{{titles[0].title}}</span>
-                                <span class="text"><span class="info"></span><span class="inner-text">{{shortDescription}}</span></span>
+                                <span class="text"><span class="inner-text">{{shortDescription}}</span></span>
                                 <span class="complete"></span>
                             </a>
                             {{component-seriesQuiz}}
@@ -58,8 +35,12 @@
     </div>
 </template>
 <style combined>
-    #advert {
-        margin-bottom: 2rem;
+    #carbonadcontainer {
+        position: fixed;
+        bottom: 1rem;
+        min-width: 330px;
+        max-width: 100%;
+        right: 1rem;
     }
     #series .items h2 {
         margin: 2rem 0 1rem 0;
@@ -78,9 +59,8 @@
     #guide-info p {
         background: #151b24;
         padding: 1rem 1.5rem;
-        border-radius: 0 14px 14px 0;
+        border-radius: 4px;
         line-height: 1.8;
-        border-left: 5px solid #74fa5f;
     }
     #series-completion-amount {
         margin-right: 0;
@@ -240,13 +220,16 @@
     #series .bar h2 {
 
     }
-    #series-content a {
+    #series-content a {    
         min-height: 80px;
         text-decoration: none;
         border-bottom: none;
-        background: #151b24;
         border-radius: 14px;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.5rem 0;
+        box-shadow: 0 -3px #364151, 3px 0 #364151, -3px 0 #262f3b, 0 3px #262f3b;
+        background: #151b24;
+        border-radius: 0;
+        padding: 1rem 0;
     }
 
     #series-content .item:last-of-type a {
@@ -353,9 +336,6 @@
         border-bottom: none;
     }
 
-    .inner-text {
-        margin: 0 0 0 0.5rem;
-    }
     .item {
         display: flex;
         flex-direction: column;
@@ -381,14 +361,14 @@
         position: relative;
         left: 5rem;
         width: calc(100% - 5rem);
-        padding: 0rem 0 0.5rem 0;
+        padding: 0 0 0.5rem 0;
         font-size: 1.25rem;
         font-weight: 600;
-        line-height: 1.5;
-        color: white;
+        line-height: 1rem;
+        color: #fff;
         float: left;
     }
-    .item > a .text {
+    .item > a .text {    
         position: relative;
         width: calc(100% - 5rem);
         left: 5rem;
@@ -398,8 +378,8 @@
         color: #d8dbea6b;
         margin: 0.25rem 0 0 0;
         float: left;
-        line-height: 1.5rem;
-        font-size: 1rem;
+        line-height: 1.25rem;
+        font-size: 1.125rem;
     }
     .complete {
         display: none;
@@ -428,8 +408,8 @@
             width: calc(33.3% - 2rem);
         }
         #series-content {
-            margin: 0 0 0 2rem;
             width: 66.6%;
+            margin: 0px auto;
         }
         #series-info-meta {
             display: block;
@@ -439,6 +419,9 @@
 <style async>
     #series-content a:hover {
         background: #202735;
+    }
+    #series-content .quiz a:hover {
+        background: #eee;
     }
 </style>
 <script defer type="text/javascript">
