@@ -155,7 +155,7 @@
     "glob-parent": "^5.1.1",
     "good-listener": "^1.2.2",
     "googleapis": "^67.1.1",
-    "graceful-fs": "^4.2.4",
+    "graceful-fs": "^4.2.10",
     "har-schema": "^2.0.0",
     "har-validator": "^5.1.5",
     "has": "^1.0.3",
