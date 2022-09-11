@@ -30,14 +30,7 @@
                         </h2>
                         {{advert}}
                     </div>
-                    {{file}}                
-                    <div id="inline-quiz">
-                        <data table="quiz" items-with-parents="canonicalName" filter-on="associatedCanonical">
-                            <data-item>
-                                {{component-quiz}}
-                            </data-item>
-                        </data>
-                    </div>
+                    {{file}}
                     <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://www.patreon.com/smpnjn?fan_landing=true">🙇‍♂️ If you like this, consider supporting me on Patreon</a></div>
                     <div class="time-date" dateModified>Last Updated {{date}}</div>
                 </div>
@@ -202,16 +195,21 @@ body.series-item #content, body.nav-enabled #content {
 .go-back {
     display: none;
 }
-.go-back a {
-    color: white;
-    background: #151b24;
+.go-back a {    
+    background: #74fa60;
+    box-shadow: 0 3px 0 #28811a, 0 -3px 0 #53bd43, 3px 0 0 #42a633, -3px 0 0 #42a633, 0 2px 20px #79fa6430;
+    color: #265b1f;
+    border-radius: 0;
+    padding: 0.5rem 1rem;
+    font-weight: 800;
+    display: block;
     text-decoration: none;
-    border-radius: 7px;
-    padding: 0.5rem 0.5rem;
-    position: relative;
-    white-space: nowrap;
-    right: -0.75rem;
-    font-size: 0.875rem;
+    text-shadow: 0 0 20px #b6ffab;
+    font-size: 1.125rem;
+}
+.go-back a:hover {
+    color: #1b4216;
+    transform: scale(1.05);
 }
 .go-home a, .sponsor-us a {
     color: white;
