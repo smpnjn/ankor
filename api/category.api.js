@@ -32,6 +32,7 @@ categoryApi.post('/category', jsonParser, async function(req, res) {
     }
 });
 
+
 categoryApi.post('/category/delete', jsonParser, async (req, res) => {
     try {
         if(typeof req.body.title !== "undefined") {

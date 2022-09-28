@@ -11,6 +11,7 @@ const form = multer();
 imageApi.use(express.json());
 imageApi.use(express.urlencoded({ extended: true }));
 
+
 // Reusable image uploader function. Creates .webp version as well.
 const createImage = async (req, res, location) => { 
     if(req?.file !== undefined) {
