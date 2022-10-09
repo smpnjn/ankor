@@ -69,23 +69,19 @@ seriesApi.post('/series', jsonParser, async function(req, res) {
         const requiredKeys = Object.keys(Series.schema.obj);
         let failedObjects = [];
         let succeededObjects = [];
-        if(typeof req.body.seriesItems == "object") {
-            for(let k in Object.keys(req.body.seriesItems)) {
-                if(Array.isArray(req.body.items)) {
+        if(Array.isArray(req.body.items)) {
 
-                    for(let i of req.body.items) {
-                        let thisArticle = await Article.findOne({ canonicalName: { $eq:  i } });
-                        if(thisArticle !== null) {
-                            succeededObjects.push(thisArticle._id);
-                        } 
-                        else {
-                            failedObjects.push(i);
-                        }
-                    }
-
-                    req.body.items = succeededObjects;
+            for(let i of req.body.items) {
+                let thisArticle = await Article.findOne({ canonicalName: { $eq:  i } });
+                if(thisArticle !== null) {
+                    succeededObjects.push(thisArticle._id);
+                } 
+                else {
+                    failedObjects.push(i);
                 }
             }
+
+            req.body.items = succeededObjects;
         }
 
         if(requiredKeys.every(key => Object.keys(req.body).includes(key))) {
