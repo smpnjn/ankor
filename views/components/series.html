@@ -6,14 +6,16 @@
         </div>
     </data-header>
     <div class="ellipsis prev-items"></div>
-    <data-loop of="items">
-        <div class="nav-item">
-            <a href="/article/{{canonicalName}}">
-                <span class="icon">{{icon}}</span>
-                <span class="title">{{titles[0].title}}</span>
-            </a>
-        </div>
-    </data-loop>
+    <div class="nav-items">
+        <data-loop of="items">
+            <div class="nav-item" title="{{titles[0].title}}">
+                <a href="/article/{{canonicalName}}">
+                    <span class="icon">{{icon}}</span>
+                    <span class="title">{{titles[0].title}}</span>
+                </a>
+            </div>
+        </data-loop>
+    </div>
     <div class="series-loader"></div>
     <div class="ellipsis next-items"></div>
 </template>
@@ -27,19 +29,19 @@
         document.querySelector('.series-nav .nav-item a').classList.add('current');
     }
     document.querySelectorAll('.series-nav .nav-item').forEach((i) => {
-        if(i.nextElementSibling !== null && i.nextElementSibling.classList.contains('current') || i.nextElementSibling.nextElementSibling !== null && i.nextElementSibling.nextElementSibling.classList.contains('current')) {
+        if(i.nextElementSibling !== null && i.nextElementSibling.classList.contains('current') || i.nextElementSibling !== null && i.nextElementSibling.nextElementSibling !== null && i.nextElementSibling.nextElementSibling.classList.contains('current')) {
             i.classList.add('visible');
         }
-        if(i.previousElementSibling !== null && i.previousElementSibling.classList.contains('current') || i.previousElementSibling.previousElementSibling !== null && i.previousElementSibling.previousElementSibling.classList.contains('current')) {
+        if(i.previousElementSibling !== null && i.previousElementSibling.classList.contains('current') || i.previousElementSibling !== null && i.previousElementSibling.previousElementSibling !== null && i.previousElementSibling.previousElementSibling.classList.contains('current')) {
             i.classList.add('visible');
         }
         if(i.classList.contains('current')) {
             i.classList.add('visible');
         }
-        if(!i.previousElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.header + .ellipsis') !== null) {
+        if(i.previousElementSibling !== null && !i.previousElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.header + .ellipsis') !== null) {
             i.parentElement.querySelector('.header + .ellipsis').remove();
         }
-        if(!i.nextElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.nav-item + .ellipsis') !== null) {
+        if(i.nextElementSibling !== null && !i.nextElementSibling.matches('.nav-item') && i.classList.contains('visible') && i.parentElement.querySelector('.nav-item + .ellipsis') !== null) {
             i.parentElement.querySelector('.nav-item + .ellipsis').remove();
         }
     })
