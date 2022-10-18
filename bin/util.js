@@ -194,8 +194,7 @@ const pwaCache = (cachedData) => {
     // These are all the pages to cache for the user, so that they can use the latest content in the PWA.
     let cacheContent = [];
     if(cachedData.article !== null) {
-        cacheContent = cachedData?.article?.splice(0, 10);
-        cacheContent = cacheContent.map((x) => `/article/${x.canonicalName}`);
+        cacheContent = cachedData['latestPosts'];
     }
     if(cachedData.category !== null) {
         let categories = cachedData.category.map((x) => `/category/${x.canonicalName}`);
@@ -717,6 +716,13 @@ const parseDataTables = async (loadedContent, req, recursive, post, cache) => {
         else {
             item.classList.remove('no-content')
         }
+        if(item.matches('config') && allItemData.data.length === 0) {
+            allItemData.data = [{
+                title: process.env.websiteName,
+                description: process.env.websiteDescription
+            }]
+        }
+
         if(allItemData !== undefined && allItemData.data.length > 0) {
             if(allItemData.data !== undefined && Array.isArray(allItemData.data)) {
                 for(let dataItem of allItemData.data) {
@@ -1056,6 +1062,11 @@ const recache = async () => {
                 await client.set(`table.${i}`, JSON.stringify(returnData[`${i}`]))
             }        
         }
+        let getPosts = await datasets['article'].find().sort('-date').limit(15);
+        returnData['latestPosts'] = [];
+        getPosts.forEach((item) => {
+            returnData['latestPosts'].push(`/article/${item.canonicalName}`)
+        })
         resolve(returnData)
     });
 }
@@ -1067,7 +1078,7 @@ const createPage = async function(inputFile, req, headless, post) {
     let cachedData = {}
 
     // Timer for page creation
-    console.time(`pageCreation-${timerUuid}`);
+    //console.time(`pageCreation-${timerUuid}`);
     // Load our page, based on `inputFile` name. It can be .html, or not, we will adjust:
     let fileName = `${inputFile}`
     if(inputFile.split('.').length == 1) {
@@ -1080,17 +1091,16 @@ const createPage = async function(inputFile, req, headless, post) {
     let loadFileContent = await loadFile(fileLocation, fileName, req)
     let commonFileTemplates = {};
 
-
     // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
     // Since we don't want to waste time on loading data directly from the DB, we cache data sources in code.
     // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
-    console.time(`recache-${timerUuid}`);
+    //console.time(`recache-${timerUuid}`);
     cachedData = await recache();
-    console.timeLog(`recache-${timerUuid}`);
+    //console.timeLog(`recache-${timerUuid}`);
     
-    console.time(`config-${timerUuid}`);
+    //console.time(`config-${timerUuid}`);
     loadFileContent = await removeConfig(`${loadFileContent}`, `${fileName}`, req, cachedData);
-    console.timeEnd(`config-${timerUuid}`);
+    //console.timeEnd(`config-${timerUuid}`);
 
     // We need meta data for a page to load. If the page isn't working, ensure you have a <config> tag in your page with associated JSON.
     if(req?.session?.meta !== undefined || post === true || req?.session?.meta == undefined && headless == true) {
@@ -1098,9 +1108,9 @@ const createPage = async function(inputFile, req, headless, post) {
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
         // The first thing we should do is flesh out all {{component-*}} tags, so we have one source of the truth
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
-        console.time(`parseAllComponents-${timerUuid}`);
+        //console.time(`parseAllComponents-${timerUuid}`);
         loadFileContent = await parseComponents(loadFileContent, req);
-        console.time(`parseAllComponents-${timerUuid}`);
+        //console.time(`parseAllComponents-${timerUuid}`);
 
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
         // Let's load any common files, like ./common/header.html, footer.html, or sidebar.html
@@ -1128,7 +1138,7 @@ const createPage = async function(inputFile, req, headless, post) {
                 }
             }
 
-            console.timeEnd(`loadCommonFilesTime-${timerUuid}`);
+            //console.timeEnd(`loadCommonFilesTime-${timerUuid}`);
 
             // Our final page looks like this:
             loadFileContent = `
@@ -1142,9 +1152,9 @@ const createPage = async function(inputFile, req, headless, post) {
         // Sometimes, common file templates are used throughout a page. As such, let's parse any remaining ones we missed.
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
         if(headless === undefined || headless !== true) {
-            console.time(`parseDataElementsTime-${timerUuid}`);
+            //console.time(`parseDataElementsTime-${timerUuid}`);
             loadFileContent = await parseDataElements(loadFileContent, commonFileTemplates, true);
-            console.timeEnd(`parseDataElementsTime-${timerUuid}`);
+            //console.timeEnd(`parseDataElementsTime-${timerUuid}`);
         }
 
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
@@ -1153,9 +1163,9 @@ const createPage = async function(inputFile, req, headless, post) {
 
         // Replace redis cache here and put it on file upload and API instead.
 
-        console.time(`parseDataTablesTime-${timerUuid}`);
+        //console.time(`parseDataTablesTime-${timerUuid}`);
         loadFileContent = await parseDataTables(loadFileContent, req, true, post, cachedData);
-        console.timeEnd(`parseDataTablesTime-${timerUuid}`);
+        //console.timeEnd(`parseDataTablesTime-${timerUuid}`);
         
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
         // The last thing we do, so that all CSS and JS is loaded appropriately, 
@@ -1163,7 +1173,7 @@ const createPage = async function(inputFile, req, headless, post) {
         // Configure default meta information
         // --- - - - --- - - - --- - - - --- - - - --- - - - --- - - - --- - - -
 
-        console.time(`parseRemainingPageMetaTime-${timerUuid}`);
+        //console.time(`parseRemainingPageMetaTime-${timerUuid}`);
         if(headless === undefined || headless !== true) {
             let additionalStyles = '';
             if(commonFileTemplates.style !== undefined) {
@@ -1171,7 +1181,6 @@ const createPage = async function(inputFile, req, headless, post) {
             }
             
             let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/default.webp`;
-            console.log();
             try {
                 let potentialUrl = req.originalUrl.slice(1).split('/')[1];
                 let findFile = await fsPromise(`./public/images/intro-images/${potentialUrl}.webp`);
@@ -1205,7 +1214,7 @@ const createPage = async function(inputFile, req, headless, post) {
             loadFileContent = parseDataElements(loadFileContent, pageMeta);
         }
         
-        console.timeEnd(`parseRemainingPageMetaTime-${timerUuid}`);
+        //console.timeEnd(`parseRemainingPageMetaTime-${timerUuid}`);
     }
     else {
         return JSON.stringify({ "error" : "No page metadata. Ensure your page file contains a config" })
@@ -1215,7 +1224,7 @@ const createPage = async function(inputFile, req, headless, post) {
         loadFileContent = `<!DOCTYPE html>${loadFileContent}`
     }
 
-    console.timeEnd(`pageCreation-${timerUuid}`);
+    //console.timeEnd(`pageCreation-${timerUuid}`);
 
     return loadFileContent.replaceAll(/<data (.*?)>/gmi, '').replaceAll(/<\/data>/gmi, '').replaceAll(/<data-header(.*?)>/gmi, '').replaceAll(/<\/data-header>/gmi, '');
 }
@@ -1332,7 +1341,7 @@ const removeConfig = async function(input, fileName, req, cache) {
                                 return req.params[`${getKey}`]
                             }
                             else {
-                                return key;
+                                return "";
                             }
                         }
                     });

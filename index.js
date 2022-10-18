@@ -192,7 +192,12 @@ for(let key of pages) {
         if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
             app.get(pageRoutes, async (req, res, next) => {
                 if(openPage.cache == true) {
-                    req.cacheTerm = await md5(req.originalUrl + '-full-metal-alchemist');
+                    let getUrl = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+                    let pathname = getUrl.pathname;
+                    if(getUrl.pathname.at(-1) === '/') {
+                        pathname = pathname.slice(0, -1);
+                    }
+                    req.cacheTerm = await md5(pathname + '-full-metal-alchemist');
                     if(req.originalUrl === '/') {
                         req.cacheTerm = md5('root-full-metal-alchemist');
                     }
@@ -202,6 +207,7 @@ for(let key of pages) {
                         console.time(`sent-by-cache-${timerId}`)
                         if(res.headersSent !== true) {
                             res.send(req.cache);
+                            req.requestSent = true;
                         }
                         console.timeLog(`sent-by-cache-${timerId}`)
                     }
@@ -209,6 +215,7 @@ for(let key of pages) {
                 req.output = await createPage(key.name.split('.html')[0], req, openPage.headless);
                 if(res.headersSent !== true) {
                     res.send(req.output);
+                    req.requestSent = true;
                 }
                 next();
             });
@@ -466,8 +473,8 @@ app.use(async (req, res, next) => {
 });
 
 app.use(async (req, res, next) => {  
-    if(req.method === "GET" || req.originalUrl === '/api/forceCache') {
-        if(req.cacheTerm !== undefined && req.output !== undefined) {
+    if(req.method === "GET") {
+        if(req.cacheTerm !== undefined && req.output !== undefined && req.requestSent === true) {
             await client.set(req.cacheTerm, req.output);
         }
     }
