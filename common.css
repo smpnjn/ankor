@@ -58,10 +58,10 @@ p {
 #content-text h2 .header-navigation {    
     color: rgb(210 255 204 / 20%);
     font-weight: 600;
-    font-size: 2rem;
+    font-size: 1.25rem;
     transition: all .1s ease-out;
     text-decoration: none;
-    margin: 0 0.5rem 0 0;
+    margin: 0 0 0 0.5rem;
     align-items: center;
     display: flex;
     line-height: 1.5;
@@ -204,7 +204,7 @@ canvas:not(.inline-canvas) {
     position: absolute;
     top: 2rem;
 }
-.double-posts .category, .inline.category, .search #content .category {
+.double-posts .category, .search #content .category {
     display: inline-block;
     margin: 0 1rem 1rem 0;
     box-shadow: inset 0 0 0 1px #2c323e;

@@ -18,6 +18,9 @@ seriesApi.post('/series/add/:seriesName', jsonParser, async function(req, res) {
         if(!Array.isArray(req.body)) {
             return res.status(400).send({ "error" : "The body of your request should be an array [] of canonicalNames for the articles you wish to add to your series" });            
         }
+        if(req.body.positions.length !== req.body.items.length) {
+            return res.status(400).send({ "error" : "Please use the same number of items as positions. Your request body should contain { items: 'canonical-names', positions: [1] }" });            
+        }
         let failedObjects = [];
         let succeededObjects = [];
         if(Array.isArray(req.body.items)) {
@@ -27,7 +30,7 @@ seriesApi.post('/series/add/:seriesName', jsonParser, async function(req, res) {
                     succeededObjects.push(thisArticle._id);
                 } 
                 else {
-                    failedObjects.push(i);
+                    failedOsucceededObjectsbjects.push(null);
                 }
             }
             req.body.items = succeededObjects;
@@ -35,9 +38,11 @@ seriesApi.post('/series/add/:seriesName', jsonParser, async function(req, res) {
         
         Series.findOne({ canonicalName: `${req.params.seriesName}` }, async function(err, series) {
             if(findSeries !== null) {
-                let findSeriesItems = series.seriesItems;
-                findSeriesItems = [ ...findSeriesItems, ...succeededObjects ]
-                
+                for(let i of req.body.positions) {
+                    if(req.body.items[i] !== null) {
+                        findSeriesItems.splice(i, 0, req.body.items[i]);
+                    }
+                }
                 Series.findOneAndUpdate({ canonicalName: `${req.params.seriesName}` }, { items: findSeriesItems }, { upsert: true }, function(err, doc) {
                     if (err) {
                         return res.status(400).send({ "error" : err });

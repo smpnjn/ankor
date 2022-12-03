@@ -1,9 +1,3 @@
-/* ƒ ∆ ø ¬ †
--- - - - - -
-F J O L T  -
--- - - - - -
-ƒ ∆ ø ¬ † */
-
 import path from 'path'
 import { fileURLToPath } from 'url'
 import session from 'express-session'
