@@ -125,7 +125,7 @@
     "esutils": "^2.0.3",
     "etag": "^1.8.1",
     "eventemitter2": "^5.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-formidable": "^1.2.0",
     "express-rate-limit": "^5.2.3",
     "express-session": "^1.17.2",
