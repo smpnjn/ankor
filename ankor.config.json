@@ -1,0 +1,24 @@
+{
+    "fileApi" : {
+        "/document/:fileName" : {
+            "fileType" : "md",
+            "location" : "/documents",
+            "parseCode" : true
+        },
+        "/document/html/:fileName" : {
+            "fileType" : "html",
+            "location" : "/documents",
+            "parseCode" : true
+        },
+        "/image/article/main-image/:fileName?" : {
+            "fileType" : "image",
+            "location" : "/public/images/intro-images"
+        },
+        "/image/article/content-image/:fileName?" : {
+            "fileType" : "image",
+            "location" : "/public/images/misc"
+        }
+    },
+    "mail" : "enabled",
+    "api" : "basic"
+}

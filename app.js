@@ -1,8 +1,10 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import session from 'express-session'
+import memorystore from 'memorystore'
 import { v4 as uuid } from 'uuid';
 
+const MemoryStore = memorystore(session)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -13,11 +15,14 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 import express from 'express'
 import https from 'https'
 import http from 'http'
-import { apiVerification } from './bin/api.js';
-import { parseTemplate, createPage, fsPromise, fsDirPromise, getRoutes } from './bin/util.js'
-import mongoose from 'mongoose'
+import { parseTemplate, fsPromise } from './core/util.js'
+import { readDirectory } from './core/files.js'
+import { initiateApi } from './core/api.js'
+import { parsePage } from './core/parse.js'
+import { setCached, getCached } from './core/data.js'
+import { extractRoutes } from './core/extract.js'
 import compression from 'compression'
-import { createClient } from 'redis'
+import cookies from 'cookie-parser'
 import { md5 } from 'hash-wasm'
 import { rehype } from 'rehype'
 import rehypePrism from 'rehype-prism-plus'
@@ -25,46 +30,26 @@ import nfs from 'fs'
 import rateLimit from 'express-rate-limit'
 import { JSDOM } from 'jsdom'
 import WebSocket from 'ws'
-import { nanoid } from "nanoid"
+import { nanoid } from 'nanoid'
 
 // xml specific routes
-import { xmlRouter } from './bin/xml.js';
-
-// *.api.js
-import { articleApi } from './api/article.api.js';
-import { imageApi } from './api/image.api.js';
-import { authorApi } from './api/author.api.js';
-import { categoryApi } from './api/category.api.js';
-import { userApi } from './api/user.api.js';
-import { seriesApi } from './api/series.api.js';
-import { quizApi } from './api/quiz.api.js';
-import { roleApi } from './api/role.api.js';
-import { tokenApi } from './api/token.api.js';
-import { cacheApi } from './api/cache.api.js';
-import { accessApi } from './api/access.api.js';
+import { xmlRouter } from './core/xml.js';
 
 // *.model.js
-import { Article } from './models/article.model.js';
-import { Series } from './models/series.model.js';
-import { Quiz } from './models/quiz.model.js';
-import { Access } from './models/access.model.js';
-import { Subscription } from './models/subscription.model.js';
+import articleObject from './models/article.model.js';
+import seriesObject from './models/series.model.js';
+import quizObject from './models/quiz.model.js';
 
-// MongoDb Connection
-mongoose.connect(process.env.mongooseUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-// Redis Connection
-const client = createClient();
-client.on('error', (err) => console.log('Redis Client Error', err));
-await client.connect();
+const Article = articleObject.data;
+const Series = seriesObject.data;
+const Quiz = quizObject.data;
 
 // app, port, options
-let app = express();
-let jsonParser = express.json();
+let app = express()
 let port = 3000
+let jsonParser = express.json()
+
+initiateApi(app, jsonParser, express.text({ type: 'text/html', limit: '50mb' }))
 
 if(process.env.environment === "staging") {
     port = 1234;
@@ -72,13 +57,14 @@ if(process.env.environment === "staging") {
 let options = {};
 
 // apply to all requests
+app.use(cookies());
 app.use(rateLimit({
     windowMs: 5 * 60 * 1000, // 15 minutes
     max: 10000 // limit each IP to 10000 requests per 15 min window
 }));
 
 // Setup server
-let server;
+let server, secure = true
 if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev") {
     // HTTPS environment
     options = {
@@ -89,79 +75,44 @@ if(typeof process.env.environment == "undefined"  || process.env.environment !==
     server = https.createServer(options, app);
 } else {
     // Non-HTTPS environment
+    secure = false;
     server = http.createServer(app) 
 }
 
 // Compress our app
 app.use(compression());
+// cors
 // Set static folder
 app.use('/', express.static(__dirname + '/public', { maxAge: '365d' }));
 
 // Track session loaded files.. so we can remove duplicate CSS in advance
 // Expedite sending of data using redis, and clear loaded file cache on any new get request
-app.use(session({ 
+const sessionData = session({ 
     genid: function(req) {
         return uuid() // use UUIDs for session IDs
     },
-    saveUninitialized: false,    
+    saveUninitialized: false,
     cookie: {
-        domain: process.env.rootUrl,
-        secure: true,
-        sameSite: true
+        httpOnly: true,
+        secure: secure,
+        maxAge: 86400000,
+        sameSite: false
     },
-    resave: true,
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
     secret: process.env.sessionSecret
-}))
+})
+
+app.use(sessionData)
 
 app.use(async (req, res, next) => {
     try {
+        req.session.csrf = nanoid(64);
         // Store information on loadedFiles
-        if (req.method == "GET" && req.session.csrf == undefined) {
-            req.session.csrf = nanoid(64);
-        }
-
-        if(req.session.data !== undefined) {
-            req.session.data = [];
-        }
-
-        if(req.method == "GET" && req.header('x-api') == undefined || req.header('x-forceCache') === "true") {
+        if (req.method === "GET") {
             req.session.fileCache = {};
-        }
-        else if(req.method === "POST") {
-            /*
-            if(req.session.csrf !== req.header('X-CSRF-Token') && req.originalUrl !== '/api/cache/session') {
-                res.status(403).send({ "error" : "Incorrect CSRF" });
-            }*/
-            let getAccess = await Access.find();
-            let getAccessKeys = [];
-            if(getAccess !== null) {
-                getAccessKeys = getAccess.map((x) => x.api);
-            }
-            let check = false;
-            if(getAccessKeys.length === 0 || getAccessKeys.indexOf('access') == -1) {
-                // No access keys are
-                if(req.originalUrl.indexOf('/access') === -1) {
-                    res.status(400).send({ "message" : `It seems like no 'access' control has been set up in your access table. To do this, POST to /api/access with { "api" : "access", "importance" : 9999 } first.` })
-                }
-            }
-            else {
-                for(let x of getAccessKeys) {
-                    if(req.originalUrl.indexOf(x) > -1) {
-                        check = true; // This is a valid API
-                        let currentKey = getAccess.find((y) => y.api === x)
-                        let accessLevel = currentKey.accessLevel;
-                        let checkApiAuthentication = await apiVerification(req, accessLevel);
-                        if(!checkApiAuthentication) {
-                            res.status(400).send({ "message" : "Invalid Credentials. Check your Authentication Details." })
-                        }
-                        break;
-                    }
-                }
-                if(check == false) {
-                    res.status(400).send({ "message" : "Invalid API" })
-                    return;
-                }
-            }
         }
         else {
             next();
@@ -178,54 +129,80 @@ app.use(async (req, res, next) => {
 });
 
 // Configure all page routes
-let pages = await fsDirPromise('pages', false);
-for(let key of pages) {
-    if(key.name !== undefined && key.name !== '404.html') {
-        let openPage = await getRoutes(key.name);
-        let pageRoutes = openPage.routes;
-        if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
-            app.get(pageRoutes, async (req, res, next) => {
-                if(openPage.cache == true) {
-                    let getUrl = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-                    let pathname = getUrl.pathname;
-                    if(getUrl.pathname.at(-1) === '/') {
-                        pathname = pathname.slice(0, -1);
-                    }
-                    req.cacheTerm = await md5(pathname + '-full-metal-alchemist');
-                    if(req.originalUrl === '/') {
-                        req.cacheTerm = md5('root-full-metal-alchemist');
-                    }
-                    req.cache = await client.get(`${req.cacheTerm}`);
-                    const timerId = uuid();
-                    if(req.method == "GET" && req.cache !== null && req.cache !== "" && req.header('x-forceCache') !== "true") {
-                        console.time(`sent-by-cache-${timerId}`)
-                        if(res.headersSent !== true) {
-                            res.send(req.cache);
-                            req.requestSent = true;
+let pages = await readDirectory('./views/pages', false);
+if(pages !== undefined && Array.isArray(pages)) {
+    for(let key of pages) {
+        if(key !== undefined && key !== '404.html') {
+            let openPage = await extractRoutes(key);
+            let pageRoutes = openPage.routes;
+            if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
+                app.get(pageRoutes, async (req, res, next) => {
+                    if(openPage.stale) {
+                        let getUrl = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+                        let pathname = getUrl.pathname;
+                        if(getUrl.pathname.at(-1) === '/') {
+                            pathname = pathname.slice(0, -1);
                         }
-                        console.timeLog(`sent-by-cache-${timerId}`)
+                        req.cacheTerm = await md5(pathname);
+                        if(req.originalUrl === '/') {
+                            req.cacheTerm = await md5('root-full-metal-alchemist');
+                        }
+                        req.output = await getCached('staleFile', `${req.cacheTerm}`)
+                        
+                        const timerId = uuid();
+                        if(req.method == "GET" && req.output && req.header('x-forceCache') !== "true") {
+                            console.time(`sent-by-cache-${timerId}`)
+                            res.send(req.output)
+                            console.timeLog(`sent-by-cache-${timerId}`)
+                            let getPage = await parsePage(key.split('.html')[0], req, openPage.headless, false)
+                            await setCached('staleFile', `${req.cacheTerm}`, getPage)
+                        }
+                        else {
+                            req.output = await parsePage(key.split('.html')[0], req, openPage.headless, false)
+                            if(req.output.next) {
+                                next()
+                            }
+                            else {
+                                await setCached('staleFile', `${req.cacheTerm}`, req.output)
+                                res.send(req.output)
+                            }
+                        }
                     }
-                }
-                req.output = await createPage(key.name.split('.html')[0], req, openPage.headless);
-                if(res.headersSent !== true) {
-                    res.send(req.output);
-                    req.requestSent = true;
-                }
-                next();
-            });
+                    else {
+                        let getPage = await parsePage(key.split('.html')[0], req, openPage.headless, false)
+                        if(getPage.next) {
+                            next()
+                        }
+                        else {
+                            if(!req.cache) {
+                                req.output = getPage
+                            }
+                            if(res.headersSent !== true) {
+                                res.send(req.output)
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 }
 
 // Configure all post routes
-let posts = await fsDirPromise('post', false);
-for(let key of posts) {
-    if(key.name !== undefined) {
-        let openPage = await getRoutes(key.name, true);
+let posts = await readDirectory('./views/post', false)
+if(posts !== undefined && Array.isArray(posts)) {
+    for(let key of posts) {
+        let openPage = await extractRoutes(key, true)
         let pageRoutes = openPage.routes;
         if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
             app.post(pageRoutes, jsonParser, async (req, res, next) => {
-                req.output = await createPage(key.name.split('.html')[0], req, openPage.headless, true);
+                let getPage = await parsePage(key.split('.html')[0], req, openPage.headless, true)
+                if(getPage.next) {
+                    next()
+                }
+                else {
+                    req.output = getPage
+                }
                 if(res.headersSent !== true) {
                     res.send(req.output);
                 }
@@ -235,19 +212,6 @@ for(let key of posts) {
 }
 // *.controller.js files
 app.use('/', xmlRouter);
-
-// *.api.js files
-app.use('/api/', imageApi);
-app.use('/api/', authorApi);
-app.use('/api/', articleApi);
-app.use('/api/', categoryApi);
-app.use('/api/', userApi);
-app.use('/api/', seriesApi);
-app.use('/api/', quizApi);
-app.use('/api/', roleApi);
-app.use('/api/', tokenApi);
-app.use('/api/', cacheApi);
-app.use('/api/', accessApi);
 
 let wss = new WebSocket.Server({ server: server, path: '/ws' });
 // Websocket connection
@@ -427,51 +391,23 @@ wss.on('connection', function(ws) {
     });
 });
 
-app.post('/unsubscribe/:email', async (req, res, next) => {
-
-    try {
-        // Enclosed function which runs before the file is loaded
-        let findEmail = await Subscription.find({ "email" : req.params.email || "" });
-        if(findEmail.length > 0) {
-            await Subscription.deleteOne({ "email" : req.params.email || "" });
-            res.send({ "message" : "Email removed" })
-        } 
-        else {
-            res.send({ "message" : "Email doesn't exist" })
-        }
+// I'm going back to 404
+app.use(sessionData, async (req, res, next) => {
+    // If it's a seven hour flight or a 45 minute drive
+    if(req.session?.headersSent !== true && req.method == "GET" || req.session?.noData == true && req.method == "GET") {
+        let output = await parsePage('404', req);
+        res.send(output)
     }
-    catch(e) {
-        console.log(e);
+    else {
+        next()
     }
 });
 
-// I'm going back to 404
-app.use(async (req, res, next) => {
-    // If it's a seven hour flight or a 45 minute drive
-    if(res.headersSent !== true && req.method == "GET" && req.header('x-forceCache') !== "true" && (req?.header('referrer')?.indexOf('sw.js') == -1 ||  req?.header('referrer')?.indexOf('sw.js') == undefined)) {
-        let output = await createPage('404', req);
-        if(res.headersSent !== true) {
-            res.send(output);
-        }
-    }
-    else if(res.headersSent !== true && req.method == "POST") {
+app.post('*', async (req, res) => {
+    if(res.headersSent !== true && req.method == "POST") {
         res.send({ "error" : "404 - that page was not found" })
     }
-    else if(req.method == "GET" && res.headersSent !== true) {
-        let output = await createPage('404', req);
-        if(res.headersSent !== true) {
-            res.send(output);
-        }
-    }
-    next();
-});
-
-app.use(async (req, res, next) => {  
-    if(req.method === "GET") {
-        if(req.cacheTerm !== undefined && req.output !== undefined && req.requestSent === true) {
-            await client.set(req.cacheTerm, req.output);
-        }
-    }
 })
+
 // Hey.. Listen!
 server.listen(port);

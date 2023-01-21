@@ -1,14 +1,15 @@
-<url routes="[ '/course/:seriesName', '/series/:seriesName' ]" cache="true" />
 <config table="series" filter=":seriesName" filter-on="canonicalName" limit="1">
     <title>Fjolt - {{title}}</title>
     <description>{{shortDescription}}</description>
     <classes>series</classes>
+    <url>[ "/course/:seriesName", "/series/:seriesName" ]</url>
+    <cache>true</cache>
 </config>
 <template>
     <div id="series">
         <div id="series-content">
             <div id="top-section">
-                <data table="series" filter=":seriesName" filter-on="canonicalName" limit="1">
+                <data table="series" filter=":seriesName" filter-on="canonicalName" limit="1" main="true">
                     <div id="guide-info">
                         <h1>{{title}}</h1>
                         <p>{{description}}</p>
@@ -17,7 +18,7 @@
             </div>
             <div class="items">
                 <data table="series" filter=":seriesName" filter-on="canonicalName">
-                    <data-loop of="items">
+                    <array name="items">
                         <h2 if>{{additionalSeriesData.subArea}}</h2>
                         <div class="item">
                             <a href="/article/{{canonicalName}}">
@@ -26,9 +27,9 @@
                                 <span class="text"><span class="inner-text">{{shortDescription}}</span></span>
                                 <span class="complete"></span>
                             </a>
-                            {{component-seriesQuiz}}
+                            <Component name="seriesQuiz" />
                         </div>
-                    </data-loop>
+                    </array>
                 </data>
             </div>
         </div>

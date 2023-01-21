@@ -10,6 +10,8 @@ const schema = mongoose.Schema({
     socialHtml: 'string'
 });
 
-const Author = mongoose.model('Author', schema);
-
-export { Author };
+export default {
+    "data": mongoose.model('Author', schema),
+    "access": 1,
+    "unique" : [ "name" ]
+}

@@ -254,7 +254,7 @@ if(document.querySelector('#subscribe button') !== null || document.body.getAttr
                     document.querySelector('#subscribe-box .error-message').classList.remove('active');
                 }, 3000);
             } else {
-                let postEmailSubscription = await fetch('/api/subscribe/', {
+                let postEmailSubscription = await fetch('/api/subscription/', {
                     method: 'POST',
                     body: JSON.stringify({
                         "email" : input
@@ -264,7 +264,7 @@ if(document.querySelector('#subscribe button') !== null || document.body.getAttr
                     }
                 });
                 let getResponse = await postEmailSubscription.json();
-                if(getResponse.response == true) {
+                if(getResponse.success == true) {
                     document.querySelector('#subscribe').classList.add('completed');
                     document.body.setAttribute('data-subscribe', false);
                     window.location.hash = '';

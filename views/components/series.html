@@ -1,20 +1,18 @@
 <template>
-    <data-header> 
-        <div class="header">
-            <span class="title">Part of Series:</span>
-            <span class="go-back"><a href="/series/{{canonicalName}}">{{title}}</a></span>
-        </div>
-    </data-header>
+    <div class="header">
+        <span class="title">Part of Series:</span>
+        <span class="go-back"><a href="/series/{{canonicalName}}">{{title}}</a></span>
+    </div>
     <div class="ellipsis prev-items"></div>
     <div class="nav-items">
-        <data-loop of="items">
+        <array name="items">
             <div class="nav-item" title="{{titles[0].title}}">
                 <a href="/article/{{canonicalName}}">
                     <span class="icon">{{icon}}</span>
                     <span class="title">{{titles[0].title}}</span>
                 </a>
             </div>
-        </data-loop>
+        </array>
     </div>
     <div class="series-loader"></div>
     <div class="ellipsis next-items"></div>

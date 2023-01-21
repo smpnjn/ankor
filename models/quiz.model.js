@@ -13,6 +13,8 @@ const schema = new mongoose.Schema({
     quizDescription: 'string'
 });
 
-const Quiz = mongoose.model('Quiz', schema);
-
-export { Quiz };
+export default {
+    "data": mongoose.model('Quiz', schema),
+    "access": 2,
+    "unique" : [ "canonicalName" ]
+}

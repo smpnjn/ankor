@@ -1,18 +1,20 @@
 <template>
     <!-- Custom "first post" file for highlighted files at the top of the site. -->
-    <div class="featured-post" if>
+    <div class="featured-post" a-if>
         <data-item>
-            <article class="archive-article featured-post-article" data-url="{{qualifiedUrl}}">
+            <article class="archive-article featured-post-article" data-url="/article/{{canonicalName}}">
                 <div class="intro-image">
                     <div class="archive-article-category">
-                        <a class="category" href="/category/{{associatedWith.category.title}}">{{associatedWith.category.displayTitle}}</a>
+                        <data table="category" limit="1" parents="category equals title"  test="true">
+                            <a class="category" href="/category/{{title}}">{{displayTitle}}</a>
+                        </data>
                     </div>
-                    <a href="{{qualifiedUrl}}" aria-label="{{title}}"><img src="/images/intro-images/{{canonicalName}}.webp" {{lazyLoading}} alt="{{title}}" onerror="this.style.display='none'" /></a>
+                    <a href="/article/{{canonicalName}}" aria-label="{{title}}"><img src="/images/intro-images/{{canonicalName}}.webp" alt="{{title}}" onerror="this.style.display='none'" /></a>
                 </div>
                 <div class="archive-article-title">
-                    <h2><a href="{{qualifiedUrl}}">{{titles[0].title}}</a></h2>
+                    <h2><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></h2>
                     <div class="archive-article-description">
-                        <a href="{{qualifiedUrl}}">{{description}}</a>
+                        <a href="/article/{{canonicalName}}">{{description}}</a>
                     </div>
                 </div>    
             </article>
@@ -22,7 +24,7 @@
                 <h3 id="ad-header">
                     Sponsor
                 </h3>
-                {{advert}}
+                <Component name="advert" />
             </div>
         </aside>
     </div>
@@ -127,7 +129,7 @@
         border-radius: 4px;
         width: calc(100% - 2rem);
         min-width: calc(100% - 2rem);
-        height: 200px;
+        height: 183px;
         margin: 0 0 2rem 0;
     }
     .featured-post-article .archive-article {

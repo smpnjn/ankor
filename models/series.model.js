@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const schema = mongoose.Schema({ 
     title: 'string',
     canonicalName: 'string',
-    date: 'number',
+    date: { type: 'number', required: false },
     items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
     seriesPage: 'boolean',
     description: 'string',
@@ -13,6 +13,12 @@ const schema = mongoose.Schema({
 
 schema.index({canonicalName: 1});
 
-const Series = mongoose.model('Series', schema);
 
-export { Series }
+export default {
+    "data": mongoose.model('Series', schema),
+    "access": 2,
+    "unique" : [ "canonicalName" ],
+    "rules" : {
+        "date" : "date"
+    }
+}

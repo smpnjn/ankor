@@ -1,8 +1,8 @@
-<url routes="[ '/unsubscribe/:email' ]" />
 <config>
     <title>Fjolt - Unsubscribe</title>
     <description>The page for unsubscribing from the Fjolt newsletter</description>
     <robots>noindex,nofollow</robots>
+    <url>[ "/unsubscribe/:email" ]</url>
 </config>
 <section id="container">
     <article id="content">
@@ -19,13 +19,19 @@
     (async () => {
         let csrf = document.querySelector('[name="csrf-token"]').getAttribute('content');
         let email = window.location.pathname.split('/unsubscribe/')[1];
-        let removeEmail = await fetch(`/unsubscribe/${email}`, {
+        let removeEmail = await fetch(`/api/subscription/delete`, {
             method: "POST",
             headers: {
                 'content-type': 'application/json',
                 'X-CSRF-Token': csrf
             },
+            body: JSON.stringify({
+                query: {
+                    email: email
+                }
+            })
         })
-        let response = await removeEmail.text();
+        let response = await removeEmail.json();
+        console.log(removeEmail)
     })()
 </script>

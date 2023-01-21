@@ -1,50 +1,58 @@
-<url routes="[ '/article/:canonicalName/:alias?' ]" cache="true" />
 <config table="article" filter=":canonicalName" filter-on="canonicalName" limit="1">
     <title>{{titles[0].title}}</title>
     <description>{{description}}</description>
     <classes>article</classes>
+    <cache>true</cache>
+    <url>[ "/article/:canonicalName/:alias?" ]</url>
+    <stale>true</stale>
 </config>
 <template>
     <section id="container">
-        <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" file-name="canonicalName" parse-code="true">
-            <div class="fl series-holder side-nav">
-                <data table="series" limit="1" items-with-parents="series" filter-on="canonicalName" populate="items">
-                    <div class="series-nav">
-                        {{component-series}}
-                    </div>
-                </data>
-            </div>
-            <article id="content">
-                <nav id="secondary-navigation"></nav>
-                <div id="header-container">
-                    <a class="category inline" href="/category/{{associatedWith.category.title}}">
-                        {{associatedWith.category.displayTitle}}
-                    </a>
-                    <h1 headline>{{titles.0.title}}</h1>
+        <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" main="true">
+            <data-item>
+                <div class="fl series-holder side-nav">
+                    <data table="series" limit="1" parents="series equals canonicalName">
+                        <div class="series-nav">
+                            <Component name="series">
+                        </div>
+                    </data>
                 </div>
-                <div id="content-text">
-                    <div id="carbonadcontainer">
-                        <h2 id="ad-header">
-                            Sponsor
-                        </h2>
-                        {{advert}}
-                    </div>
-                    {{file}}
-                    <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://www.patreon.com/smpnjn?fan_landing=true">🙇‍♂️ If you like this, consider supporting me on Patreon</a></div>
-                    <div class="time-date" dateModified>Last Updated {{date}}</div>
-                </div>
-                <div id="see-more-header">
-                    <h2>More Tips and Tricks for {{associatedWith.category.displayTitle}}</h2>
-                </div>
-                <div id="see-more">
-                    <ul>
-                        <data table="article" limit="10" sort="random" items-with-parents="category">
-                            <data-loop>
-                                <li><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></li>
-                            </data-loop>
+                <article id="content">
+                    <nav id="secondary-navigation"></nav>
+                    <div id="header-container">
+                        <data table="category" limit="1" parents="category equals canonicalName">
+                            <a class="category inline" href="/category/{{canonicalName}}">
+                                {{displayTitle}}
+                            </a>
                         </data>
-                    </ul>
-                </div>
+                        <h1 headline>{{titles.0.title}}</h1>
+                    </div>
+                    <div id="content-text">
+                        <div id="carbonadcontainer">
+                            <h2 id="ad-header">
+                                Sponsor
+                            </h2>
+                            <Component name="advert" />
+                        </div>
+                        <File directory="./documents" name="canonicalName" extension="md|html">
+                        <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://www.patreon.com/smpnjn?fan_landing=true">🙇‍♂️ If you like this, consider supporting me on Patreon</a></div>
+                        <div class="time-date" dateModified>Last Updated {{date}}</div>
+                    </div>
+                    <data table="category" limit="1" parents="category equals canonicalName" test="category">
+                        <div id="see-more-header">
+                            <h2>More Tips and Tricks for {{displayTitle}}</h2>
+                        </div>
+                        <div id="see-more">
+                            <ul>
+                                <data table="article" limit="10" sort="random" parents="canonicalName equals category" test="true">
+                                    <data-loop>
+                                        <li><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></li>
+                                    </data-loop>
+                                </data>
+                            </ul>
+                        </div>
+                    </data>
+                </data-item>
             </data>
         </article>
     </section>
@@ -101,9 +109,6 @@ body.series-item #content, body.nav-enabled #content {
     padding: 0;
     max-width: 1300px;
     box-sizing: border-box;
-}
-#content > h1 {
-    display: none;
 }
 .navigation-item a, .inline-quiz-link a {
     line-height: 1.5;

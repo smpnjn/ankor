@@ -1,15 +1,15 @@
-<url routes="[ '/search/:search' ]" />
 <config>
     <title>Search results for ":search"</title>
+    <url>[ "/search/:search" ]</url>
 </config>
 <template>
 <div id="container">
     <section id="content">
         <h1>Search Results</h1>            
-        <data table="article" limit="12" search="true" filter=":search" filter-on="canonicalName" sort="-date">
-            {{component-firstPost}}
-            {{component-triplePost}}
-            {{component-doublePost*4}}
+        <data table="article" limit="12" search=":search" search-on="canonicalName" sort="-date" main="true">
+            <Component name="firstPost" />
+            <Component  name="triplePost" />
+            <Component  name="doublePost" times="4" />
         </data>
     </section>
     <div id="pagination"><a href="#" class="next-page">View More Articles</a></div>

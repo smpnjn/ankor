@@ -1,15 +1,17 @@
 <data-item>
-    <article class="archive-article" data-url="{{qualifiedUrl}}">
+    <article class="archive-article" data-url="/article/{{canonicalName}}">
         <div class="archive-article-icon">
             {{icon}}
         </div>
         <div class="archive-article-title">
-            <h2><a href="{{qualifiedUrl}}">{{titles[0].title}}</a></h2>
+            <h2><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></h2>
             <div class="archive-article-category">
-                <a class="category promoted" style="color: {{associatedWith.category.color[0]}};" href="/category/{{associatedWith.category.title}}">{{associatedWith.category.displayTitle}}</a>
+                <data table="category" limit="1" parents="category equals title">
+                    <a class="category promoted" style="color: {{color[0]}};" href="/category/{{title}}">{{displayTitle}}</a>
+                </data>
             </div>
             <div class="archive-article-description">
-                <a href="{{qualifiedUrl}}">{{description}}</a>
+                <a href="/article/{{canonicalName}}">{{description}}</a>
             </div>
         </div>    
     </article>

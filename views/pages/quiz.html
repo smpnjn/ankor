@@ -1,21 +1,21 @@
-<url routes="[ '/quiz/:quiz' ]" />
 <config table="quiz" filter=":quiz" filter-on="canonicalName" limit="1">
     <description>{{description}}</description>
     <title>Fjolt - {{title}}</title>
     <classes>archive</classes>
+    <url>[ "/quiz/:quiz" ]</url>
 </config>
 <template>
-    <div class="fl">
-        <div id="associated-guide">
-            <div id="associated-guide-holder">        
-                <a href="{{article}}" class="associated-article"><span class="title">Back</span></a>   
-                <a href="/quiz/{{canonicalName}}" class="associated-article">Restart</a> 
+    <data table="quiz" limit="1" filter=":quiz" filter-on="canonicalName">
+        <div class="fl">
+            <div id="associated-guide">
+                <div id="associated-guide-holder">        
+                    <a href="/quiz/{{canonicalName}}" class="associated-article">Restart</a> 
+                    <a href="/article/{{associatedCanonical}}" class="associated-article">Article</a> 
+                </div>
             </div>
         </div>
-    </div>
-    <div id="container" class="quiz" data-question="0">
-        <div id="quiz">
-            <data table="quiz" limit="1" filter=":quiz" filter-on="canonicalName">
+        <div id="container" class="quiz" data-question="0">
+            <div id="quiz">
                 <div id="progress-bar-holder">
                     <div id="progress-bar">
                         <div id="progress-bar-percentage"></div>
@@ -25,7 +25,7 @@
                 <div class="fl" id="initial-page">
                     <div id="quiz-title"><h1>{{title}}</h1></div>
                     <div id="question-submit">
-                        <button class="hover-button" data-filter-color="#027cfd61" id="submit-question"><span class="loading"><i class="lds-ring"><i></i><i></i><i></i><i></i></i></span></button>
+                        <button class="hover-button" data-filter-color="#74fa6038" id="submit-question"><span class="loading"><i class="lds-ring"><i></i><i></i><i></i><i></i></i></span></button>
                     </div>
                     <div id="associated-article">{{article}}</div>
                     <div id="normal-question-holder">
@@ -34,9 +34,10 @@
                 <div id="quiz-question-holder">
                     
                 </div>
-            </data>
+            </div>
         </div>
-    </div>
+    </data>
+
 </template>
 <style combined>
     #container.quiz {
@@ -171,7 +172,7 @@
         top: 0;
     }
     #submit-question span, #submit-individual-question span {
-        filter: drop-shadow(#027cfd61 0 10px 15px);
+        filter: drop-shadow(#74fa6038 0 10px 15px);
     }
     .quiz ~ #subscribe {
         display: none;
@@ -444,7 +445,6 @@
     #question-submit button span, .quiz-button {
         font-size: 1.25rem;
         padding: 1rem 2rem;
-        color: white;
     }
     #submit-question-cover:before {
         margin: 0 0.5rem 0 0;
@@ -459,7 +459,7 @@
         left: 0;
         width: 600%;
         height: 200%;
-        background: linear-gradient(90deg, #00a1ff, #af4ae6, #00a1ff, #2cefff);
+        background: linear-gradient(90deg,#74fa60,#74fa60,#36e19f,#47ca33);
         animation: colorCycle 8s infinite alternate;
         z-index: -2;
     }

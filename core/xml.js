@@ -10,13 +10,15 @@ let xmlRouter = express.Router();
 let runXmlParser = express.xml();
 
 // *.model.js
-import { Article } from '../models/article.model.js';
-import { Category } from '../models/category.model.js';
+import articleObject from '../models/article.model.js';
+import categoryObject from '../models/category.model.js';
+
+const Article = articleObject.data;
+const Category = categoryObject.data;
 
 xmlRouter.get('/sitemap.xml', async function(req, res) {
     res.header('Content-Type', 'application/xml');
     res.header('Content-Encoding', 'gzip');
-    let sitemap;
     try {
         const queryArticles = await Article.find({ published: true }).select('canonicalName')
         const queryCategories = await Category.find({}).select('title')

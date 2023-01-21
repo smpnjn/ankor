@@ -1,4 +1,7 @@
-<url routes="[ '/subscription' ]" headless="true" />
+<config>
+    <url>[ "/email/:email" ]</url>
+    <headless>true</headless>
+</config>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -157,7 +160,7 @@
                                                 <tr>
                                                     <td style="padding: 0 0 30px 0;font-size: 16px; line-height: 28px;">
                                                         <data table="article" limit="10" sort="-date">
-                                                            {{component-singlePostEmail*10}}
+                                                            <Component name="singlePostEmail" times="10" />
                                                         </data>
                                                     </td>
                                                 </tr>
@@ -166,7 +169,9 @@
                                     </td>
 								</tr>
                                 <tr class="footer">
-                                    <td><a href="{{unsubscribeLink}}">Unsubscribe</a> <a href="{{privacyPolicy}}">Privacy Policy</a></td>
+                                    <data table="subscription" filter=":email" filter-on="email" limit="1">
+                                        <td><a href="https://fjolt.com/unsubscribe/{{email}}">Unsubscribe</a> <a href="https://fjolt.com/privacy">Privacy Policy</a></td>
+                                    </data>
                                 </tr>
                             </tbody>
                         </table>

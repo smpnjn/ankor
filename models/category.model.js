@@ -12,7 +12,8 @@ const schema = mongoose.Schema({
 
 schema.index({canonicalName: 1});
 
-const Category = mongoose.model('Category', schema);
-
-export { Category };
-
+export default {
+    "data": mongoose.model('Category', schema),
+    "access": 2,
+    "unique" : [ "canonicalName" ]
+}

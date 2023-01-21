@@ -1,27 +1,8 @@
 <template>
     <div id="container">
-        {{sidebar}}
         <div id="content">
             <h1>We could not find that.</h1>
+            <p><a href="/">Go home</a></p>
         </div>
     </div>
 </template>
-<style combined>
-    #container h1 {
-        margin: 0 1rem 2rem 1rem;
-        text-transform: inherit;
-        font-size: 2rem;
-        letter-spacing: 0;
-        background: #151b24;
-        padding: 2rem;
-        border-radius: 14px;
-    }
-    @media screen and (min-width: 1000px) {
-        #container h1 {
-            margin-left: 0rem;
-        }
-        #container {
-            grid-template-columns: calc(100% - 330px - 2rem) 330px;;
-        }
-    }
-</style>

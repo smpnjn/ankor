@@ -9,15 +9,11 @@ dotenv.config({ path: path.join(__dirname, '../', '.env') });
 
 import mail from 'nodemailer'
 import schedule from 'node-schedule'
-import mongoose from 'mongoose'
-import { createPage } from '../bin/util.js'
-import * as Subscription from '../models/subscription.model.js';
+import { parsePage } from '../core/parse.js'
+import Subscription from '../models/subscription.model.js';
 
-
-const connection = mongoose.connect(process.env.mongooseUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+/* Config file */
+let config = await import('../ankor.config.json', { assert: { type: "json" } }).then((data) => data.default)
 
 const mailer = async () => {	
     try {
@@ -37,10 +33,11 @@ const mailer = async () => {
             }
         });
 
-        let allSubs = await Subscription.Subscription.find();
-
-        allSubs.forEach(async function(item) {
-            let text = await createPage('subscription', { session: { data: [] } }, true);
+        let allSubs = await Subscription.data.find();
+        
+        for(let item of allSubs) {
+            let text = await parsePage('subscription', { params: { email: item.email }, session: { data: [] } }, true)
+            console.log(text)
             if(typeof item.email !== "undefined") {
                 transporter.sendMail({
                     from   : `${process.env.websiteName} <${process.env.contactEmail}>`,
@@ -49,7 +46,7 @@ const mailer = async () => {
                     replyTo: process.env.contactEmail,
                     headers: { 'Mime-Version' : '1.0', 'X-Priority' : '3', 'Content-type' : 'text/html; charset=iso-8859-1' },
                     html   : text
-                }, (err, info) => {
+                }, (err) => {
                     if(err !== null) {
                         console.log(err);
                     }
@@ -58,14 +55,14 @@ const mailer = async () => {
                     }
                 });
             }
-        });
+        }
 
     } catch(e) {
         console.log(e);
     }
 }
 
-if(process.env.subscriptionEnabled === "true" || process.env.subscriptionEnabled == true) {
+if(config.mail == true) {
     schedule.scheduleJob('00 30 10 * * 1', async function() {
         try {
             mailer();
