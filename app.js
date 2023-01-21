@@ -101,6 +101,7 @@ const sessionData = session({
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
     }),
+    secure: secure,
     resave: false,
     secret: process.env.sessionSecret
 })

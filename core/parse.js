@@ -6,6 +6,7 @@ import { extractConfig, compressCssJs, extractCss } from './extract.js'      // 
 import { refreshData, getCached } from './data.js'                           // parsePage, parseFile
 import path from 'path'                                                      // parseFile
 import { md5 } from 'hash-wasm'                                              // parseFile
+import sanatizeFilename from 'sanitize-filename'
 
 /* Prep global app cache */
 globalThis.cache = await refreshData()
@@ -297,7 +298,7 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
                     }
                     let checkReturn = true;
                     for(let x of searchArray) {
-                        let regexExp = new RegExp(`${x}`, "gmi");
+                        let regexExp = new RegExp(`${sanatizeFilename(x)}`, "gmi");
                         if(data && !data.match(regexExp)) {
                             checkReturn = false;   
                         }
