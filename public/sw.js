@@ -1,6 +1,6 @@
 
 const cacheName = 'mainCache';
-const version = '1.0.4';
+const version = '1.0.5';
 
 self.addEventListener("install", async (e) => {
     e.waitUntil(
@@ -33,46 +33,7 @@ self.addEventListener("message", async (e) => {
         })
     }
 })
-self.addEventListener('fetch', async function(e) {
-    if(e.request.method === "GET" && e.request.url.startsWith(self.location.origin)) {
-        e.respondWith(
-            caches.match(e.request).then(cachedResponse => {
-                if (cachedResponse) {
-                    caches.open(cacheName).then(async (cache) => {
-                        const newRequest = new Request(e.request, {
-                            mode: 'cors',
-                            credentials: 'omit',
-                            headers: {
-                                'x-service': true
-                            }
-                        });
-                        fetch(newRequest).then(response => {
-                            // Put a copy of the response in the runtime cache.
-                            cache.put(e.request, response.clone())
-                        });
-                    });
-                    return cachedResponse;
-                }
 
-                return caches.open(cacheName).then(async (cache) => {
-                    const newRequest = new Request(e.request, {
-                        mode: 'cors',
-                        credentials: 'omit',
-                        headers: {
-                            'x-service': true
-                        }
-                    })
-                    return fetch(newRequest).then(response => {
-                        // Put a copy of the response in the runtime cache.
-                        return cache.put(e.request, response.clone()).then(() => {
-                            return response;
-                        });
-                    });
-                });
-            })
-        )
-        }
-});
 self.addEventListener('activate', function(event) {
     self.clients.matchAll({
         includeUncontrolled: true

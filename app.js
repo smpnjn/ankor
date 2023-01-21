@@ -105,9 +105,7 @@ const sessionData = session({
     secret: process.env.sessionSecret
 })
 
-app.use(sessionData)
-
-app.use(async (req, res, next) => {
+app.use(sessionData, async (req, res, next) => {
     try {
         req.session.csrf = nanoid(64);
         // Store information on loadedFiles
@@ -136,7 +134,7 @@ if(pages !== undefined && Array.isArray(pages)) {
             let openPage = await extractRoutes(key);
             let pageRoutes = openPage.routes;
             if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
-                app.get(pageRoutes, async (req, res, next) => {
+                app.get(pageRoutes, sessionData, async (req, res, next) => {
                     if(openPage.stale) {
                         let getUrl = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
                         let pathname = getUrl.pathname;
@@ -195,7 +193,7 @@ if(posts !== undefined && Array.isArray(posts)) {
         let openPage = await extractRoutes(key, true)
         let pageRoutes = openPage.routes;
         if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
-            app.post(pageRoutes, jsonParser, async (req, res, next) => {
+            app.post(pageRoutes, sessionData, jsonParser, async (req, res, next) => {
                 let getPage = await parsePage(key.split('.html')[0], req, openPage.headless, true)
                 if(getPage.next) {
                     next()

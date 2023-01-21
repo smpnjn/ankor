@@ -188,6 +188,10 @@ let syncFile = async (fileLocation, fileName, req) => {
                 fileContents = await extractCss(`${fileContents}`, `${fileName}`, req)
                 fileContents = await extractHtml(`${fileContents}`, `${fileName}`, req)
             }
+            else {
+                fileContents = await extractCss(`${fileContents}`, `${fileName}`)
+                fileContents = await extractHtml(`${fileContents}`, `${fileName}`)
+            }
 
             if(req && req.session && req.session.fileCache && req.session.fileCache[fileName] !== undefined && req.session.fileCache[fileName].data == undefined) {
                 req.session.fileCache[fileName].data = fileContents

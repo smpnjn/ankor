@@ -12,21 +12,20 @@ const extractCss = async function(input, fileName, req) {
     return new Promise((resolve) => {
         try {
             // Remove any duplicate CSS
-            let removeCss = input.replaceAll(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
-                if(req.session.fileCache[fileName] && req.session.fileCache[fileName].css == undefined && key !== undefined) {
-                    req.session.fileCache[fileName].css = key.replace(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
+            let removeCss = input.replace(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
+                if(req && req.session?.fileCache && req.session.fileCache[fileName] && req.session.fileCache[fileName].css == undefined && key !== undefined) {
+                    req.session.fileCache[fileName].css = key.replace(/<style[\s]*combined[\s\S]*data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
                 }
                 return "";
             });
 
-            let removeAsyncCss = removeCss.replaceAll(/<style[\s]*?async[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
-                if(req.session.fileCache[fileName] && req.session.fileCache[fileName].asyncCss == undefined && key !== undefined) {
-                    req.session.fileCache[fileName].asyncCss = key.replace(/<style[\s]*?async[\s\S]*?data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
+            let removeAsyncCss = removeCss.replace(/<style[\s]*?async[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
+                if(req && req.session?.fileCache && req.session.fileCache[fileName] && req.session.fileCache[fileName].asyncCss == undefined && key !== undefined) {
+                    req.session.fileCache[fileName].asyncCss = key.replace(/<style[\s]*async[\s\S]*data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
                 }
                 return "";
             });
 
-            
             resolve(removeAsyncCss)
         }
         catch(e) {
@@ -41,10 +40,10 @@ const extractHtml = async function(input, fileName, req) {
         try {
             // Remove any duplicate CSS
             let removeHtml = input.replace(/<template>([\S\s]*?)<\/template>/gmi, (key) => {
-                if(req.session.fileCache[fileName].data == undefined && key !== undefined) {
-                    req.session.fileCache[fileName].data = key.replace(/<template>/gmi, "").replace(/<\/template>/gmi, "");
+                if(req && req.session?.fileCache && req.session.fileCache[fileName].data == undefined && key !== undefined) {
+                    req.session.fileCache[fileName].data = key.replace(/<template>/gmi, "").replace(/<\/template>/gmi, "")
                 }          
-                return req.session.fileCache[fileName].data
+                return key.replace(/<template>/gmi, "").replace(/<\/template>/gmi, "")
             });
             resolve(removeHtml)
         }
@@ -82,9 +81,11 @@ const compressCssJs = async function(req) {
     let timerUuid = uuid()
 
     return new Promise(async (resolve) => {
-        console.time(`compress-code-${timerUuid}`);
         
         let css = '', asyncCss = '', commonJs = ''
+        
+        let timerUuid = uuid()
+        console.time(`compress-code-${timerUuid}`);
 
         try {
             css = await readFile('./common.css') || "";
@@ -160,7 +161,7 @@ const extractRoutes = async (page, post) => {
         pageLocation = `./views/post/${page}`
     }
     
-    let openPage = await readFile(`${pageLocation}`)
+    let openPage = await readFile(pageLocation)
     
     if(!openPage) return {}
 

@@ -204,292 +204,287 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
     
     return new Promise(async (resolve) => {
 
-        // Generate IDs and Data...
-        for(let item of allDataElements) {
-            // Give each item a custom ID, and generate their IDs
-            let customId = uuid();
-            if(!item.getAttribute('data-id')) {
-                item.setAttribute('data-id', customId)
-            }
-        }
-
         // This loop associates data with each data tag
         let item = allDataElements[0]
         
         // If no items
         if(!item) resolve("")
+        else {
+            // Generate IDs and Data...
+            item.setAttribute('data-id', uuid())
 
-        let thisId = item.getAttribute('data-id')
-        // Identify any parents
-        let checkParent = parent(item, 'data[data-id]', 2)
-        let parentId, dataParentId
-        if(checkParent[0]) {
-            parentId = checkParent[0].getAttribute('data-id')
-            let checkDataParent = parent(item, 'data-loop, data-item', 2)
-            if(checkDataParent && checkDataParent[0]) {
-                dataParentId = checkDataParent[0].getAttribute('data-element')
+            let thisId = item.getAttribute('data-id')
+            // Identify any parents
+            let checkParent = parent(item, 'data[data-id]', 2)
+            let parentId, dataParentId
+            if(checkParent[0]) {
+                parentId = checkParent[0].getAttribute('data-id')
+                let checkDataParent = parent(item, 'data-loop, data-item', 2)
+                if(checkDataParent && checkDataParent[0]) {
+                    dataParentId = checkDataParent[0].getAttribute('data-element')
+                }
             }
-        }
 
-        // Parse for POST requests
-        if(post === true && typeof req.body == "object") {
-            let allAttributes = item.getAttributeNames();
-            for(let attr of allAttributes) {
-                let thisAttribute = item.getAttribute(attr);
-                if(thisAttribute !== null && thisAttribute.indexOf('$') > -1) {
-                    thisAttribute = thisAttribute.split('$')[1];
-                    if(req.body[`${thisAttribute}`] !== undefined) {
-                        item.setAttribute(attr, req.body[`${thisAttribute}`]);
-                    }
-                    else {
-                        item.removeAttribute(attr);
+            // Parse for POST requests
+            if(post === true && typeof req.body == "object") {
+                let allAttributes = item.getAttributeNames();
+                for(let attr of allAttributes) {
+                    let thisAttribute = item.getAttribute(attr);
+                    if(thisAttribute !== null && thisAttribute.indexOf('$') > -1) {
+                        thisAttribute = thisAttribute.split('$')[1];
+                        if(req.body[`${thisAttribute}`] !== undefined) {
+                            item.setAttribute(attr, req.body[`${thisAttribute}`]);
+                        }
+                        else {
+                            item.removeAttribute(attr);
+                        }
                     }
                 }
             }
-        }
 
-        let options = { 'table' : null, 'limit' : null, 'filter' : null, 'parents' : null, 'filter-on' : null, 'sort' : null, 'search' : null, 'search-on' : null, 'skip' : null, 'main' : null, 'test': null };
-        let optionKeys = Object.keys(options);
-        for(let i of optionKeys) { 
-            options[i] = item.getAttribute(i) || undefined;
-        }
-        if(options['filter'] !== undefined && options['filter'].indexOf(':') > -1) {
-            options['filter'] = options['filter'].split(':')[1];
-            if(req.params?.[`${options['filter']}`] !== undefined) {
-                options['filter'] = req.params[`${options['filter']}`];
+            let options = { 'table' : null, 'limit' : null, 'filter' : null, 'parents' : null, 'filter-on' : null, 'sort' : null, 'search' : null, 'search-on' : null, 'skip' : null, 'main' : null, 'test': null };
+            let optionKeys = Object.keys(options);
+            for(let i of optionKeys) { 
+                options[i] = item.getAttribute(i) || undefined;
             }
-        }
-        if(options['search'] !== undefined && options['search'].indexOf(':') > -1) {
-            options['search'] = options['search'].split(':')[1];
-            if(req.params?.[`${options['search']}`] !== undefined) {
-                options['search'] = req.params[`${options['search']}`];
+            if(options['filter'] !== undefined && options['filter'].indexOf(':') > -1) {
+                options['filter'] = options['filter'].split(':')[1];
+                if(req.params?.[`${options['filter']}`] !== undefined) {
+                    options['filter'] = req.params[`${options['filter']}`];
+                }
             }
-        }
-        if(options['table']) {
-            // Retrieve from Redis
-            let compileData;
+            if(options['search'] !== undefined && options['search'].indexOf(':') > -1) {
+                options['search'] = options['search'].split(':')[1];
+                if(req.params?.[`${options['search']}`] !== undefined) {
+                    options['search'] = req.params[`${options['search']}`];
+                }
+            }
+            if(options['table']) {
+                // Retrieve from Redis
+                let compileData;
 
-            if(globalThis.cache[options['table']]) {
-                compileData = [ ...globalThis.cache[options['table']] ]
-            }
-            else {
-                globalThis.cache[options['table']] = await getCached('table', options['table'])
-                compileData = [ ...globalThis.cache[options['table']] ]
-            }
-            // Parse options correctly
-            if(options['limit']) {
-                options['limit'] = !isNaN(parseFloat(options['limit'])) ? parseFloat(options['limit']) : null
-            }
-            if(options['skip']) {
-                options['skip'] = !isNaN(parseFloat(options['skip'])) ? parseFloat(options['skip']) : null
-            }
-            
-            compileData = compileData.filter((i) => {
-                if(options['search'] && options['search-on']) {
-                    let searchArray = options['search'].split(' ');
-                    let data = i[`${options['search-on']}`]
-                    if(Array.isArray(options['search-on'])) {
-                        data = i;
-                        for(let x of options['search-on']) {
-                            if(data[`${x}`] !== undefined) {
-                                data = data[`${x}`];
+                if(globalThis.cache[options['table']]) {
+                    compileData = [ ...globalThis.cache[options['table']] ]
+                }
+                else {
+                    globalThis.cache[options['table']] = await getCached('table', options['table'])
+                    compileData = [ ...globalThis.cache[options['table']] ]
+                }
+                // Parse options correctly
+                if(options['limit']) {
+                    options['limit'] = !isNaN(parseFloat(options['limit'])) ? parseFloat(options['limit']) : null
+                }
+                if(options['skip']) {
+                    options['skip'] = !isNaN(parseFloat(options['skip'])) ? parseFloat(options['skip']) : null
+                }
+                
+                compileData = compileData.filter((i) => {
+                    if(options['search'] && options['search-on']) {
+                        let searchArray = options['search'].split(' ');
+                        let data = i[`${options['search-on']}`]
+                        if(Array.isArray(options['search-on'])) {
+                            data = i;
+                            for(let x of options['search-on']) {
+                                if(data[`${x}`] !== undefined) {
+                                    data = data[`${x}`];
+                                }
                             }
                         }
+                        let checkReturn = true;
+                        for(let x of searchArray) {
+                            let regexExp = new RegExp(`${sanatizeFilename(x)}`, "gmi");
+                            if(data && !data.match(regexExp)) {
+                                checkReturn = false;   
+                            }
+                        }
+                        return checkReturn;
                     }
-                    let checkReturn = true;
-                    for(let x of searchArray) {
-                        let regexExp = new RegExp(`${sanatizeFilename(x)}`, "gmi");
-                        if(data && !data.match(regexExp)) {
-                            checkReturn = false;   
+                    else if(options['filter'] && options['filter-on']) {
+                        let data = i[`${options['filter-on']}`];
+                        if(Array.isArray(data)) {
+                            return data.indexOf(options['filter']) > -1
+                        }
+                        else {
+                            return data == options['filter']
                         }
                     }
-                    return checkReturn;
+                    else {
+                        return true;
+                    }
+                });
+
+                if(options['sort'] == "random" && options['sort'] !== undefined) {
+                    compileData = shuffle(compileData)
                 }
-                else if(options['filter'] && options['filter-on']) {
-                    let data = i[`${options['filter-on']}`];
-                    if(Array.isArray(data)) {
-                        return data.indexOf(options['filter']) > -1
+                else if(options['sort'] == "random" && options['filter'] !== undefined && options['filter-on'] !== undefined) {
+                    compileData = shuffle(compileData.find((i) => {
+                        let data = i[`${options['filter-on']}`];
+                        if(Array.isArray(data)) {
+                            return data.indexOf(options['filter']) > -1
+                        }
+                        else {
+                            return data == `${options['filter']}`
+                        }
+                    })).slice(0, 8);
+                }
+
+                if(!Array.isArray(compileData) && compileData) {
+                    compileData = [ compileData ];
+                }
+
+                if(compileData && options['sort']) {
+                    let descending = false;
+                    if(options['sort'].indexOf('-') > -1) {
+                        descending = true;
+                        options['sort'] = options['sort'].split('-')[1];
+                    }
+                    if(descending == true) {
+                        compileData = compileData.sort((a,b) => b[`${options['sort']}`] - a[`${options['sort']}`]);
                     }
                     else {
-                        return data == options['filter']
+                        compileData = compileData.sort((a,b) => a[`${options['sort']}`] - b[`${options['sort']}`]);
+                    }
+                }
+                if(options['parents'] !== undefined) {
+                    if(parentId && dataParentId) {
+                        let findParent = req.session.elements.find((x) => x.id === parentId)
+                        if(findParent) {
+                            let parentData = findParent.data.find((x) => x._id === dataParentId)
+                            if(parentData) {
+                                let parentsQuery = options['parents'].split(' equals ')
+                                let parentAttribute = parentsQuery[0]
+                                let childAttribute = parentsQuery[1]
+
+                                if(!parentAttribute || !childAttribute) return
+                                
+                                parentAttribute = parentData[parentAttribute]
+
+                                if(parentAttribute) {
+                                    compileData = compileData.filter((childData) => {
+                                        return childData[`${childAttribute}`] === parentAttribute
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
                 else {
-                    return true;
-                }
-            });
-
-            if(options['sort'] == "random" && options['sort'] !== undefined) {
-                compileData = shuffle(compileData)
-            }
-            else if(options['sort'] == "random" && options['filter'] !== undefined && options['filter-on'] !== undefined) {
-                compileData = shuffle(compileData.find((i) => {
-                    let data = i[`${options['filter-on']}`];
-                    if(Array.isArray(data)) {
-                        return data.indexOf(options['filter']) > -1
+                    if(compileData == undefined) {
+                        compileData = []
                     }
-                    else {
-                        return data == `${options['filter']}`
+                }
+                
+                if(options['skip'] && compileData) {
+                    compileData = compileData.slice(options['skip'], compileData.length - 1);
+                }
+                if(options['limit'] && compileData) {
+                    compileData = compileData.slice(0, options['limit']);
+                }
+
+                req.session.elements.push({ id: thisId, table: options['table'], data: compileData, length: compileData.length, main: options['main'] })
+
+                let copyDocument = item.innerHTML.replaceAll(/<data [\s\S]*>[\s\S]*<\/data>/g, "")
+                let dataItemRegex = /<data-item|<data-loop/g.test(copyDocument)
+
+                if(!dataItemRegex) {
+                    item.innerHTML = `<data-item>${document.querySelector(`[data-id="${thisId}"]`).innerHTML}</data-item>`
+                }
+                let allDataDom = item.querySelectorAll(`data-item, data-loop`)
+
+                let tagNames = []
+                for(let i of allDataDom) {
+                    if(i.nodeType === 1) {
+                        tagNames.push([ i.tagName, i ])
                     }
-                })).slice(0, 8);
-            }
-
-            if(!Array.isArray(compileData) && compileData) {
-                compileData = [ compileData ];
-            }
-
-            if(compileData && options['sort']) {
-                let descending = false;
-                if(options['sort'].indexOf('-') > -1) {
-                    descending = true;
-                    options['sort'] = options['sort'].split('-')[1];
                 }
-                if(descending == true) {
-                    compileData = compileData.sort((a,b) => b[`${options['sort']}`] - a[`${options['sort']}`]);
+                
+                
+                let dataConfig = { 
+                    startDataItems: { number: 0, elements: [] }, 
+                    endDataItems: { number: 0, elements: [] }, 
+                    dataLoop: { number: 0, elements: [] } 
                 }
-                else {
-                    compileData = compileData.sort((a,b) => a[`${options['sort']}`] - b[`${options['sort']}`]);
+
+                for(let countElements of tagNames) {
+                    if(countElements[0] === "DATA-ITEM" && dataConfig['dataLoop'] === 0) {
+                        ++dataConfig['startDataItems'].number
+                        dataConfig['startDataItems'].elements.push(countElements[1])
+                    }
+                    else if(countElements[0] === "DATA-LOOP") {
+                        ++dataConfig['dataLoop'].number
+                        dataConfig['dataLoop'].elements.push(countElements[1])
+                    }
+                    else if(countElements[0] === "DATA-ITEM" && dataConfig['dataLoop'] !== 0) {
+                        ++dataConfig['endDataItems'].number
+                        dataConfig['endDataItems'].elements.push(countElements[1])
+                    }
                 }
-            }
-            if(options['parents'] !== undefined) {
-                if(parentId && dataParentId) {
-                    let findParent = req.session.elements.find((x) => x.id === parentId)
-                    if(findParent) {
-                        let parentData = findParent.data.find((x) => x._id === dataParentId)
-                        if(parentData) {
-                            let parentsQuery = options['parents'].split(' equals ')
-                            let parentAttribute = parentsQuery[0]
-                            let childAttribute = parentsQuery[1]
-
-                            if(!parentAttribute || !childAttribute) return
-                            
-                            parentAttribute = parentData[parentAttribute]
-
-                            if(parentAttribute) {
-                                compileData = compileData.filter((childData) => {
-                                    return childData[`${childAttribute}`] === parentAttribute
-                                });
+                let index = 0
+                for(let y of Object.keys(dataConfig)) {
+                    let nodeHtml = ''
+                    if(y === "dataLoop") {
+                        let dataLoopHtml = dataConfig[y].elements[0]
+                        while(index <= compileData.length) {
+                            if(compileData[index] !== undefined && dataLoopHtml) {
+                                dataLoopHtml.setAttribute('data-element', compileData[index]._id)
+                                dataLoopHtml.setAttribute('data-parsed', true)
+                                let dataEl = dataLoopHtml.querySelectorAll('array:not([data-parsed])')
+                                if(dataEl[0]) {
+                                    let dataElements = parent(dataEl[0], 'data', 2)
+                                    let earliestParent
+                                    if(dataElements.length > 1) {
+                                        earliestParent = dataElements[0].getAttribute('data-id')
+                                    }
+                                    if(earliestParent === thisId || dataElements.length === 1) {
+                                        for(let item of dataEl) {
+                                            item.setAttribute('data-parsed', true)
+                                            let arrayHtml = await parseDataArrays(item, compileData[index], req, options['table'], document)
+                                            item.innerHTML = arrayHtml
+                                        } 
+                                    }
+                                }
+                                req.session.dataTags.push(compileData[index])
+                                nodeHtml += dataLoopHtml.outerHTML
                             }
-                        }
-                    }
-                }
-            }
-            else {
-                if(compileData == undefined) {
-                    compileData = []
-                }
-            }
-            
-            if(options['skip'] && compileData) {
-                compileData = compileData.slice(options['skip'], compileData.length - 1);
-            }
-            if(options['limit'] && compileData) {
-                compileData = compileData.slice(0, options['limit']);
-            }
-
-            req.session.elements.push({ id: thisId, table: options['table'], data: compileData, length: compileData.length, main: options['main'] })
-
-            let copyDocument = item.innerHTML.replaceAll(/<data [\s\S]*>[\s\S]*<\/data>/g, "")
-            let dataItemRegex = /<data-item|<data-loop/g.test(copyDocument)
-
-            if(!dataItemRegex) {
-                item.innerHTML = `<data-item>${document.querySelector(`[data-id="${thisId}"]`).innerHTML}</data-item>`
-            }
-            let allDataDom = item.querySelectorAll(`data-item, data-loop`)
-
-            let tagNames = []
-            for(let i of allDataDom) {
-                if(i.nodeType === 1) {
-                    tagNames.push([ i.tagName, i ])
-                }
-            }
-            
-            
-            let dataConfig = { 
-                startDataItems: { number: 0, elements: [] }, 
-                endDataItems: { number: 0, elements: [] }, 
-                dataLoop: { number: 0, elements: [] } 
-            }
-
-            for(let countElements of tagNames) {
-                if(countElements[0] === "DATA-ITEM" && dataConfig['dataLoop'] === 0) {
-                    ++dataConfig['startDataItems'].number
-                    dataConfig['startDataItems'].elements.push(countElements[1])
-                }
-                else if(countElements[0] === "DATA-LOOP") {
-                    ++dataConfig['dataLoop'].number
-                    dataConfig['dataLoop'].elements.push(countElements[1])
-                }
-                else if(countElements[0] === "DATA-ITEM" && dataConfig['dataLoop'] !== 0) {
-                    ++dataConfig['endDataItems'].number
-                    dataConfig['endDataItems'].elements.push(countElements[1])
-                }
-            }
-            let index = 0
-            for(let y of Object.keys(dataConfig)) {
-                let nodeHtml = ''
-                if(y === "dataLoop") {
-                    let dataLoopHtml = dataConfig[y].elements[0]
-                    while(index <= compileData.length) {
-                        if(compileData[index] !== undefined && dataLoopHtml) {
-                            dataLoopHtml.setAttribute('data-element', compileData[index]._id)
-                            dataLoopHtml.setAttribute('data-parsed', true)
-                            let dataEl = dataLoopHtml.querySelectorAll('array:not([data-parsed])')
-                            if(dataEl[0]) {
-                                let dataElements = parent(dataEl[0], 'data', 2)
-                                let earliestParent
-                                if(dataElements.length > 1) {
-                                    earliestParent = dataElements[0].getAttribute('data-id')
-                                }
-                                if(earliestParent === thisId || dataElements.length === 1) {
-                                    for(let item of dataEl) {
-                                        item.setAttribute('data-parsed', true)
-                                        let arrayHtml = await parseDataArrays(item, compileData[index], req, options['table'], document)
-                                        item.innerHTML = arrayHtml
-                                    } 
-                                }
-                            }
-                            req.session.dataTags.push(compileData[index])
-                            nodeHtml += dataLoopHtml.outerHTML
-                        }
-                        ++index
-                    }
-                    if(dataLoopHtml) dataLoopHtml.outerHTML = nodeHtml
-                }
-                else {
-                    for(let dataItemHtml of dataConfig[y].elements) {
-                        if(compileData[index] !== undefined && dataItemHtml) {
-                            dataItemHtml.setAttribute('data-element', compileData[index]._id)
-                            dataItemHtml.setAttribute('data-parsed', true)
-                            let checkEl = dataItemHtml.querySelectorAll('array:not([data-parsed])')
-                            if(checkEl[0]) {
-                                let dataElements = parent(checkEl[0], 'data', 2)
-                                let earliestParent
-                                if(dataElements.length > 1) {
-                                    earliestParent = dataElements[0].getAttribute('data-id')
-                                }
-                                if(earliestParent === thisId || dataElements.length === 1) {
-                                    for(let item of checkEl) {
-                                        item.setAttribute('data-parsed', true)
-                                        let arrayHtml = await parseDataArrays(item, compileData[index], req, options['table'], document)
-                                        item.innerHTML = arrayHtml
-                                    } 
-                                }
-                            }
-                            req.session.dataTags.push(compileData[index])
                             ++index
                         }
+                        if(dataLoopHtml) dataLoopHtml.outerHTML = nodeHtml
+                    }
+                    else {
+                        for(let dataItemHtml of dataConfig[y].elements) {
+                            if(compileData[index] !== undefined && dataItemHtml) {
+                                dataItemHtml.setAttribute('data-element', compileData[index]._id)
+                                dataItemHtml.setAttribute('data-parsed', true)
+                                let checkEl = dataItemHtml.querySelectorAll('array:not([data-parsed])')
+                                if(checkEl[0]) {
+                                    let dataElements = parent(checkEl[0], 'data', 2)
+                                    let earliestParent
+                                    if(dataElements.length > 1) {
+                                        earliestParent = dataElements[0].getAttribute('data-id')
+                                    }
+                                    if(earliestParent === thisId || dataElements.length === 1) {
+                                        for(let item of checkEl) {
+                                            item.setAttribute('data-parsed', true)
+                                            let arrayHtml = await parseDataArrays(item, compileData[index], req, options['table'], document)
+                                            item.innerHTML = arrayHtml
+                                        } 
+                                    }
+                                }
+                                req.session.dataTags.push(compileData[index])
+                                ++index
+                            }
+                        }
                     }
                 }
             }
+            
+            item.setAttribute('data-parsed', 'true')
+            
+            if([ ...document.querySelectorAll('data:not([data-parsed]), config:not([data-parsed])') ].length > 0) {
+                await parseNextDataTag([ ...document.querySelectorAll('data:not([data-parsed]), config:not([data-parsed])') ], document, post, req, cache)
+            }
+            resolve(document)
         }
-        
-        item.setAttribute('data-parsed', 'true')
-        
-        if([ ...document.querySelectorAll('data:not([data-parsed]), config:not([data-parsed])') ].length > 0) {
-            await parseNextDataTag([ ...document.querySelectorAll('data:not([data-parsed]), config:not([data-parsed])') ], document, post, req, cache)
-        }
-        resolve(document)
     })
 }
 
@@ -604,10 +599,10 @@ const parseDataTags = async (template, req, post, cache) => {
             }
         }
 
-        let remainingEmptyElements = document.querySelectorAll('data-item:not([data-element]), data-loop:not([data-element]), [if]')
+        let remainingEmptyElements = document.querySelectorAll('data-item:not([data-element]), data-loop:not([data-element]), [a-if]')
         
         for(let item of remainingEmptyElements) {
-            if(item.hasAttribute('if')) {
+            if(item.hasAttribute('a-if')) {
                 let contents = item.innerHTML.trim()
                 if(item.matches(':empty') || contents == "") {
                     item.remove()
@@ -736,43 +731,46 @@ const parsePage = async function(page, req, headless, post) {
     let timerUuid = uuid()
     console.time(`parse-full-page-${timerUuid}`)
 
-    /* Refresh data mongodb --> redis */
-    refreshData().then((data) => {
-        globalThis.cache = data
-    })
+    return new Promise(async (resolve) => {
+        /* Refresh data mongodb --> redis */
+        refreshData().then((data) => {
+            globalThis.cache = data
+        })
 
-    if(!post && req.session) {
-        req.session.elements = []
-    }
-
-    let fileName = `${page.split('.')[0]}.html`
-    let fileLocation = `./views/${post ? 'post' : 'pages'}/${fileName}`
-    let rawPage = await readFile(`${fileLocation}`, req)
-
-    /* Parse <Component /> Tags */
-    rawPage = await parseComponents(rawPage, req, fileName)
-
-    /* Parse header */
-    if(!headless) {
-        rawPage = await parseHeaderFooter(rawPage, req)
-    }
-    
-    /* Parse any <data> or <config> tags which emerge from header.html or footer.html */
-    rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
-
-    if(req.session) req.session.headersSent = true
-
-    if(req && req.session && req.session.elements) {
-        let mainEl = req.session.elements.filter((x) => x.main == "true" || x.main == true)
-        if(mainEl && mainEl.length > 0 && mainEl[0].data && mainEl[0].data.length == 0) {
-            if(req.session) req.session.noData = true
-            return { next: true }
+        if(!post && req.session) {
+            req.session.elements = []
         }
-    }
-    
-    console.timeEnd(`parse-full-page-${timerUuid}`)
-    console.log('|---------------------------------------------------------------------|')
-    return rawPage
+
+        let fileName = `${page.split('.')[0]}.html`
+        let fileLocation = `./views/${post ? 'post' : 'pages'}/${fileName}`
+        let rawPage = await readFile(`${fileLocation}`, req)
+
+        /* Parse <Component /> Tags */
+        rawPage = await parseComponents(rawPage, req, fileName)
+
+        /* Parse any <data> or <config> tags which emerge from header.html or footer.html */
+        rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
+
+        /* Parse header */
+        if(!headless) {
+            rawPage = await parseHeaderFooter(rawPage, req)
+            rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
+        }
+
+        if(req.session) req.session.headersSent = true
+
+        if(req && req.session && req.session.elements) {
+            let mainEl = req.session.elements.filter((x) => x.main == "true" || x.main == true)
+            if(mainEl && mainEl.length > 0 && mainEl[0].data && mainEl[0].data.length == 0) {
+                if(req.session) req.session.noData = true
+                resolve({ next: true })
+            }
+        }
+        
+        console.timeEnd(`parse-full-page-${timerUuid}`)
+        console.log('|---------------------------------------------------------------------|')
+        resolve(rawPage)
+    })
 }
 
 export { parseDataTags, parseComponents, parsePage } 

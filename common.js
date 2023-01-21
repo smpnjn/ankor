@@ -194,25 +194,18 @@ if(document.getElementById('pagination') !== null) {
                     body: JSON.stringify(jsonBody)
                 });
                 let response = await getPosts.text();
+                console.log(response)
                 if(response.trim() !== "") {
                     try {
-                        let parseJson = JSON.parse(response);
-                        if(parseJson.error !== undefined) {
-                            document.getElementById('pagination').innerHTML = "<div class='no-results'>We ran into an error. Try again later</div>"  
-                        }
+                        let newEl = document.createElement('div');
+                        newEl.innerHTML = response;
+                        document.getElementById('content').innerHTML += newEl.innerHTML;
+                        document.getElementById('pagination').innerHTML = `<a href="" class="next-page">View More Articles</a>`
+                        skip += limit;
+                        fetchingInProgress = false;
                     }
                     catch(e) {
-                        try {
-                            let newEl = document.createElement('div');
-                            newEl.innerHTML = response;
-                            document.getElementById('content').innerHTML += newEl.innerHTML;
-                            document.getElementById('pagination').innerHTML = `<a href="/page/${response.newOffset}" class="next-page">View More Articles</a>`
-                            skip += limit;
-                            fetchingInProgress = false;
-                        }
-                        catch(e) {
-                            console.log(e);
-                        }
+                        console.log(e);
                     }
                 } 
                 else if(document.querySelector('.no-results') == null) {
