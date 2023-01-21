@@ -11,3 +11,4 @@ public/images
 .vscode/*
 .vscode
 views/common/common.css
+views/components/advert.html

@@ -1,1 +1,0 @@
-A nascent blogging platform based on Node.JS, Redis, and MongoDB. 
