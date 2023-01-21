@@ -170,11 +170,6 @@ let syncFile = async (fileLocation, fileName, req) => {
             /* Return nothing if file doesn't exist */
             if(!fileContents) return
 
-            if(fileContents.match(/<style[\s]*combined>/gmi) ||  fileContents.match(/<style[\s]*async>/gmi)) {
-                fileContents = fileContents.replace(/<style[\s]*combined>/gmi, `<style combined data-id="${fileName}">`);
-                fileContents = fileContents.replace(/<style[\s]*async>/gmi, `<style async data-id="${fileName}">`);
-            }
-            
             if(req && req.session?.fileCache !== undefined && req.session?.fileCache[fileName] == undefined) {
                 req.session.fileCache[fileName] = {}
             }
