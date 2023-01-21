@@ -287,7 +287,7 @@
     "path-to-regexp": "^0.1.7",
     "performance-now": "^2.1.0",
     "picomatch": "^2.2.2",
-    "pidusage": "^2.0.21",
+    "pidusage": "^3.0.2",
     "pify": "^3.0.0",
     "pm2": "^5.1.2",
     "pm2-axon": "^4.0.0",
