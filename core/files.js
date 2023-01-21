@@ -261,11 +261,11 @@ let readFile = async (fileLocation, req) => {
 
             // If the file already exists.. then we just want to return the data we already have.
             if(req && req.session?.fileCache !== undefined && req.session.fileCache[fileName] !== undefined && req.session.fileCache[fileName].data !== undefined) {
-                syncFile(fileLocation, fileName, req)
+                syncFile(`${fileLocation}`, fileName, req)
                 resolve(`${req.session.fileCache[fileName].data}`)
             }
 
-            let syncFileSync = await syncFile(fileLocation, fileName, req)
+            let syncFileSync = await syncFile(`${fileLocation}`, fileName, req)
             resolve(syncFileSync)
         }
         catch(e) {
@@ -320,7 +320,7 @@ const fileSyncer = async(data, fileLocation) => {
 
 const fileParser = async (fileLocation, fileType, parseCode, req) => {
     return new Promise(async (resolve) => {
-        let fileContents = await readFile(fileLocation, req)
+        let fileContents = await readFile(`${fileLocation}`, req)
         if(fileType === 'md') {
             fileContents = fileMarkdown.render(fileContents)
         }

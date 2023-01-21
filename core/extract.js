@@ -12,16 +12,16 @@ const extractCss = async function(input, fileName, req) {
     return new Promise((resolve) => {
         try {
             // Remove any duplicate CSS
-            let removeCss = input.replace(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
+            let removeCss = input.replaceAll(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
                 if(req.session.fileCache[fileName] && req.session.fileCache[fileName].css == undefined && key !== undefined) {
-                    req.session.fileCache[fileName].css = key.replace(/<style[\s]*combined[\s\S]*data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
+                    req.session.fileCache[fileName].css = key.replace(/<style[\s]*?combined[\s\S]*?data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
                 }
                 return "";
             });
 
-            let removeAsyncCss = removeCss.replace(/<style[\s]*?async[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
+            let removeAsyncCss = removeCss.replaceAll(/<style[\s]*?async[\s\S]*?data-id="(.*?)">([\S\s]*?)<\/style>/gmi, (key) => {
                 if(req.session.fileCache[fileName] && req.session.fileCache[fileName].asyncCss == undefined && key !== undefined) {
-                    req.session.fileCache[fileName].asyncCss = key.replace(/<style[\s]*async[\s\S]*data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
+                    req.session.fileCache[fileName].asyncCss = key.replace(/<style[\s]*?async[\s\S]*?data-id="(.*?)">/gmi, "").replace(/<\/style>/gmi, "")
                 }
                 return "";
             });
@@ -160,7 +160,7 @@ const extractRoutes = async (page, post) => {
         pageLocation = `./views/post/${page}`
     }
     
-    let openPage = await readFile(pageLocation)
+    let openPage = await readFile(`${pageLocation}`)
     
     if(!openPage) return {}
 
