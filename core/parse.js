@@ -11,6 +11,8 @@ import sanatizeFilename from 'sanitize-filename'
 /* Prep global app cache */
 globalThis.cache = await refreshData()
 
+let config = await import('../ankor.config.json', { assert: { type: "json" } }).then((data) => data.default)
+
 /* Replaces <Component /> Tags with actual components. Parses <File /> tags to <file></file> */
 const parseNextComponent = async(processedFile, req) => {
 
@@ -689,6 +691,10 @@ const parseHeaderFooter = async(rawPage, req) => {
             /* Title config */
             if(req.session.meta.title) {
                 let titles = `<meta property="og:title" content="${req.session.meta.title}"><meta name="twitter:title" content="${req.session.meta.title}"><title>${req.session.meta.title}</title>`
+                document.head.innerHTML = document.head.innerHTML + titles
+            }
+            else if(config.websiteName) {
+                let titles = `<meta property="og:title" content="Ankor"><meta name="twitter:title" content="Ankor"><title>${config.websiteName}</title>`
                 document.head.innerHTML = document.head.innerHTML + titles
             }
             else {

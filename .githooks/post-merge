@@ -18,5 +18,5 @@ done
 echo 'Shutting down the server..'
 pm2 delete 'all'
 echo 'Starting server..'
-set NODE_ENV=production && pm2 start index.js
+set NODE_ENV=production && pm2 start app.js
 pm2 start ./daemons/subscription.daemons.js
