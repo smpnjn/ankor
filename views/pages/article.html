@@ -8,7 +8,7 @@
 </config>
 <template>
     <section id="container">
-        <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" main="true">
+        <data table="article" filter=":canonicalName" filter-on="canonicalName" limit="1" main="true" test="true1">
             <data-item>
                 <div class="fl series-holder side-nav">
                     <data table="series" limit="1" parents="series equals canonicalName">
@@ -38,19 +38,21 @@
                         <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://www.patreon.com/smpnjn?fan_landing=true">🙇‍♂️ If you like this, consider supporting me on Patreon</a></div>
                         <div class="time-date" dateModified>Last Updated {{date}}</div>
                     </div>
-                    <data table="category" limit="1" parents="category equals canonicalName" test="category">
-                        <div id="see-more-header">
-                            <h2>More Tips and Tricks for {{displayTitle}}</h2>
-                        </div>
-                        <div id="see-more">
-                            <ul>
-                                <data table="article" limit="10" sort="random" parents="canonicalName equals category" test="true">
-                                    <data-loop>
-                                        <li><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></li>
-                                    </data-loop>
-                                </data>
-                            </ul>
-                        </div>
+                    <data table="category" limit="1" parents="category equals canonicalName" test="true2">
+                        <data-item>
+                            <div id="see-more-header">
+                                <h2>More Tips and Tricks for {{displayTitle}}</h2>
+                            </div>
+                            <div id="see-more">
+                                <ul>
+                                    <data table="article" limit="10" sort="random" parents="canonicalName equals category" test="true3">
+                                        <data-loop>
+                                            <li><a href="/article/{{canonicalName}}">{{titles[0].title}}</a></li>
+                                        </data-loop>
+                                    </data>
+                                </ul>
+                            </div>
+                        </data-item>
                     </data>
                 </data-item>
             </data>

@@ -214,7 +214,7 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
 
         // This loop associates data with each data tag
         let item = allDataElements[0]
-        
+
         // If no items
         if(!item) resolve("")
         else {
@@ -255,6 +255,8 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
             for(let i of optionKeys) { 
                 options[i] = item.getAttribute(i) || undefined;
             }
+
+
             if(options['filter'] !== undefined && options['filter'].indexOf(':') > -1) {
                 options['filter'] = options['filter'].split(':')[1];
                 if(req.params?.[`${options['filter']}`] !== undefined) {
@@ -388,10 +390,10 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
                 if(options['limit'] && compileData) {
                     compileData = compileData.slice(0, options['limit']);
                 }
-
+                
                 req.session.elements.push({ id: thisId, table: options['table'], data: compileData, length: compileData.length, main: options['main'] })
 
-                let copyDocument = item.innerHTML.replaceAll(/<data [\s\S]*>[\s\S]*<\/data>/g, "")
+                let copyDocument = `${item.innerHTML}`.replaceAll(/<data [\s\S]*>[\s\S]*<\/data>/g, "")
                 let dataItemRegex = /<data-item|<data-loop/g.test(copyDocument)
 
                 if(!dataItemRegex) {
@@ -401,11 +403,11 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
 
                 let tagNames = []
                 for(let i of allDataDom) {
-                    if(i.nodeType === 1) {
+                    let checkParent = parent(i, 'data', 2);
+                    if(i.nodeType === 1 && checkParent[0]?.getAttribute('data-id') === thisId) {
                         tagNames.push([ i.tagName, i ])
                     }
                 }
-                
                 
                 let dataConfig = { 
                     startDataItems: { number: 0, elements: [] }, 
