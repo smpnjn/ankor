@@ -19,9 +19,11 @@ const parseNextComponent = async(processedFile, req) => {
     return new Promise(async (resolve) => {
         let component = processedFile.querySelector('component')
         if(component !== undefined) {
+            console.log('ok-2-1')
             let componentName = component.getAttribute('name')
             if(!componentName) return ""
 
+            console.log('ok-2-2')
             let multiplyComponents = component.getAttribute('times')
             if(multiplyComponents) {
                 multiplyComponents = parseFloat(multiplyComponents)
@@ -32,6 +34,7 @@ const parseNextComponent = async(processedFile, req) => {
             let finalFileContent = '';
             let rawComponent = await readFile(`./views/components/${componentName}`, req)
 
+            console.log('ok-2-3')
             // For multiple components, multiply the component by the number given
             if(typeof multiplyComponents == "number") {
                 for(let multiple = 0; multiple < multiplyComponents; ++multiple) {
@@ -42,6 +45,7 @@ const parseNextComponent = async(processedFile, req) => {
                 finalFileContent = rawComponent;
             }
 
+            console.log('ok-2-4')
             let componentMatchRegex = /<[\s]*[C|c]omponent[\s]*name[\s]*=[\s]*"(.*?)"[\s]*[\/|\s]*>/g
             if(finalFileContent.match(componentMatchRegex) !== null) {
                 finalFileContent = finalFileContent.replace(componentMatchRegex, function(key) {
@@ -52,8 +56,10 @@ const parseNextComponent = async(processedFile, req) => {
             // Replace the multiply sign so it is escaped
             // Replace the component placeholder with the HTML contnet
             component.outerHTML = finalFileContent
+            console.log('ok-2-5')
             // Check for any more matches
             let matchComponents = processedFile.querySelectorAll('component')
+            console.log('ok-2-6')
             if(matchComponents.length > 0) {
                 processedFile = await parseNextComponent(processedFile, req);
             }
