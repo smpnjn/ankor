@@ -127,15 +127,14 @@ app.use(sessionData, async (req, res, next) => {
 
 // Configure all page routes
 let pages = await readDirectory('./views/pages', false);
-console.log(pages)
 if(pages !== undefined && Array.isArray(pages)) {
     for(let key of pages) {
         if(key !== undefined && key !== '404.html') {
             let openPage = await extractRoutes(key);
-            console.log(openPage)
             let pageRoutes = openPage.routes;
             if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
                 app.get(pageRoutes, sessionData, async (req, res, next) => {
+                    console.log('ok')
                     if(openPage.stale) {
                         let getUrl = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
                         let pathname = getUrl.pathname;
@@ -148,8 +147,9 @@ if(pages !== undefined && Array.isArray(pages)) {
                         }
                         req.output = await getCached('staleFile', `${req.cacheTerm}`)
                         
+                        console.log(getUrl, req.output)
                         const timerId = uuid();
-                        if(req.method == "GET" && req.output && req.header('x-forceCache') !== "true") {
+                        if(req.method == "GET" && req.output) {
                             console.time(`sent-by-cache-${timerId}`)
                             res.send(req.output)
                             console.timeLog(`sent-by-cache-${timerId}`)
@@ -158,6 +158,7 @@ if(pages !== undefined && Array.isArray(pages)) {
                         }
                         else {
                             req.output = await parsePage(key.split('.html')[0], req, openPage.headless, false)
+                            console.log(req.output)
                             if(req.output.next) {
                                 next()
                             }
