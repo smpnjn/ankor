@@ -632,7 +632,7 @@ const parseDataTags = async (template, req, post, cache) => {
 
         console.timeEnd(`parse-data-tags-${timerUuid}`);
 
-        resolve(document.body.innerHTML.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, ""))
+        resolve(document.documentElement.outerHTML.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, ""))
     })
 }
 
@@ -652,7 +652,7 @@ const parseHeaderFooter = async(rawPage, req) => {
             await extractCss(headerFile, 'header.html', req)
         }
         else {
-            rawPage = `<!DOCTYPE HTML><html><head></head><body>` + rawPage
+            rawPage = `<html><head></head><body>` + rawPage
         }
 
         if(footerFile) {
@@ -677,7 +677,7 @@ const parseHeaderFooter = async(rawPage, req) => {
         document.body.innerHTML = document.body.innerHTML + js
 
         let potentialUrl = req.originalUrl.slice(1).split('/')[1];
-        let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl}.webp`;
+        let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl ? potentialUrl : "default"}.webp`;
 
         let images = `<meta name="twitter:image" content="${image}"><meta property="og:image" content="${image}" />`
 
@@ -741,7 +741,7 @@ const parseHeaderFooter = async(rawPage, req) => {
             }
         }
 
-        resolve(document.documentElement.outerHTML)
+        resolve(`${document.documentElement.outerHTML}`)
 
     })
 
@@ -791,7 +791,7 @@ const parsePage = async function(page, req, headless, post) {
         
         console.timeEnd(`parse-full-page-${timerUuid}`)
         console.log('|---------------------------------------------------------------------|')
-        resolve(rawPage)
+        resolve(`<!DOCTYPE html>${rawPage}`)
     })
 }
 
