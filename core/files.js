@@ -159,7 +159,6 @@ let syncFile = async (fileLocation, fileName, req) => {
 
     return new Promise(async (resolve) => {
 
-        let timerUuid = uuid()
         if(req && req.session?.fileCache && req.session?.fileCache[fileName] && req.session?.fileCache[fileName].data) {
             resolve(req.session?.fileCache[fileName].data)
         }
@@ -168,7 +167,7 @@ let syncFile = async (fileLocation, fileName, req) => {
             let fileContents = getLoadedFile.data
 
             /* Return nothing if file doesn't exist */
-            if(!fileContents) return
+            if(!fileContents) resolve("")
 
             if(req && req.session?.fileCache !== undefined && req.session?.fileCache[fileName] == undefined) {
                 req.session.fileCache[fileName] = {}
@@ -199,8 +198,13 @@ let syncFile = async (fileLocation, fileName, req) => {
 
 const fileLoadTime = (fileLocation) => {
     return new Promise((resolve) => {
-        let statSync = fs.statSync(`${fileLocation}`)
-        resolve(statSync)
+        try {
+            let statSync = fs.statSync(`${fileLocation}`)
+            resolve(statSync)
+        }
+        catch(e) {
+            resolve(false)
+        }
     })
 }
 /**
@@ -256,7 +260,6 @@ let readFile = async (fileLocation, req) => {
                 return;
             }
             
-            console.log(fileName)
             // If the file already exists.. then we just want to return the data we already have.
             if(req && req.session?.fileCache !== undefined && req.session.fileCache[fileName] !== undefined && req.session.fileCache[fileName].data !== undefined) {
                 syncFile(`${fileLocation}`, fileName, req)

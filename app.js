@@ -207,7 +207,7 @@ if(posts !== undefined && Array.isArray(posts)) {
         }
     }
 }
-// *.controller.js files
+
 app.use('/', xmlRouter);
 
 let wss = new WebSocket.Server({ server: server, path: '/ws' });
