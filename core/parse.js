@@ -798,7 +798,7 @@ const parsePage = async function(page, req, headless, post) {
         
         console.timeEnd(`parse-full-page-${timerUuid}`)
         console.log('|---------------------------------------------------------------------|')
-        resolve(rawPage)
+        resolve(`<!DOCTYPE html>${rawPage}`)
     })
 }
 
