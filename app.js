@@ -127,10 +127,12 @@ app.use(sessionData, async (req, res, next) => {
 
 // Configure all page routes
 let pages = await readDirectory('./views/pages', false);
+console.log(pages)
 if(pages !== undefined && Array.isArray(pages)) {
     for(let key of pages) {
         if(key !== undefined && key !== '404.html') {
             let openPage = await extractRoutes(key);
+            console.log(openPage)
             let pageRoutes = openPage.routes;
             if(Array.isArray(pageRoutes) && pageRoutes.length > 0) {
                 app.get(pageRoutes, sessionData, async (req, res, next) => {
