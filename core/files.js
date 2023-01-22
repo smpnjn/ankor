@@ -244,7 +244,6 @@ let readFile = async (fileLocation, req) => {
     return new Promise(async (resolve) => {
         try {
             let fileName;
-            let timerUuid = uuid()
             if(fileLocation.indexOf('/') > -1) {
                 fileName = fileLocation.split('/')
                 fileName = fileName[fileName.length - 1]
@@ -257,7 +256,7 @@ let readFile = async (fileLocation, req) => {
                 return;
             }
             
-
+            console.log(fileName)
             // If the file already exists.. then we just want to return the data we already have.
             if(req && req.session?.fileCache !== undefined && req.session.fileCache[fileName] !== undefined && req.session.fileCache[fileName].data !== undefined) {
                 syncFile(`${fileLocation}`, fileName, req)
