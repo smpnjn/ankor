@@ -282,6 +282,18 @@ Within `<data>` there are a number of attributes:
 - `main` (accepts true) - if set to true, should no data be returned for this element a 404 page will be produced.
 - `parents` (accepts x equals y) - will relate the data set to its parent where `x` is the parent property which should match `y` - the current elements property.
 
+
+### a-if attribute
+Sometimes, elements may be left empty should a property not exist. For example, consider a model where the `date` attribute is optional. In these cases, we can add the `a-if` attribute to a tag. If its left empty after rendering, it will be removed:
+```
+<data table="theUsers">
+    <data-item>
+        <div class="name" a-if>
+            {{name}}
+        </div>
+    </data-item>
+</data>
+```
 ## Files
 You can import files from the server associated with certain pieces of data. This is useful if you upload a file via file API and want to use it within one of your pages. To find a file associated with a particular `<data-item>` or `<data-loop>` item, you can do this:
 ```html

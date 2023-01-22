@@ -64,7 +64,7 @@ app.use(rateLimit({
 }));
 
 // Setup server
-let server, secure = true
+let server
 if(typeof process.env.environment == "undefined"  || process.env.environment !== "dev") {
     // HTTPS environment
     options = {
@@ -75,7 +75,6 @@ if(typeof process.env.environment == "undefined"  || process.env.environment !==
     server = https.createServer(options, app);
 } else {
     // Non-HTTPS environment
-    secure = false;
     server = http.createServer(app) 
 }
 
@@ -94,7 +93,7 @@ const sessionData = session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: secure,
+        secure: true,
         maxAge: 86400000,
         sameSite: false
     },
