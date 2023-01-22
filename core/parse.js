@@ -19,11 +19,9 @@ const parseNextComponent = async(processedFile, req) => {
     return new Promise(async (resolve) => {
         let component = processedFile.querySelector('component')
         if(component !== undefined) {
-            console.log('ok-2-1')
             let componentName = component.getAttribute('name')
             if(!componentName) return ""
 
-            console.log('ok-2-2')
             let multiplyComponents = component.getAttribute('times')
             if(multiplyComponents) {
                 multiplyComponents = parseFloat(multiplyComponents)
@@ -34,7 +32,6 @@ const parseNextComponent = async(processedFile, req) => {
             let finalFileContent = '';
             let rawComponent = await readFile(`./views/components/${componentName}`, req)
 
-            console.log('ok-2-3')
             // For multiple components, multiply the component by the number given
             if(typeof multiplyComponents == "number") {
                 for(let multiple = 0; multiple < multiplyComponents; ++multiple) {
@@ -45,7 +42,6 @@ const parseNextComponent = async(processedFile, req) => {
                 finalFileContent = rawComponent;
             }
 
-            console.log('ok-2-4')
             let componentMatchRegex = /<[\s]*[C|c]omponent[\s]*name[\s]*=[\s]*"(.*?)"[\s]*[\/|\s]*>/g
             if(finalFileContent.match(componentMatchRegex) !== null) {
                 finalFileContent = finalFileContent.replace(componentMatchRegex, function(key) {
@@ -56,10 +52,8 @@ const parseNextComponent = async(processedFile, req) => {
             // Replace the multiply sign so it is escaped
             // Replace the component placeholder with the HTML contnet
             component.outerHTML = finalFileContent
-            console.log('ok-2-5')
             // Check for any more matches
             let matchComponents = processedFile.querySelectorAll('component')
-            console.log('ok-2-6')
             if(matchComponents.length > 0) {
                 processedFile = await parseNextComponent(processedFile, req);
             }
@@ -70,12 +64,11 @@ const parseNextComponent = async(processedFile, req) => {
 }
 
 const parseComponents = async (componentText, req, fileName) => {
-    console.log('ok-1-1')
+
     return new Promise(async (resolve) => {
         let timerUuid = uuid();
         console.time(`components-${timerUuid}`)
 
-        console.log('ok-1-2')
         let fileMatchRegex = /<File[\s]*[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[\s]*[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[\s]*[\/]*>/g
         if(componentText && componentText.match(fileMatchRegex) !== null) {
             componentText = componentText.replace(fileMatchRegex, function(key) {
@@ -83,7 +76,6 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
-        console.log('ok-1-3')
         let componentMatchRegex = /<[\s]*[C|c]omponent[\s]*name[\s]*=[\s]*"(.*?)"[\s]*[\/|\s]*>/g
         if(componentText && componentText.match(componentMatchRegex) !== null) {
             componentText = componentText.replace(componentMatchRegex, function(key) {
@@ -91,7 +83,6 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
-        console.log('ok-1-4')
         let componentDom = parseHTML(`<!DOCTYPE><html><head></head><body>${componentText}</body></html>`).document
         let findComponents = componentDom.querySelectorAll('component')
         if(findComponents.length > 0) {
@@ -100,7 +91,6 @@ const parseComponents = async (componentText, req, fileName) => {
         else if(req?.session?.fileCache[fileName]) {
             req.session.fileCache[fileName].noComponents = true
         }
-        console.log('ok-1-5')
         console.timeEnd(`components-${timerUuid}`)
         resolve(componentDom)
     })
@@ -761,22 +751,18 @@ const parsePage = async function(page, req, headless, post) {
         let fileLocation = `./views/${post ? 'post' : 'pages'}/${fileName}`
         let rawPage = await readFile(`${fileLocation}`, req)
 
-        console.log('ok-1')
         /* Parse <Component /> Tags */
         rawPage = await parseComponents(rawPage, req, fileName)
 
-        console.log('ok-2')
         /* Parse any <data> or <config> tags which emerge from header.html or footer.html */
         rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
 
-        console.log('ok-3')
         /* Parse header */
         if(!headless) {
             rawPage = await parseHeaderFooter(rawPage, req)
             rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
         }
 
-        console.log('ok-4')
         if(req.session) req.session.headersSent = true
 
         if(req && req.session && req.session.elements) {
