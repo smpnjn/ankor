@@ -7,9 +7,15 @@ import { refreshData, getCached } from './data.js'                           // 
 import path from 'path'                                                      // parseFile
 import { md5 } from 'hash-wasm'                                              // parseFile
 import sanatizeFilename from 'sanitize-filename'
+import schedule from 'node-schedule'
 
 /* Prep global app cache */
 globalThis.cache = await refreshData()
+
+/* Keep data up to date frequently */
+schedule.scheduleJob('*/5 * * * * *', async function() {
+    globalThis.cache = await refreshData()
+});
 
 let config = await import('../ankor.config.json', { assert: { type: "json" } }).then((data) => data.default)
 
