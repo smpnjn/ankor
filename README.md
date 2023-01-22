@@ -139,7 +139,7 @@ There are a few other options available to you within `ankor.config.json`. These
 - `mail` - if set to `enabled`, an email will be sent every monday. In the future this will be more customizable.
 - `mailTitle` - the title of your mail if its enabled.
 - `websiteName` - the name of your website. Used for the home page and default titles.
-- `websiteDesription` - the description of your website. Used for the home page and default descriptions.
+- `websiteDescription` - the description of your website. Used for the home page and default descriptions.
 - `api` - API authentication method. Can be set to `basic` or `jwt`. If basic, then username, password and API key will be used. With `jwt`, you can pass `token` in the header of your API request with a token which matches the JWT found in `./certificates/jwt.key`.
 
 
