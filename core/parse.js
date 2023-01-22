@@ -89,7 +89,7 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
-        let componentDom = parseHTML(`<!DOCTYPE html><html><head></head><body>${componentText}</body></html>`).document
+        let componentDom = parseHTML(`<!DOCTYPE><html><head></head><body>${componentText}</body></html>`).document
         let findComponents = componentDom.querySelectorAll('component')
         if(findComponents.length > 0) {
             componentDom = await parseNextComponent(componentDom, req)
@@ -652,7 +652,7 @@ const parseHeaderFooter = async(rawPage, req) => {
             await extractCss(headerFile, 'header.html', req)
         }
         else {
-            rawPage = `<html><head></head><body>` + rawPage
+            rawPage = `<!DOCTYPE HTML><html><head></head><body>` + rawPage
         }
 
         if(footerFile) {
@@ -741,7 +741,7 @@ const parseHeaderFooter = async(rawPage, req) => {
             }
         }
 
-        resolve(`${document.documentElement.outerHTML}`)
+        resolve(document.documentElement.outerHTML)
 
     })
 
@@ -791,7 +791,7 @@ const parsePage = async function(page, req, headless, post) {
         
         console.timeEnd(`parse-full-page-${timerUuid}`)
         console.log('|---------------------------------------------------------------------|')
-        resolve(`<!DOCTYPE html>${rawPage}`)
+        resolve(`<!DOCTYPE>${rawPage}`)
     })
 }
 
