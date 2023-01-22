@@ -751,18 +751,22 @@ const parsePage = async function(page, req, headless, post) {
         let fileLocation = `./views/${post ? 'post' : 'pages'}/${fileName}`
         let rawPage = await readFile(`${fileLocation}`, req)
 
+        console.log('ok-1')
         /* Parse <Component /> Tags */
         rawPage = await parseComponents(rawPage, req, fileName)
 
+        console.log('ok-2')
         /* Parse any <data> or <config> tags which emerge from header.html or footer.html */
         rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
 
+        console.log('ok-3')
         /* Parse header */
         if(!headless) {
             rawPage = await parseHeaderFooter(rawPage, req)
             rawPage = await parseDataTags(rawPage, req, post, globalThis.cache)
         }
 
+        console.log('ok-4')
         if(req.session) req.session.headersSent = true
 
         if(req && req.session && req.session.elements) {
