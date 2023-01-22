@@ -16,9 +16,12 @@ import categoryObject from '../models/category.model.js';
 const Article = articleObject.data;
 const Category = categoryObject.data;
 
+let config = await import('../ankor.config.json', { assert: { type: "json" } }).then((data) => data.default)
+
 xmlRouter.get('/sitemap.xml', async function(req, res) {
     res.header('Content-Type', 'application/xml');
     res.header('Content-Encoding', 'gzip');
+    let sitemap;
     try {
         const queryArticles = await Article.find({ published: true }).select('canonicalName')
         const queryCategories = await Category.find({}).select('title')
@@ -61,14 +64,14 @@ xmlRouter.get('/rss.xml', runXmlParser, async function(req, res) {
         const categories = queryCategories.map( ({ title }) => `${title}`)
 
         let feed = new rss({
-            title: process.env.websiteName,
-            description: process.env.websiteDescription,
+            title: config.websiteName,
+            description: config.websiteDescription,
             feed_url: 'https://' + req.headers.host + req.url,
             site_url: 'https://' + req.headers.host,
             image_url: 'https://' + req.headers.host + '/favicon.png',
             language: 'en',
             ttl: '60',
-            copyright: process.env.websiteName,
+            copyright: config.websiteName,
             categories: Object.values(categories)
         });
 

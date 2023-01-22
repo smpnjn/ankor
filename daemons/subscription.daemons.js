@@ -40,9 +40,9 @@ const mailer = async () => {
             console.log(text)
             if(typeof item.email !== "undefined") {
                 transporter.sendMail({
-                    from   : `${process.env.websiteName} <${process.env.contactEmail}>`,
+                    from   : `${config.websiteName} <${process.env.contactEmail}>`,
                     to     : item.email,
-                    subject: process.env.subscriptionEmailTitle,
+                    subject: config.mailTitle,
                     replyTo: process.env.contactEmail,
                     headers: { 'Mime-Version' : '1.0', 'X-Priority' : '3', 'Content-type' : 'text/html; charset=iso-8859-1' },
                     html   : text

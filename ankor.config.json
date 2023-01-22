@@ -20,5 +20,8 @@
         }
     },
     "mail" : "enabled",
+    "mailTitle" : "👋 Daily Web Dev Tips from Fjolt",
+    "websiteName" : "Fjolt",
+    "websiteDesription" : "Regular Articles on CSS, Javascript, Web Design and Web Development.",
     "api" : "basic"
 }

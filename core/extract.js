@@ -57,7 +57,7 @@ const extractHtml = async function(input, fileName, req) {
 const extractConfig = async function(config, req) {
     try {
         
-        let configProps = [ 'description', 'title', 'classes', 'url', 'cache', 'robots', 'stale' ]
+        let configProps = [ 'description', 'title', 'classes', 'url', 'robots', 'stale' ]
 
         if(!req.session.meta) {
             req.session.meta = {};
