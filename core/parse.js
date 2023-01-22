@@ -616,15 +616,18 @@ const parseDataTags = async (template, req, post, cache) => {
         let remainingEmptyElements = document.querySelectorAll('data-item:not([data-element]), data-loop:not([data-element]), [a-if]')
         
         for(let item of remainingEmptyElements) {
+            if(item.hasAttribute('a-if')) continue
+            if(item.parentElement.tagName !== "CONFIG") {
+                item.remove()
+            }
+        }
+        for(let item of remainingEmptyElements) {
             if(item.hasAttribute('a-if')) {
                 let contents = item.innerHTML.trim()
                 if(item.matches(':empty') || contents == "") {
                     item.remove()
                 }
-            }
-            else if(item.parentElement.tagName !== "CONFIG") {
-                item.remove()
-            }
+            }    
         }
 
         /* Extract <config /> */
@@ -636,7 +639,7 @@ const parseDataTags = async (template, req, post, cache) => {
 
         console.timeEnd(`parse-data-tags-${timerUuid}`);
 
-        resolve(document.body.innerHTML.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, ""))
+        resolve(document.body.innerHTML/*.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, "")*/)
     })
 }
 
