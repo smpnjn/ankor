@@ -639,7 +639,7 @@ const parseDataTags = async (template, req, post, cache) => {
 
         console.timeEnd(`parse-data-tags-${timerUuid}`);
 
-        resolve(document.body.innerHTML/*.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, "")*/)
+        resolve(document.body.innerHTML.replaceAll(/<[\s]*data[\s\S]*?>|<[\s]*array[\s\S]*?>|<\/array>|<\/data[\s\S]*?>/g, ""))
     })
 }
 
