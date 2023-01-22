@@ -407,6 +407,9 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
                     if(i.nodeType === 1 && checkParent[0]?.getAttribute('data-id') === thisId) {
                         tagNames.push([ i.tagName, i ])
                     }
+                    else if(i.parentElement?.tagName === "CONFIG") {
+                        tagNames.push([ i.tagName, i ])
+                    }
                 }
                 
                 let dataConfig = { 
@@ -429,6 +432,7 @@ const parseNextDataTag = async (allDataElements, document, post, req, cache) => 
                         dataConfig['endDataItems'].elements.push(countElements[1])
                     }
                 }
+
                 let index = 0
                 for(let y of Object.keys(dataConfig)) {
                     let nodeHtml = ''
@@ -618,7 +622,7 @@ const parseDataTags = async (template, req, post, cache) => {
                     item.remove()
                 }
             }
-            else {
+            else if(item.parentElement.tagName !== "CONFIG") {
                 item.remove()
             }
         }
@@ -677,7 +681,7 @@ const parseHeaderFooter = async(rawPage, req) => {
         document.body.innerHTML = document.body.innerHTML + js
 
         let potentialUrl = req.originalUrl.slice(1).split('/')[1];
-        let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl ? potentialUrl : "default"}.webp`;
+        let image = `${req.protocol + '://' + req.get('host')}/images/intro-images/${potentialUrl}.webp`;
 
         let images = `<meta name="twitter:image" content="${image}"><meta property="og:image" content="${image}" />`
 
@@ -723,14 +727,6 @@ const parseHeaderFooter = async(rawPage, req) => {
             /* Description config */
             if(req.session.meta.description) {
                 let descriptions = `<meta property="og:description" content="${req.session.meta.description}" /><meta name="twitter:description" content="${req.session.meta.description}"><meta name="description" content="${req.session.meta.description}">`
-                document.head.innerHTML = document.head.innerHTML + descriptions
-            }
-            else if(config.websiteDescription) {
-                let descriptions = `<meta property="og:description" content="${config.websiteDescription}" /><meta name="twitter:description" content="${config.websiteDescription}"><meta name="description" content="${config.websiteDescription}">`
-                document.head.innerHTML = document.head.innerHTML + descriptions
-            }
-            else {
-                let descriptions = `<meta property="og:description" content="Ankor - simple content management system" /><meta name="twitter:description" content="Ankor - simple content management system"><meta name="description" content="Ankor - simple content management system">`
                 document.head.innerHTML = document.head.innerHTML + descriptions
             }
             if(req.session.meta.classes) {
@@ -791,7 +787,7 @@ const parsePage = async function(page, req, headless, post) {
         
         console.timeEnd(`parse-full-page-${timerUuid}`)
         console.log('|---------------------------------------------------------------------|')
-        resolve(`<!DOCTYPE>${rawPage}`)
+        resolve(rawPage)
     })
 }
 
