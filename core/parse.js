@@ -89,7 +89,7 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
-        let componentDom = parseHTML(`<!DOCTYPE><html><head></head><body>${componentText}</body></html>`).document
+        let componentDom = parseHTML(`<!DOCTYPE html><html><head></head><body>${componentText}</body></html>`).document
         let findComponents = componentDom.querySelectorAll('component')
         if(findComponents.length > 0) {
             componentDom = await parseNextComponent(componentDom, req)
