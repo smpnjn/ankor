@@ -729,6 +729,14 @@ const parseHeaderFooter = async(rawPage, req) => {
                 let descriptions = `<meta property="og:description" content="${req.session.meta.description}" /><meta name="twitter:description" content="${req.session.meta.description}"><meta name="description" content="${req.session.meta.description}">`
                 document.head.innerHTML = document.head.innerHTML + descriptions
             }
+            else if(config.websiteDescription) {
+                let descriptions = `<meta property="og:description" content="${config.websiteDescription}" /><meta name="twitter:description" content="${config.websiteDescription}"><meta name="description" content="${config.websiteDescription}">`
+                document.head.innerHTML = document.head.innerHTML + descriptions
+            }
+            else {
+                let descriptions = `<meta property="og:description" content="Ankor - simple content management." /><meta name="twitter:description" content="Ankor - simple content management."><meta name="description" content="Ankor - simple content management.">`
+                document.head.innerHTML = document.head.innerHTML + descriptions
+            }
             if(req.session.meta.classes) {
                 let classes = req.session.meta.classes.split(' ')
                 for(let singleClass of classes) {
