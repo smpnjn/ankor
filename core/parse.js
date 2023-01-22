@@ -64,11 +64,12 @@ const parseNextComponent = async(processedFile, req) => {
 }
 
 const parseComponents = async (componentText, req, fileName) => {
-
+    console.log('ok-1-1')
     return new Promise(async (resolve) => {
         let timerUuid = uuid();
         console.time(`components-${timerUuid}`)
 
+        console.log('ok-1-2')
         let fileMatchRegex = /<File[\s]*[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[\s]*[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[name]*[directory]*[extension]*[=]*["']*[\S\s]*?["']*?[\s]*[\/]*>/g
         if(componentText && componentText.match(fileMatchRegex) !== null) {
             componentText = componentText.replace(fileMatchRegex, function(key) {
@@ -76,6 +77,7 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
+        console.log('ok-1-3')
         let componentMatchRegex = /<[\s]*[C|c]omponent[\s]*name[\s]*=[\s]*"(.*?)"[\s]*[\/|\s]*>/g
         if(componentText && componentText.match(componentMatchRegex) !== null) {
             componentText = componentText.replace(componentMatchRegex, function(key) {
@@ -83,6 +85,7 @@ const parseComponents = async (componentText, req, fileName) => {
             })
         }
 
+        console.log('ok-1-4')
         let componentDom = parseHTML(`<!DOCTYPE><html><head></head><body>${componentText}</body></html>`).document
         let findComponents = componentDom.querySelectorAll('component')
         if(findComponents.length > 0) {
@@ -91,6 +94,7 @@ const parseComponents = async (componentText, req, fileName) => {
         else if(req?.session?.fileCache[fileName]) {
             req.session.fileCache[fileName].noComponents = true
         }
+        console.log('ok-1-5')
         console.timeEnd(`components-${timerUuid}`)
         resolve(componentDom)
     })
