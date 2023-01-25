@@ -698,7 +698,7 @@ const parseHeaderFooter = async(rawPage, req) => {
 
 
         /* Canonical Config */
-        let canonical = req.protocol + '://' + req.get('host') + req.originalUrl
+        let canonical = req.protocol + '://' + req.get('host') + req.path
         let canonicals = `<link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}" />`
         document.head.innerHTML = document.head.innerHTML + canonicals
 
