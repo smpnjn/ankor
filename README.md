@@ -55,7 +55,7 @@ Schemas are defined in the same way as any other MongoDB model using `mongoose.S
 - `rules` (optional): optional rules we apply to properties. We can define a RegExp against properties in our schema, to ensure they comply. We can also define 2 other rules:
    - "bcrypt" - which will bcrypt that field every time
    - "date" - which will mean a date is created on submission based on current date in numerical format.
-- onCreate, onUpdate, and onDelete (optional): array of functions to run when an item is created, deleted or updated.
+- `onCreate`, `onUpdate`, and `onDelete` (optional): array of functions to run when an item is created, deleted or updated. `bodyData` refers to the data passed into the API in your request `body` - meaning you can access an API request body and perform actions with it.
 
 ## User and Role Models
 User and Role models are default models which are required for APIs to work. When you start out, you'll need to make one user, with the following request to `/api/user`:
