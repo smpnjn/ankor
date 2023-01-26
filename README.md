@@ -37,11 +37,11 @@ export default {
     "onCreate" : [
         async (bodyData) => {
         }
-    ]
+    ],
     "onDelete" : [
         async (bodyData) => {
         }
-    ]
+    ],
     "onUpdate" : [
         async (bodyData) => {
         }
