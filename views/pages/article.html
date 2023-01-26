@@ -34,9 +34,10 @@
                             </h2>
                             <Component name="advert" />
                         </div>
+                        <div class="sponsor-us top"><a target="_blank" rel="noreferrer" href="https://acn.ionos.com/aff_c?offer_id=1&aff_id=5788"><span>📣 Fjolt is hosted by Ionos! Click here to learn more</span></a></div>
                         <File directory="./documents" name="canonicalName" extension="md|html">
-                        <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://www.patreon.com/smpnjn?fan_landing=true">🙇‍♂️ If you like this, consider supporting me on Patreon</a></div>
-                        <div class="time-date" dateModified>Last Updated {{date}}</div>
+                        <div class="sponsor-us bottom"><a target="_blank" rel="noreferrer" href="https://acn.ionos.com/aff_c?offer_id=1&aff_id=5788"><span>📣 Fjolt is hosted by Ionos!</span><span>I'd recommend them for your next web hosting project. Click here to learn more!</span></a></div>
+                        <div class="time-date" dateModified>Last Updated <span>{{date}}</span></div>
                     </div>
                     <data table="category" limit="1" parents="category equals canonicalName" test="true2">
                         <data-item>
@@ -233,8 +234,44 @@ body.series-item #content, body.nav-enabled #content {
     border-bottom: 1px dotted #ffffff2e;
     padding: 0.25rem 0;
     font-weight: 600;
+    font-size: 1.25rem;
     margin: 0;
     letter-spacing: 0.25px;
+}
+#content .sponsor-us a {
+    text-decoration: none;
+    padding: 2rem;
+    border-radius: 6px;
+    background: #151b24;
+}
+
+#content .sponsor-us.top a {
+    background: transparent;
+    padding: 0;
+    width: 100%;
+    text-decoration: underline;
+}
+#content .sponsor-us.top a > span {
+    background: #151b24;
+}
+#content .sponsor-us.top {
+    float: none;
+}
+.sponsor-us a span {
+    display: block;
+    padding: 0 0 0.5rem 0;
+}
+
+.sponsor-us a span:first-of-type {
+    text-decoration: none;
+    font-weight: 900;
+}
+#content .sponsor-us a span:last-of-type {
+    text-decoration: underline;
+    line-height: 2rem;
+    font-weight: 600;
+    padding: 1rem;
+    float: left;
 }
 .go-home + .fl {
     display: none;
@@ -245,6 +282,7 @@ body.series-item #content, body.nav-enabled #content {
 .sponsor-us.bottom {
     float: left;
     width: 100%;
+    width: 400px;
 }
 #see-more {
     float: left;
@@ -361,6 +399,12 @@ body.series-item #content, body.nav-enabled #content {
     border-radius: 10px;
     border-radius: 8px;
     overflow: hidden;
+}
+
+.time-date {
+    float: right;
+    letter-spacing: inherit;
+    margin-bottom: 1rem;
 }
 
 @media screen and (min-width: 1000px) {
@@ -497,6 +541,16 @@ if(document.querySelectorAll('#content-text h2').length > 0) {
     }
     if(document.getElementById('secondary-navigation') !== null) {
         document.getElementById('secondary-navigation').style.transform = `translateY(${window.scrollY}px)`
+    }
+
+    let time = document.querySelectorAll('.time-date span')
+    if(time.length > 0) {
+        for(let i of time) {
+            let timeText = parseFloat(i.textContent)
+            console.log(timeText)
+            let parseTime = new Date(timeText).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+            i.textContent = parseTime
+        }
     }
 }
 </script>

@@ -148,11 +148,6 @@ pre > code:not([class*="language"]) {
 .category:hover .color {
     left: 0;
 }
-.time-date {
-    float: right;
-    letter-spacing: inherit;
-    margin-bottom: 1rem;
-}
 input[type="text"]::placeholder {
     font-weight: 400;
     color: #babed2;
