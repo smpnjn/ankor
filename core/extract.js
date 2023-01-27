@@ -89,6 +89,7 @@ const compressCssJs = async function(req) {
 
         try {
             css = await readFile('./common.css', req) || "";
+            css += await readFile('./views/common/c.css', req);
             asyncCss = await readFile('./async.css', req) || "";
             commonJs = await readFile('./common.js', req) || "";
         } 
@@ -101,6 +102,7 @@ const compressCssJs = async function(req) {
             for(let item of Object.keys(req.session.fileCache)) {
                 cacheTimeCheck.push(req.session.fileCache[item].cachedCss)
             }
+
             let cachedCss, cachedAsyncCss
             if(cacheTimeCheck.every((item) => item === true)) {
                 cachedCss = await getCached('css', await md5(req.originalUrl))

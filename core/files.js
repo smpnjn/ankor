@@ -160,11 +160,13 @@ let syncFile = async (fileLocation, fileName, req) => {
     return new Promise(async (resolve) => {
 
         if(req && req.session?.fileCache && req.session?.fileCache[fileName] && req.session?.fileCache[fileName].data) {
+            console.log(req.session?.fileCache[fileName])
             resolve(req.session?.fileCache[fileName].data)
         }
         else {
             let getLoadedFile = await loadFile(`${fileLocation}`, fileName)
             let fileContents = getLoadedFile.data
+
 
             /* Return nothing if file doesn't exist */
             if(!fileContents) resolve("")
@@ -229,6 +231,7 @@ const loadFile = async (fileLocation, fileName) => {
                 globalThis.fileTimeCache[fileName].time = fileTime.mtimeMs
             }
         }
+
         try {
             let fileContents = fs.readFileSync(`${fileLocation}`, 'utf-8')
             resolve({ data: fileContents, timestamp: fileTime.mtimeMs, cached: cached })

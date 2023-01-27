@@ -10,5 +10,5 @@ public/images/misc
 public/images
 .vscode/*
 .vscode
-views/common/common.css
+views/common/c.css
 views/components/advert.html
