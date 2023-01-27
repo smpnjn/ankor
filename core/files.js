@@ -234,7 +234,7 @@ const loadFile = async (fileLocation, fileName) => {
             resolve({ data: fileContents, timestamp: fileTime.mtimeMs, cached: cached })
         }
         catch(e) {
-            resolve(false);
+            resolve({ data: "", timestamp: 0, cached: true });
         }
     }))
 }

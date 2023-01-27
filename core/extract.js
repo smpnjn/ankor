@@ -88,16 +88,9 @@ const compressCssJs = async function(req) {
         console.time(`compress-code-${timerUuid}`);
 
         try {
-            css = await readFile('./common.css') || "";
-            try {
-                /* in common we also have a separate common.css file */
-                css += await readFile('./views/common/common.css');
-            }
-            catch(e) {
-                console.log(e);
-            }
-            asyncCss = await readFile('./async.css') || "";
-            commonJs = await readFile('./common.js') || "";
+            css = await readFile('./common.css', req) || "";
+            asyncCss = await readFile('./async.css', req) || "";
+            commonJs = await readFile('./common.js', req) || "";
         } 
         catch(e) {
             console.log(e)
@@ -108,7 +101,6 @@ const compressCssJs = async function(req) {
             for(let item of Object.keys(req.session.fileCache)) {
                 cacheTimeCheck.push(req.session.fileCache[item].cachedCss)
             }
-
             let cachedCss, cachedAsyncCss
             if(cacheTimeCheck.every((item) => item === true)) {
                 cachedCss = await getCached('css', await md5(req.originalUrl))
