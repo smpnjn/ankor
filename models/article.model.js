@@ -64,6 +64,7 @@ export default {
                         wordArray.push([line, x, y]);
                     }
                 }
+                console.log( [ wordArray, totalLineHeight ] )
                 return [ wordArray, totalLineHeight ];
             }
                 
@@ -85,13 +86,11 @@ export default {
             ctx.fillStyle = '#050506';
             ctx.fillRect(0, 0, 1200, 630);
         
-            ctx.font = '76px JetBrains';
+            ctx.font = '60px JetBrains';
             ctx.fillStyle = 'white';
-            let wrappedText = wrapText(ctx, `${bodyData.titles[0].title}`, 90, 270, 1000, 120);
-            let linePosition = 300;
+            let wrappedText = wrapText(ctx, `${bodyData.titles[0].title}`, 90, 130, 1000, 120);
             wrappedText[0].forEach(function(item, index) {
-                if(index === 0) linePosition = item[2] - wrappedText[1];
-                ctx.fillText(item[0], item[1], item[2] - wrappedText[1]); 
+                ctx.fillText(item[0], item[1], item[2]); 
             })
             // More text
             ctx.font = '38px Menlo-Bold'
