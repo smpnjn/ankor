@@ -194,7 +194,6 @@ if(document.getElementById('pagination') !== null) {
                     body: JSON.stringify(jsonBody)
                 });
                 let response = await getPosts.text();
-                console.log(response)
                 if(response.trim() !== "") {
                     try {
                         let newEl = document.createElement('div');

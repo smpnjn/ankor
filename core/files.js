@@ -160,7 +160,6 @@ let syncFile = async (fileLocation, fileName, req) => {
     return new Promise(async (resolve) => {
 
         if(req && req.session?.fileCache && req.session?.fileCache[fileName] && req.session?.fileCache[fileName].data) {
-            console.log(req.session?.fileCache[fileName])
             resolve(req.session?.fileCache[fileName].data)
         }
         else {

@@ -64,7 +64,6 @@ export default {
                         wordArray.push([line, x, y]);
                     }
                 }
-                console.log( [ wordArray, totalLineHeight ] )
                 return [ wordArray, totalLineHeight ];
             }
                 
