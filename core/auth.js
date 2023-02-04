@@ -158,18 +158,21 @@ const initUserRole = async function(req, res) {
     }
 
     for(let role of Object.keys(defaultRoles)) {
-        const newItem = new Role({ 
-            "role" : role,
-            "importance" : defaultRoles[role]
-        })
+        const checkRole = await models['role'].data.find({ "role" : role })
+        if(checkRole.length === 0) {
+            const newItem = new models['role'].data({ 
+                "role" : role,
+                "importance" : defaultRoles[role]
+            })
 
-        await newItem.save(async function (err) {
-            if (err) {
-                return res.status(400).send(err);
-            } else {
-                await refreshModel('role', Role, true)
-            }
-        });
+            await newItem.save(async function (err) {
+                if (err) {
+                    return res.status(400).send(err);
+                } else {
+                    await refreshModel('role', models['role'].data, true)
+                }
+            });
+        }
     }
 
     bcrypt.hash(req.body.password, 15, async (err, hash) => {
@@ -191,7 +194,7 @@ const initUserRole = async function(req, res) {
             if (err) {
                 return res.status(400).send(err);
             } else {
-                await refreshModel('user', User, true)
+                await refreshModel('user', models['user'].data, true)
                 return res.status(400).send({ 
                     "sucess" : true,
                     "message" : "Object saved"
